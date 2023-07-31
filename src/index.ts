@@ -3,9 +3,13 @@ import { CandleStick } from "./entity/CandleStick";
 import { getCoinOHLCV } from "./opertions/exchangeOperations"
 
 AppDataSource.initialize().then(async () => {
-    const OHLCV = await getCoinOHLCV('BTC/USDT', '5m')
+    const symbol = 'BTC/USDT'
+    const timeFrame = '5m'
+
+    const OHLCV = await getCoinOHLCV(symbol, timeFrame)
     for await (const candle of OHLCV) {
         let candleStick = AppDataSource.manager.create(CandleStick, {
+            symbol: symbol,
             date: new Date(candle[0]),
             open: candle[1],
             high: candle[2],
@@ -16,7 +20,8 @@ AppDataSource.initialize().then(async () => {
 
         await AppDataSource.manager.save(candleStick);
     }
-    setInterval(() => {
-
+    setInterval(async() => {
+        const candle = await getCoinOHLCV(symbol, timeFrame)
+        await AppDataSource.manager.save(candle)
     }, 5 * 60 * 100) // every 5 minutes
 }).catch(error => console.log(error))

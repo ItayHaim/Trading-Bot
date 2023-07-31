@@ -1,5 +1,5 @@
 import { OHLCV, Ticker } from "ccxt"
-import { binanceExchange } from "./consts"
+import { binanceExchange } from "./exchange"
 import { Order, OrderSide, OrderType } from "ccxt/js/src/base/types"
 
 /**

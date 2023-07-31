@@ -6,6 +6,9 @@ export class CandleStick {
     @PrimaryGeneratedColumn()
     id: number
 
+    @Column({type: 'varchar',length: 20})
+    symbol: string
+
     @Column()
     date: Date
 
