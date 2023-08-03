@@ -2,6 +2,7 @@ import { currenciesArray } from "./consts";
 import { AppDataSource } from "./data-source";
 import { CandleStick } from "./entity/CandleStick";
 import { getCoinOHLCV } from "./operations/exchangeOperations";
+import { strategyExample } from "./strategies/strategyExample";
 
 export const main = async () => {
     try {
@@ -12,7 +13,6 @@ export const main = async () => {
                 const oneOHLCV = await getCoinOHLCV(symbol, process.env.TIME_FRAME, undefined, 1)[0]
                 let candleStick = AppDataSource.manager.create(CandleStick, {
                     symbolId: symbolId,
-                    symbol: symbol,
                     date: new Date(oneOHLCV[0]),
                     open: oneOHLCV[1],
                     high: oneOHLCV[2],
@@ -22,6 +22,7 @@ export const main = async () => {
                 })
                 await AppDataSource.manager.save(candleStick)
             }
+            strategyExample()
         }, 60 * 1000) // Need to be the same as the process.env.TIME_FRAME
 
     } catch (err) {

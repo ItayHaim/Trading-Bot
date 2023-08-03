@@ -15,7 +15,6 @@ AppDataSource.initialize().then(async () => {
             for await (const candle of OHLCV) {
                 let candleStick = AppDataSource.manager.create(CandleStick, {
                     symbolId: symbolId,
-                    symbol: symbol,
                     date: new Date(candle[0]),
                     open: candle[1],
                     high: candle[2],
@@ -26,10 +25,10 @@ AppDataSource.initialize().then(async () => {
 
                 await AppDataSource.manager.save(candleStick);
             }
-
-            // Run the trading strategy
-            main()
         }
+        // Run the trading strategy
+        console.log('Connect and initialize ')
+        main()
     } catch (err) {
         console.log(err);
     }

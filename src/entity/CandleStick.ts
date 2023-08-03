@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm"
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm"
+import { Currency } from "./Currency"
 
 @Entity()
 export class CandleStick {
@@ -6,11 +7,9 @@ export class CandleStick {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({name: 'symbol_id'})
+    @OneToOne(() => Currency, (currency) => currency.symbolId)
+    @JoinColumn({ name: 'symbol_id' })
     symbolId: number
-
-    @Column({type: 'varchar',length: 20})
-    symbol: string
 
     @Column()
     date: Date
