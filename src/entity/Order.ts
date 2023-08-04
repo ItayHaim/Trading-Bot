@@ -10,7 +10,7 @@ export class Order {
     orderId: string
 
     @Column()
-    status: boolean
+    status: OrderStatus
 
     @ManyToOne(() => Currency, (currency) => currency.id)
     @JoinColumn({ name: 'symbol_id' })

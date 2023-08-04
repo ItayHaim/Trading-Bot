@@ -9,7 +9,8 @@ export const strategyExample = async () => {
         const amount = await getQuoteAmount('BTC/USDT', usdtAmount)
         const { id } = await createOrder('BTC/USDT', 'buy', amount)
         AppDataSource.manager.save(Order, {
-            orderId: id
+            orderId: id,
+            status: 'open'
         })
 
         const res = await isOrderFilled(id)
