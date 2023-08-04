@@ -1,18 +1,18 @@
-import { SymbolsArray } from "./consts";
+import { CurrenciesArray } from "./consts";
 import { AppDataSource } from "./data-source";
 import { CandleStick } from "./entity/CandleStick";
 import { Currency } from "./entity/Currency";
 import { getCoinOHLCV } from "./operations/exchangeOperations";
-import { strategyExample } from "./strategies/strategyExample";
 
 export const main = async () => {
     try {
-        for (const symbol in SymbolsArray) {
+        for (const currency in CurrenciesArray) {
+            const symbol = CurrenciesArray[currency]
+
             const { id } = await AppDataSource.manager.findOne(Currency, {
                 where: { symbol: symbol }
             })
             console.log(id);
-
 
             const oneOHLCV = await getCoinOHLCV(symbol, process.env.TIME_FRAME, undefined, 1)[0]
             let candleStick = AppDataSource.manager.create(CandleStick, {
@@ -26,7 +26,9 @@ export const main = async () => {
             })
             await AppDataSource.manager.save(candleStick)
         }
-        strategyExample()
+        console.log('finish');
+        
+        // strategyExample()
     } catch (err) {
         console.log(err);
     }

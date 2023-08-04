@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm"
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm"
 import { Currency } from "./Currency"
 
 @Entity()
@@ -24,7 +24,7 @@ export class CandleStick {
     @Column()
     volume: number
 
-    @OneToOne(() => Currency, (currency) => currency.id)
+    @ManyToOne(() => Currency, (currency) => currency.id)
     @JoinColumn({ name: 'symbol_id' })
     symbolId: number
 }

@@ -1,1 +1,1 @@
-export const SymbolsArray = ['BTC/USDT', 'ETH/USDT']
+export const CurrenciesArray = ['BTC/USDT', 'ETH/USDT']
