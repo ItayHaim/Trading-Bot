@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm"
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
+import { Currency } from "./Currency"
 
 @Entity()
 export class Order {
@@ -10,4 +11,8 @@ export class Order {
 
     @Column()
     status: boolean
+
+    @ManyToOne(() => Currency, (currency) => currency.id)
+    @JoinColumn({ name: 'symbol_id' })
+    symbolId: number
 }

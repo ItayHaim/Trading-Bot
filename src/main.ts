@@ -3,6 +3,7 @@ import { AppDataSource } from "./data-source";
 import { CandleStick } from "./entity/CandleStick";
 import { Currency } from "./entity/Currency";
 import { getCoinOHLCV } from "./operations/exchangeOperations";
+import { strategyExample } from "./strategies/strategyExample";
 
 export const main = async () => {
     try {
@@ -29,7 +30,7 @@ export const main = async () => {
         }
         console.log('Added on candle!');
 
-        // strategyExample()
+        strategyExample()
     } catch (err) {
         console.log(err);
         AppDataSource.destroy()

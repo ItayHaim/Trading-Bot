@@ -102,8 +102,8 @@ export const createOrder = async (symbol: string, buyOrSell: OrderSide, amountIn
         }
         const res = await binanceExchange.createOrder(symbol, orderType, buyOrSell, amountInUSDT, price, params)
 
-        await binanceExchange.createOrder(symbol, 'STOP_MARKET', 'sell', amountInUSDT, undefined, { 'stopPrice': stopLossPrice })
-        await binanceExchange.createOrder(symbol, 'TAKE_PROFIT_MARKET', 'sell', amountInUSDT, undefined, { 'stopPrice': takeProfitPrice })
+        await binanceExchange.createOrder(symbol, 'STOP_MARKET', buyOrSell === 'buy' ? 'sell' : 'buy', amountInUSDT, undefined, { 'stopPrice': stopLossPrice })
+        await binanceExchange.createOrder(symbol, 'TAKE_PROFIT_MARKET', buyOrSell === 'buy' ? 'sell' : 'buy', amountInUSDT, undefined, { 'stopPrice': takeProfitPrice })
 
         return res
     }
@@ -197,3 +197,12 @@ export const getOpenOrders = async (symbol?: string, sinceDate?: Date, limit?: n
 // Usage example:
 // getOpenOrders('BTC/USDT',new Date(),5).then(console.log).catch(console.error)
 
+export const isOrderFilled = async (orderId: string) => {
+    const res = await binanceExchange.fetchOrderStatus(orderId)
+    return res
+}
+
+// export const isOrderFilled = (orderId: string): Promise<boolean> => {
+//     const res =  
+
+// } 
