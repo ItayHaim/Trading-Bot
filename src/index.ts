@@ -6,9 +6,10 @@ import { main } from "./main";
 import { getCoinOHLCV } from "./operations/exchangeOperations";
 
 AppDataSource.initialize().then(async () => {
-    // First initialize the last 500 candles
+    // First initialize the last ? candles
     try {
         const timeFrame = process.env.TIME_FRAME
+        const candleAmount = Number(process.env.CANDLE_AMOUNT)
 
         for (const coinPair in CurrenciesArray) {
             const symbol = CurrenciesArray[coinPair]
@@ -17,7 +18,7 @@ AppDataSource.initialize().then(async () => {
                 symbol: symbol
             })
 
-            const OHLCV = await getCoinOHLCV(symbol, timeFrame, undefined, 100)
+            const OHLCV = await getCoinOHLCV(symbol, timeFrame, undefined, candleAmount)
             for await (const candle of OHLCV) {
                 await AppDataSource.manager.save(CandleStick, {
                     symbolId: id,
@@ -34,6 +35,7 @@ AppDataSource.initialize().then(async () => {
         console.log('Connect and initialize ')
         main()
     } catch (err) {
+        console.log('Failed to connect or initialize');
         console.log(err);
         AppDataSource.destroy()
     }
