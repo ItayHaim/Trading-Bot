@@ -3,13 +3,8 @@ import { Currency } from "./Currency"
 
 @Entity()
 export class CandleStick {
-
     @PrimaryGeneratedColumn()
     id: number
-
-    @OneToOne(() => Currency, (currency) => currency.symbolId)
-    @JoinColumn({ name: 'symbol_id' })
-    symbolId: number
 
     @Column()
     date: Date
@@ -29,4 +24,7 @@ export class CandleStick {
     @Column()
     volume: number
 
+    @OneToOne(() => Currency, (currency) => currency.id)
+    @JoinColumn({ name: 'symbol_id' })
+    symbolId: number
 }

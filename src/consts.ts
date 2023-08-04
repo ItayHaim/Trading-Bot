@@ -1,10 +1,1 @@
-export const currenciesArray = [
-    {
-        symbolId: 1,
-        symbol: 'BTC/USDT'
-    },
-    {
-        symbolId: 2,
-        symbol: 'ETH/USDT'
-    }
-]
+export const SymbolsArray = ['BTC/USDT', 'ETH/USDT']
