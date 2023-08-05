@@ -33,10 +33,10 @@ export const strategyExample = async () => {
         })
 
         const first = await isOrderFilled(order.mainOrderId, currency.symbol)
-        console.log('order first ', first);
+        // console.log('order first ', first);
 
         const second = await getOrder(order.mainOrderId, currency.symbol)
-        console.log('order second ', second);
+        // console.log('order second ', second);
 
         return first
     } catch (err) {
