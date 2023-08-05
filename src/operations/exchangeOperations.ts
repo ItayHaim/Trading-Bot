@@ -1,6 +1,7 @@
 import { OHLCV, Ticker } from "ccxt"
 import { binanceExchange } from "./exchange"
 import { Order, OrderSide, OrderType } from "ccxt/js/src/base/types"
+import { CreateOrderReturnType } from "./types"
 
 /**
  * Retrieves the balance of a specified coin.
@@ -90,7 +91,7 @@ export const getQuoteAmount = async (symbol: string, quoteAmount: number): Promi
  * 
  * @return The created order.
  */
-export const createOrder = async (symbol: string, buyOrSell: OrderSide, amountInUSDT: number, orderType: OrderType = 'market', price: number = undefined): Promise<Order> => {
+export const createOrder = async (symbol: string, buyOrSell: OrderSide, amountInUSDT: number, orderType: OrderType = 'market', price: number = undefined): Promise<CreateOrderReturnType> => {
     try {
         // Get the current price to Determine SL and TP
         const ticker = await fetchTicker(symbol)
@@ -100,12 +101,13 @@ export const createOrder = async (symbol: string, buyOrSell: OrderSide, amountIn
         const params = {
             'marginType': 'isolated',
         }
-        const res = await binanceExchange.createOrder(symbol, orderType, buyOrSell, amountInUSDT, price, params)
+        const mainOrder = await binanceExchange.createOrder(symbol, orderType, buyOrSell, amountInUSDT, price, params)
 
-        await binanceExchange.createOrder(symbol, 'STOP_MARKET', buyOrSell === 'buy' ? 'sell' : 'buy', amountInUSDT, undefined, { 'stopPrice': stopLossPrice })
-        await binanceExchange.createOrder(symbol, 'TAKE_PROFIT_MARKET', buyOrSell === 'buy' ? 'sell' : 'buy', amountInUSDT, undefined, { 'stopPrice': takeProfitPrice })
+        const SL = await binanceExchange.createOrder(symbol, 'STOP_MARKET', buyOrSell === 'buy' ? 'sell' : 'buy', amountInUSDT, undefined, { 'stopPrice': stopLossPrice })
+        const TP = await binanceExchange.createOrder(symbol, 'TAKE_PROFIT_MARKET', buyOrSell === 'buy' ? 'sell' : 'buy', amountInUSDT, undefined, { 'stopPrice': takeProfitPrice })
 
-        return res
+        console.log(mainOrder)
+        return { mainOrderId: mainOrder.id, StopLossId: SL.id, TakeProfitId: TP.id }
     }
     catch (err) {
         console.log(err)
@@ -175,6 +177,19 @@ export const cancelAllOrdersBySymbol = async (symbol: string, params: Record<any
 // Usage example:
 // cancelAllOrdersBySymbol('BTC/USDT').then(console.log).catch(console.error)
 
+/**
+ * Retrieves an order from the Binance exchange.
+ *
+ * @param orderId - The ID of the order to retrieve.
+ * @param symbol - The symbol of the order (optional).
+ * @returns The retrieved order.
+ */
+export const getOrder = async (orderId: string, symbol: string): Promise<Order> => {
+    const res = await binanceExchange.fetchOrder(orderId, symbol)
+    return res
+}
+// Usage example:
+// getOpenOrders('4411342324').then(console.log).catch(console.error)
 
 /**
  * Retrieves the open orders for a given symbol, since a specific date, and with an optional limit and additional parameters.
@@ -197,8 +212,15 @@ export const getOpenOrders = async (symbol?: string, sinceDate?: Date, limit?: n
 // Usage example:
 // getOpenOrders('BTC/USDT',new Date(),5).then(console.log).catch(console.error)
 
-export const isOrderFilled = async (orderId: string) => {
-    const res = await binanceExchange.fetchOrderStatus(orderId)
+/**
+ * Checks if an order is filled.
+ *
+ * @param orderId - The ID of the order to check.
+ * @param symbol - The symbol of the order to check.
+ * @return The order status.
+ */
+export const isOrderFilled = async (orderId: string, symbol: string) => {
+    const res = await binanceExchange.fetchOrderStatus(orderId, symbol)
     return res
 }
 // Usage example:

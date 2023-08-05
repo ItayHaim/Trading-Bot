@@ -4,7 +4,7 @@ import { AppDataSource } from "./data-source"
 import { CandleStick } from "./entity/CandleStick";
 import { Currency } from "./entity/Currency";
 import { main } from "./main";
-import { createOrder, getCoinOHLCV, isOrderFilled } from "./operations/exchangeOperations";
+import { getCoinOHLCV } from "./operations/exchangeOperations";
 
 AppDataSource.initialize().then(async () => {
     // First initialize the last ? candles
@@ -18,7 +18,6 @@ AppDataSource.initialize().then(async () => {
             const currency = await AppDataSource.manager.save(Currency, {
                 symbol: symbol
             })
-            
 
             const OHLCV = await getCoinOHLCV(symbol, timeFrame, undefined, candleAmount)
             for await (const candle of OHLCV) {

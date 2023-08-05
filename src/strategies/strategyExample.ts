@@ -1,24 +1,44 @@
-import { OrderStatus } from "../consts";
 import { AppDataSource } from "../data-source";
+import { Currency } from "../entity/Currency";
 import { Order } from "../entity/Order";
-import { createOrder, getQuoteAmount, isOrderFilled } from "../operations/exchangeOperations";
+import { OrderType } from "../enums";
+import { createOrder, getOrder, getQuoteAmount, isOrderFilled } from "../operations/exchangeOperations";
 
 export const strategyExample = async () => {
     try {
-        // const usdtAmount = Number(process.env.USDT_AMOUNT)
+        const usdtAmount = Number(process.env.USDT_AMOUNT)
 
-        // const amount = await getQuoteAmount('BTC/USDT', usdtAmount)
-        // const order = await createOrder('BTC/USDT', 'buy', amount)
-        // AppDataSource.manager.save(Order, {
-        //     orderId: order.id,
-        // })
-        // console.log(order);
-        
+        const currency = await AppDataSource.manager.findOneOrFail(Currency, {
+            where: { symbol: 'BTC/USDT' }
+        })
 
-        // const res = await isOrderFilled(order.id)
-        // console.log(res);
+        const amount = await getQuoteAmount(currency.symbol, usdtAmount)
+        const order = await createOrder(currency.symbol, 'buy', amount)
 
-        // return res
+        // Save the order in database
+        await AppDataSource.manager.save(Order, {
+            orderId: order.mainOrderId,
+            orderType: OrderType.Main,
+            symbol: currency
+        })
+        await AppDataSource.manager.save(Order, {
+            orderId: order.StopLossId,
+            orderType: OrderType.StopLoss,
+            symbol: currency,
+        })
+        await AppDataSource.manager.save(Order, {
+            orderId: order.TakeProfitId,
+            orderType: OrderType.TakeProfit,
+            symbol: currency
+        })
+
+        const first = await isOrderFilled(order.mainOrderId, currency.symbol)
+        console.log('order first ', first);
+
+        const second = await getOrder(order.mainOrderId, currency.symbol)
+        console.log('order second ', second);
+
+        return first
     } catch (err) {
         console.log('Strategy Failed: ');
         console.log(err);
