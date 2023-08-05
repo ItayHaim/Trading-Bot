@@ -7,7 +7,7 @@ import { main } from "./main";
 import { getCoinOHLCV } from "./operations/exchangeOperations";
 
 AppDataSource.initialize().then(async () => {
-    // First initialize the last ? candles
+    // First initialize the last 10 candles
     try {
         const timeFrame = process.env.TIME_FRAME
         const candleAmount = Number(process.env.CANDLE_AMOUNT)
