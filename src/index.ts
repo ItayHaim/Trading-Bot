@@ -15,14 +15,15 @@ AppDataSource.initialize().then(async () => {
         for (const coinPair in CurrenciesArray) {
             const symbol = CurrenciesArray[coinPair]
 
-            const { id } = await AppDataSource.manager.save(Currency, {
+            const currency = await AppDataSource.manager.save(Currency, {
                 symbol: symbol
             })
+            
 
             const OHLCV = await getCoinOHLCV(symbol, timeFrame, undefined, candleAmount)
             for await (const candle of OHLCV) {
                 await AppDataSource.manager.save(CandleStick, {
-                    symbolId: id,
+                    symbol: currency,
                     date: new Date(candle[0]),
                     open: candle[1],
                     high: candle[2],

@@ -1,11 +1,10 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm"
-import { Order } from "./Order"
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm"
 
 @Entity()
 export class Currency {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({type: 'varchar',length: 20})
+    @Column({ type: 'varchar', length: 20 })
     symbol: string
 }

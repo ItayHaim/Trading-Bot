@@ -9,17 +9,17 @@ export const main = async () => {
     try {
         const timeFrame = process.env.TIME_FRAME
 
-        for (const currency in CurrenciesArray) {
-            const symbol = CurrenciesArray[currency]
+        for (const coinPair in CurrenciesArray) {
+            const symbol = CurrenciesArray[coinPair]
 
-            const { id } = await AppDataSource.manager.findOneOrFail(Currency, {
+            const currency = await AppDataSource.manager.findOneOrFail(Currency, {
                 where: { symbol: symbol }
             })
 
             const oneOHLCV = await getCoinOHLCV(symbol, timeFrame, undefined, 1)
-            
+
             await AppDataSource.manager.save(CandleStick, {
-                symbolId: id,
+                symbol: currency,
                 date: new Date(oneOHLCV[0][0]),
                 open: oneOHLCV[0][1],
                 high: oneOHLCV[0][2],

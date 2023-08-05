@@ -1,6 +1,6 @@
-import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
-import { Currency } from "./Currency"
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
 import { OrderStatus } from "../consts"
+import { Currency } from "./Currency"
 
 @Entity()
 export class Order {
@@ -10,10 +10,10 @@ export class Order {
     @Column({ name: 'order_id', type: 'varchar', length: 100 })
     orderId: string
 
-    @Column({ enum: OrderStatus, default: OrderStatus.Open })
+    @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.Open })
     status: OrderStatus
 
     @ManyToOne(() => Currency, (currency) => currency.id)
-    @JoinColumn({ name: 'symbol_id' })
-    symbolId: number
+    @JoinColumn({ name: "symbol_id" })
+    symbolId: Currency
 }
