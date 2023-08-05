@@ -10,7 +10,7 @@ export class Order {
     @Column({ name: 'order_id', type: 'varchar', length: 100 })
     orderId: string
 
-    @Column({ enum: OrderStatus })
+    @Column({ enum: OrderStatus, default: OrderStatus.Open })
     status: OrderStatus
 
     @ManyToOne(() => Currency, (currency) => currency.id)
