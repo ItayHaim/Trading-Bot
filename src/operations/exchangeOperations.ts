@@ -127,7 +127,7 @@ export const createOrder = async (symbol: string, buyOrSell: OrderSide, amountIn
  * @param params - Additional parameters for the cancellation. Defaults to undefined.
  * @return The cancelled order.
  */
-export const cancelOrder = async (orderId: string, symbol: string, params: Record<any, any> = undefined): Promise<Order> => {
+export const closeOrder = async (orderId: string, symbol: string, params: Record<any, any> = undefined): Promise<Order> => {
     try {
         const res = await binanceExchange.cancelOrder(orderId, symbol, params)
         return res
@@ -221,7 +221,7 @@ export const getOpenOrders = async (symbol?: string, sinceDate?: Date, limit?: n
  * @param symbol - The symbol of the order to check.
  * @return The order status.
  */
-export const isOrderFilled = async (orderId: string, symbol: string) => {
+export const isOrderFilled = async (orderId: string, symbol: string): Promise<string> => {
     const res = await binanceExchange.fetchOrderStatus(orderId, symbol)
     return res
 }

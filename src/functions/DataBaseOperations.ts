@@ -1,10 +1,16 @@
+import { In } from "typeorm"
 import { CurrenciesArray } from "../consts"
 import { AppDataSource } from "../data-source"
 import { CandleStick } from "../entity/CandleStick"
 import { Currency } from "../entity/Currency"
-import { getCoinOHLCV } from "../operations/exchangeOperations"
+import { Order } from "../entity/Order"
+import { OrderStatus, OrderType } from "../enums"
+import { closeOrder, getCoinOHLCV, isOrderFilled } from "../operations/exchangeOperations"
 
-export const addOneCandle = async () => {
+/**
+ * Adds one candle to the database for each currency in the CurrenciesArray.
+ */
+export const addOneCandle = async (): Promise<void> => {
     const timeFrame = process.env.TIME_FRAME
 
     for (const coinPair in CurrenciesArray) {
@@ -27,4 +33,28 @@ export const addOneCandle = async () => {
         })
     }
     console.log('Added on candle!');
+}
+
+export const checkOrders = async () => {
+    const orders = await AppDataSource.manager.find(Order, {
+        where: {orderType: In([OrderType.StopLoss , OrderType.TakeProfit])},
+        relations: { currency: true }
+    })
+    
+    for (const order of orders) {
+        const { id, orderId, currency } = order
+        const { symbol } = currency
+
+        const status = await isOrderFilled(orderId, symbol)
+        if (status === OrderStatus.Closed) {
+            await closeOrder(orderId, symbol)
+            await AppDataSource
+                .createQueryBuilder()
+                .delete()
+                .from(Order)
+                .where('id = :id', { id: id })
+                .execute();
+            console.log(`order: ${orderId} (${symbol}) is closed!`);
+        }
+    }
 }
