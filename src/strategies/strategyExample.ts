@@ -1,3 +1,4 @@
+import { OrderStatus } from "../consts";
 import { AppDataSource } from "../data-source";
 import { Order } from "../entity/Order";
 import { createOrder, getQuoteAmount, isOrderFilled } from "../operations/exchangeOperations";
@@ -7,13 +8,15 @@ export const strategyExample = async () => {
         const usdtAmount = Number(process.env.USDT_AMOUNT)
 
         const amount = await getQuoteAmount('BTC/USDT', usdtAmount)
-        const { id } = await createOrder('BTC/USDT', 'buy', amount)
+        const order = await createOrder('BTC/USDT', 'buy', amount)
         AppDataSource.manager.save(Order, {
-            orderId: id,
-            status: 'open'
+            orderId: order.id,
+            status: OrderStatus.open
         })
+        console.log(order);
+        
 
-        const res = await isOrderFilled(id)
+        const res = await isOrderFilled(order.id)
         console.log(res);
 
         return res

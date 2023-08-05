@@ -201,8 +201,5 @@ export const isOrderFilled = async (orderId: string) => {
     const res = await binanceExchange.fetchOrderStatus(orderId)
     return res
 }
-
-// export const isOrderFilled = (orderId: string): Promise<boolean> => {
-//     const res =  
-
-// } 
+// Usage example:
+// isOrderFilled('cd345m34nf234').then(console.log).catch(console.error)

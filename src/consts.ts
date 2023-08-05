@@ -1,3 +1,7 @@
 export const CurrenciesArray = ['BTC/USDT', 'ETH/USDT']
 
-export type OrderStatus = 'open' | 'closed' | 'canceled' 
+export enum OrderStatus {
+    'open',
+    'closed',
+    'canceled'
+}
