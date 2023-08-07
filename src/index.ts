@@ -21,7 +21,7 @@ AppDataSource.initialize().then(async () => {
             const OHLCV = await getCoinOHLCV(symbol, timeFrame, undefined, candleAmount)
             for await (const candle of OHLCV) {
                 await AppDataSource.manager.save(CandleStick, {
-                    symbol: currency,
+                    currency: currency,
                     date: new Date(candle[0]),
                     open: candle[1],
                     high: candle[2],

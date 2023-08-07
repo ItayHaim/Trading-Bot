@@ -1,10 +1,9 @@
-import { In } from "typeorm"
 import { CurrenciesArray } from "../consts"
 import { AppDataSource } from "../data-source"
 import { CandleStick } from "../entity/CandleStick"
 import { Currency } from "../entity/Currency"
-import { Order } from "../entity/MainOrder"
-import { OrderStatus, OrderType } from "../enums"
+import { SideOrder } from "../entity/SideOrder"
+import { OrderStatus } from "../enums"
 import { closeOrder, getCoinOHLCV, isOrderFilled } from "../operation/exchangeOperations"
 
 /**
@@ -36,25 +35,34 @@ export const addOneCandle = async (): Promise<void> => {
 }
 
 export const checkOrders = async () => {
-    const orders = await AppDataSource.manager.find(Order, {
-        where: { orderType: In([OrderType.StopLoss, OrderType.TakeProfit]) },
-        relations: { currency: true }
+    const orders = await AppDataSource.manager.find(SideOrder, {
+        where: { status: OrderStatus.Open },
+        relations: { mainOrder: { currency: true } }
     })
 
     for (const order of orders) {
-        const { id, orderId, currency } = order
-        const { symbol } = currency
+        const { mainOrder } = order
+        const { symbol } = mainOrder.currency
 
-        const status = await isOrderFilled(orderId, symbol)
+        const status = await isOrderFilled(order.orderId, symbol)
+
         if (status === OrderStatus.Closed) {
-            await closeOrder(orderId, symbol)
-            await AppDataSource
-                .createQueryBuilder()
-                .delete()
-                .from(Order)
-                .where('id = :id', { id: id })
-                .execute();
-            console.log(`order: ${orderId} (${symbol}) is closed!`);
+            await closeOrder(mainOrder.orderId, symbol)
+            await closeOrder(order.orderId, symbol)
+            // Find the other sideOrder (TP/SL) to close him
+            let otherSideOrders = await AppDataSource.getRepository(SideOrder)
+                .createQueryBuilder("sideOrder")
+                .where("sideOrder.mainOrder = :mainOrderId", { mainOrderId: mainOrder.id })
+                .andWhere("sideOrder.id != :sideOrderId", { sideOrderId: order.id })
+                .getOne();
+            await closeOrder(otherSideOrders.orderId, symbol)
+            // await AppDataSource
+            //     .createQueryBuilder()
+            //     .delete()
+            //     .from(MainOrder)
+            //     .where('id = :id', { id: mainOrder.id })
+            //     .execute();
+            console.log(`order: ${order.orderId} (${symbol}) is closed!`);
         }
     }
 }

@@ -13,19 +13,19 @@ export class OrderService {
             const amount = await getQuoteAmount(currency.symbol, this.usdtAmount)
             const { StopLossId, TakeProfitId, mainOrderId } = await createOrder(currency.symbol, 'buy', amount)
 
-            await AppDataSource.manager.save(MainOrder, {
+            const mainOrder = await AppDataSource.manager.save(MainOrder, {
                 orderId: mainOrderId,
-                symbol: currency
+                currency: currency
             })
             await AppDataSource.manager.save(SideOrder, {
                 orderId: StopLossId,
                 orderType: OrderType.StopLoss,
-                symbol: currency,
+                mainOrder: mainOrder
             })
             await AppDataSource.manager.save(SideOrder, {
                 orderId: TakeProfitId,
                 orderType: OrderType.TakeProfit,
-                symbol: currency
+                mainOrder: mainOrder
             })
             console.log('Order created successfully');
         } catch (error) {
