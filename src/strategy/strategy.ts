@@ -2,12 +2,12 @@ import { AppDataSource } from "../data-source";
 import { Currency } from "../entity/Currency";
 import { Order } from "../entity/Order";
 import { OrderType } from "../enums";
-import { createOrder, getOrder, getQuoteAmount, isOrderFilled } from "../operations/exchangeOperations";
+import { createOrder, getOrder, getQuoteAmount, isOrderFilled } from "../operation/exchangeOperations";
 
 export const strategy = async () => {
     try {
         console.log('hello world');
-        
+
         const usdtAmount = Number(process.env.USDT_AMOUNT)
 
         const currency = await AppDataSource.manager.findOneOrFail(Currency, {

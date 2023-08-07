@@ -1,10 +1,9 @@
-import { loadavg } from "os";
 import { CurrenciesArray } from "./consts";
-import { AppDataSource } from "./data-source"
+import { AppDataSource } from "./data-source";
 import { CandleStick } from "./entity/CandleStick";
 import { Currency } from "./entity/Currency";
 import { main } from "./main";
-import { getCoinOHLCV } from "./operations/exchangeOperations";
+import { getCoinOHLCV } from "./operation/exchangeOperations";
 
 AppDataSource.initialize().then(async () => {
     // First initialize the last 10 candles

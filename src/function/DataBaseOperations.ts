@@ -5,7 +5,7 @@ import { CandleStick } from "../entity/CandleStick"
 import { Currency } from "../entity/Currency"
 import { Order } from "../entity/Order"
 import { OrderStatus, OrderType } from "../enums"
-import { closeOrder, getCoinOHLCV, isOrderFilled } from "../operations/exchangeOperations"
+import { closeOrder, getCoinOHLCV, isOrderFilled } from "../operation/exchangeOperations"
 
 /**
  * Adds one candle to the database for each currency in the CurrenciesArray.
@@ -37,10 +37,10 @@ export const addOneCandle = async (): Promise<void> => {
 
 export const checkOrders = async () => {
     const orders = await AppDataSource.manager.find(Order, {
-        where: {orderType: In([OrderType.StopLoss , OrderType.TakeProfit])},
+        where: { orderType: In([OrderType.StopLoss, OrderType.TakeProfit]) },
         relations: { currency: true }
     })
-    
+
     for (const order of orders) {
         const { id, orderId, currency } = order
         const { symbol } = currency

@@ -1,7 +1,6 @@
-import { CurrenciesArray } from "./consts";
 import { AppDataSource } from "./data-source";
-import { addOneCandle, checkOrders } from "./functions/DataBaseOperations";
-import { strategy } from "./strategies/strategy";
+import { addOneCandle, checkOrders } from "./function/DataBaseOperations";
+import { strategy } from "./strategy/strategy";
 
 export const main = async () => {
     try {
