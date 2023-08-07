@@ -25,6 +25,6 @@ export class CandleStick {
     volume: number
 
     @ManyToOne(() => Currency, (currency) => currency.id)
-    @JoinColumn({ name: "symbol_id" })
-    symbol: Currency
+    @JoinColumn({ name: "currency_id" })
+    currency: Currency
 }

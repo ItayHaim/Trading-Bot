@@ -1,36 +1,19 @@
 import { CurrenciesArray } from "./consts";
 import { AppDataSource } from "./data-source";
-import { CandleStick } from "./entity/CandleStick";
-import { Currency } from "./entity/Currency";
-import { getCoinOHLCV } from "./operations/exchangeOperations";
-import { strategyExample } from "./strategies/strategyExample";
+import { addOneCandle, checkOrders } from "./functions/DataBaseOperations";
+import { strategy } from "./strategies/strategy";
 
 export const main = async () => {
     try {
-        const timeFrame = process.env.TIME_FRAME
+        setInterval(async () => {
+            addOneCandle()
+        }, 1000 * 60 * 5) // 5 minutes
+        setInterval(async () => {
+            checkOrders()
+        }, 1000 * 5) // 5 seconds
 
-        for (const coinPair in CurrenciesArray) {
-            const symbol = CurrenciesArray[coinPair]
 
-            const currency = await AppDataSource.manager.findOneOrFail(Currency, {
-                where: { symbol: symbol }
-            })
-
-            const oneOHLCV = await getCoinOHLCV(symbol, timeFrame, undefined, 1)
-
-            await AppDataSource.manager.save(CandleStick, {
-                symbol: currency,
-                date: new Date(oneOHLCV[0][0]),
-                open: oneOHLCV[0][1],
-                high: oneOHLCV[0][2],
-                low: oneOHLCV[0][3],
-                closed: oneOHLCV[0][4],
-                volume: oneOHLCV[0][5]
-            })
-        }
-        console.log('Added on candle!');
-
-        strategyExample()
+        strategy()
     } catch (err) {
         console.log(err);
         AppDataSource.destroy()
