@@ -1,6 +1,6 @@
 import { AppDataSource } from "../data-source";
 import { Currency } from "../entity/Currency";
-import { Order } from "../entity/Order";
+import { Order } from "../entity/MainOrder";
 import { OrderType } from "../enums";
 import { createOrder, getOrder, getQuoteAmount, isOrderFilled } from "../operation/exchangeOperations";
 

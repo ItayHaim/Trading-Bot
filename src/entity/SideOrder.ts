@@ -1,9 +1,9 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
-import { Currency } from "./Currency"
-import { OrderStatus, OrderType } from "../enums"
+import { BuyOrSell, OrderStatus, OrderType } from "../enums"
+import { MainOrder } from "./MainOrder"
 
 @Entity()
-export class Order {
+export class SideOrder {
     @PrimaryGeneratedColumn()
     id: number
 
@@ -13,10 +13,13 @@ export class Order {
     @Column({ type: 'enum', enum: OrderType })
     orderType: OrderType
 
+    @Column({ type: 'enum', enum: BuyOrSell })
+    buyOrSell: BuyOrSell
+
     @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.Open })
     status: OrderStatus
 
-    @ManyToOne(() => Currency, (currency) => currency.id)
-    @JoinColumn({ name: "currency_id" })
-    currency: Currency
+    @ManyToOne(() => MainOrder, (mainOrder) => mainOrder.id)
+    @JoinColumn({ name: "main_order_id" })
+    mainOrder: MainOrder
 }

@@ -5,7 +5,11 @@ export enum OrderStatus {
 }
 
 export enum OrderType {
-    Main = 'main',
     StopLoss = 'stopLoss',
     TakeProfit = 'takeProfit'
+}
+
+export enum BuyOrSell {
+    Sell = 'sell',
+    Buy = 'buy'
 }

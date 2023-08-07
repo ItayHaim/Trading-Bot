@@ -3,7 +3,7 @@ import { CurrenciesArray } from "../consts"
 import { AppDataSource } from "../data-source"
 import { CandleStick } from "../entity/CandleStick"
 import { Currency } from "../entity/Currency"
-import { Order } from "../entity/Order"
+import { Order } from "../entity/MainOrder"
 import { OrderStatus, OrderType } from "../enums"
 import { closeOrder, getCoinOHLCV, isOrderFilled } from "../operation/exchangeOperations"
 

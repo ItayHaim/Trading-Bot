@@ -1,8 +1,8 @@
 import "reflect-metadata"
 import { DataSource } from "typeorm"
 import { CandleStick } from "./entity/CandleStick"
-import { Order } from "./entity/Order"
 import { Currency } from "./entity/Currency"
+import { Order } from "./entity/MainOrder"
 
 export const AppDataSource = new DataSource({
     type: "mysql",
