@@ -2,7 +2,8 @@ import "reflect-metadata"
 import { DataSource } from "typeorm"
 import { CandleStick } from "./entity/CandleStick"
 import { Currency } from "./entity/Currency"
-import { Order } from "./entity/MainOrder"
+import { MainOrder } from "./entity/MainOrder"
+import { SideOrder } from "./entity/SideOrder"
 
 export const AppDataSource = new DataSource({
     type: "mysql",
@@ -13,7 +14,7 @@ export const AppDataSource = new DataSource({
     database: "trading_bot",
     synchronize: true,
     logging: false,
-    entities: [Currency, CandleStick, Order],
+    entities: [Currency, CandleStick, MainOrder, SideOrder],
     dropSchema: true,
     migrations: [],
     subscribers: [],
