@@ -231,7 +231,7 @@ export const changeLeverage = async (leverage: number, symbol: string) => {
     return res
 }
 
-export const changeToIsolated = async (marginMode: string = 'isolated', symbol: string) => {
+export const changeToIsolated = async (symbol: string, marginMode: string = 'isolated') => {
     const res = await binanceExchange.setMarginMode(marginMode, symbol)
     return res
 }

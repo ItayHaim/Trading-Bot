@@ -19,6 +19,7 @@ export class OrderService {
             const mainOrder = await AppDataSource.manager.save(MainOrder, {
                 orderId: mainOrderId,
                 amount: amount,
+                buyOrSell: orderSide,
                 currency: currency
             })
             await AppDataSource.manager.save(SideOrder, {
@@ -54,11 +55,7 @@ export class OrderService {
             if (status === OrderStatus.Closed || status === OrderStatus.Canceled) {
                 // Close the position
                 const closePositionSide = buyOrSell === 'buy' ? 'sell' : 'buy'
-                const closePositionOrder = await binanceExchange.createOrder(symbol, 'market', closePositionSide, amount, null, { 'reduceOnly': true })
-                console.log(closePositionOrder);
-
-                //Close TP/SL order
-                await closeOrder(order.orderId, symbol)
+                await binanceExchange.createOrder(symbol, 'market', closePositionSide, amount, null, { 'reduceOnly': true })
 
                 // Find the other SideOrder (TP/SL) to close him
                 const otherSideOrder = await AppDataSource.getRepository(SideOrder)
@@ -76,6 +73,7 @@ export class OrderService {
                     .execute();
 
                 console.log(`order: ${mainOrder.orderId} (${symbol}) is closed!`);
+                break;
             }
         }
     }
