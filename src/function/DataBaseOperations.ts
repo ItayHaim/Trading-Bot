@@ -2,6 +2,7 @@ import { CurrenciesArray } from "../consts"
 import { AppDataSource } from "../data-source"
 import { CandleStick } from "../entity/CandleStick"
 import { Currency } from "../entity/Currency"
+import { MainOrder } from "../entity/MainOrder"
 import { SideOrder } from "../entity/SideOrder"
 import { OrderStatus } from "../enums"
 import { closeOrder, getCoinOHLCV, isOrderFilled } from "../operation/exchangeOperations"
@@ -46,22 +47,28 @@ export const checkOrders = async () => {
 
         const status = await isOrderFilled(order.orderId, symbol)
 
+        setTimeout(async () => {
+            await closeOrder(order.orderId, symbol)
+        }, 1000 * 10)
         if (status === OrderStatus.Closed) {
             await closeOrder(mainOrder.orderId, symbol)
-            await closeOrder(order.orderId, symbol)
-            // Find the other sideOrder (TP/SL) to close him
-            let otherSideOrders = await AppDataSource.getRepository(SideOrder)
+            // await closeOrder(order.orderId, symbol)
+
+            // Find the other SideOrder (TP/SL) to close him
+            const otherSideOrders = await AppDataSource.getRepository(SideOrder)
                 .createQueryBuilder("sideOrder")
                 .where("sideOrder.mainOrder = :mainOrderId", { mainOrderId: mainOrder.id })
                 .andWhere("sideOrder.id != :sideOrderId", { sideOrderId: order.id })
                 .getOne();
             await closeOrder(otherSideOrders.orderId, symbol)
-            // await AppDataSource
-            //     .createQueryBuilder()
-            //     .delete()
-            //     .from(MainOrder)
-            //     .where('id = :id', { id: mainOrder.id })
-            //     .execute();
+            console.log(otherSideOrders);
+
+            await AppDataSource.getRepository(MainOrder)
+                .createQueryBuilder("mainOrder")
+                .delete()
+                .where("mainOrder.id = :mainOrderId", { mainOrderId: mainOrder.id })
+                .execute();
+
             console.log(`order: ${order.orderId} (${symbol}) is closed!`);
         }
     }

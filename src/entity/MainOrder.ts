@@ -1,6 +1,7 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm"
 import { BuyOrSell, OrderStatus } from "../enums"
 import { Currency } from "./Currency"
+import { SideOrder } from "./SideOrder"
 
 @Entity()
 export class MainOrder {
@@ -19,4 +20,7 @@ export class MainOrder {
     @ManyToOne(() => Currency, (currency) => currency.id)
     @JoinColumn({ name: "currency_id" })
     currency: Currency
+
+    @OneToMany(() => SideOrder, (sideOrder) => sideOrder.mainOrder, { cascade: true })
+    sideOrders: SideOrder[];
 }

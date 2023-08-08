@@ -9,7 +9,7 @@ export const main = async () => {
         }, 1000 * 60 * 5) // 5 minutes
         setInterval(async () => {
             checkOrders()
-        }, 1000 * 5) // 5 seconds
+        }, 1000 * 2) // 5 seconds
 
 
         strategy()
