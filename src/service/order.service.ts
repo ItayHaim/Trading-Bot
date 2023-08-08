@@ -50,7 +50,6 @@ export class OrderService {
             const { symbol } = currency
 
             const status = await isOrderFilled(order.orderId, symbol)
-            console.log(status);
 
             if (status === OrderStatus.Closed || status === OrderStatus.Canceled) {
                 // Close the position
