@@ -1,6 +1,6 @@
 import { AppDataSource } from "./data-source";
 import { CandleStickService } from "./service/candlestick.service";
-import { OrderService } from "./service/order.serveice";
+import { OrderService } from "./service/order.service";
 import { strategy } from "./strategy/strategy";
 
 export const main = async () => {

@@ -3,12 +3,13 @@ import { AppDataSource } from "./data-source";
 import { CandleStick } from "./entity/CandleStick";
 import { Currency } from "./entity/Currency";
 import { main } from "./main";
-import { getCoinOHLCV } from "./operation/exchangeOperations";
+import { changeLeverage, changeToIsolated, getCoinOHLCV } from "./operation/exchangeOperations";
 
 AppDataSource.initialize().then(async () => {
     // First initialize the last 10 candles
     try {
         const timeFrame = process.env.TIME_FRAME
+        const leverage = Number(process.env.LEVERAGE)
         const candleAmount = Number(process.env.CANDLE_AMOUNT)
 
         for (const coinPair in CurrenciesArray) {
@@ -17,6 +18,8 @@ AppDataSource.initialize().then(async () => {
             const currency = await AppDataSource.manager.save(Currency, {
                 symbol: symbol
             })
+            await changeLeverage(leverage, currency.symbol)
+            await changeToIsolated(currency.symbol)
 
             const OHLCV = await getCoinOHLCV(symbol, timeFrame, undefined, candleAmount)
             for await (const candle of OHLCV) {

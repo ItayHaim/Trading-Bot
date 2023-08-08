@@ -224,4 +224,14 @@ export const isOrderFilled = async (orderId: string, symbol: string): Promise<st
     return res
 }
 // Usage example:
-// isOrderFilled('cd345m34nf234').then(console.log).catch(console.error)
+// isOrderFilled('cd345m34nf234', 'BTC/USDT').then(console.log).catch(console.error)
+
+export const changeLeverage = async (leverage: number, symbol: string) => {
+    const res = await binanceExchange.setLeverage(leverage, symbol)
+    return res
+}
+
+export const changeToIsolated = async (symbol: string) => {
+    const res = await binanceExchange.setMarginMode('isolated', symbol)
+    return res
+}

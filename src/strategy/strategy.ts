@@ -1,6 +1,6 @@
 import { AppDataSource } from "../data-source";
 import { Currency } from "../entity/Currency";
-import { OrderService } from "../service/order.serveice";
+import { OrderService } from "../service/order.service";
 
 export const strategy = async () => {
     try {
