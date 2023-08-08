@@ -21,6 +21,6 @@ export class MainOrder {
     @JoinColumn({ name: "currency_id" })
     currency: Currency
 
-    @OneToMany(() => SideOrder, (sideOrder) => sideOrder.mainOrder, { cascade: true })
+    @OneToMany(() => SideOrder, (sideOrder) => sideOrder.mainOrder, { cascade: true, onDelete: 'CASCADE' })
     sideOrders: SideOrder[];
 }

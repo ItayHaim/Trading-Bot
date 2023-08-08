@@ -10,7 +10,7 @@ export const strategy = async () => {
             where: { symbol: 'BTC/USDT' }
         })
 
-        orderService.createFullOrder(currency)
+        // await orderService.createFullOrder(currency)
 
     } catch (err) {
         console.log('Strategy Failed: ');

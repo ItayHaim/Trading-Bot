@@ -19,7 +19,7 @@ export class SideOrder {
     @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.Open })
     status: OrderStatus
 
-    @ManyToOne(() => MainOrder, (mainOrder) => mainOrder.id)
+    @ManyToOne(() => MainOrder, (mainOrder) => mainOrder.id, { onDelete: 'CASCADE' })
     @JoinColumn({ name: "main_order_id" })
     mainOrder: MainOrder
 }

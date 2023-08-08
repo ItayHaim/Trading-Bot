@@ -46,30 +46,26 @@ export const checkOrders = async () => {
         const { symbol } = mainOrder.currency
 
         const status = await isOrderFilled(order.orderId, symbol)
+        console.log(status);
 
-        setTimeout(async () => {
+        if (status === OrderStatus.Closed || status === OrderStatus.Canceled) {
             await closeOrder(order.orderId, symbol)
-        }, 1000 * 10)
-        if (status === OrderStatus.Closed) {
-            await closeOrder(mainOrder.orderId, symbol)
-            // await closeOrder(order.orderId, symbol)
 
             // Find the other SideOrder (TP/SL) to close him
-            const otherSideOrders = await AppDataSource.getRepository(SideOrder)
+            const otherSideOrder = await AppDataSource.getRepository(SideOrder)
                 .createQueryBuilder("sideOrder")
                 .where("sideOrder.mainOrder = :mainOrderId", { mainOrderId: mainOrder.id })
                 .andWhere("sideOrder.id != :sideOrderId", { sideOrderId: order.id })
                 .getOne();
-            await closeOrder(otherSideOrders.orderId, symbol)
-            console.log(otherSideOrders);
+            await closeOrder(otherSideOrder.orderId, symbol)
 
             await AppDataSource.getRepository(MainOrder)
                 .createQueryBuilder("mainOrder")
                 .delete()
-                .where("mainOrder.id = :mainOrderId", { mainOrderId: mainOrder.id })
+                .where("id = :mainOrderId", { mainOrderId: mainOrder.id })
                 .execute();
 
-            console.log(`order: ${order.orderId} (${symbol}) is closed!`);
+            console.log(`order: ${mainOrder.orderId} (${symbol}) is closed!`);
         }
     }
 }
