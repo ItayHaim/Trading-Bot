@@ -98,13 +98,14 @@ export const createOrder = async (symbol: string, buyOrSell: OrderSide, amountIn
         const currentPrice: number = ticker.close
         const stopLossPrice = buyOrSell === 'buy' ? currentPrice * Number(process.env.STOP_LOSS_LONG) : currentPrice * Number(process.env.STOP_LOSS_SHORT)
         const takeProfitPrice = buyOrSell === 'buy' ? currentPrice * Number(process.env.TAKE_PROFIT_LONG) : currentPrice * Number(process.env.TAKE_PROFIT_SHORT)
+
         const mainOrder = await binanceExchange.createOrder(symbol, orderType, buyOrSell, amountInUSDT, price)
 
         const SL = await binanceExchange.createOrder(symbol, 'STOP_MARKET', buyOrSell === 'buy' ? 'sell' : 'buy', amountInUSDT, undefined, { 'stopPrice': stopLossPrice })
         const TP = await binanceExchange.createOrder(symbol, 'TAKE_PROFIT_MARKET', buyOrSell === 'buy' ? 'sell' : 'buy', amountInUSDT, undefined, { 'stopPrice': takeProfitPrice })
 
         console.log('main: ', mainOrder)
-        console.log('SL": ', SL)
+        console.log('SL: ', SL)
         console.log('TP: ', TP)
         return { mainOrderId: mainOrder.id, StopLossId: SL.id, TakeProfitId: TP.id }
     }

@@ -1,15 +1,19 @@
 import { AppDataSource } from "./data-source";
-import { addOneCandle, checkOrders } from "./function/DataBaseOperations";
+import { CandleStickService } from "./service/candlestick.service";
+import { OrderService } from "./service/order.serveice";
 import { strategy } from "./strategy/strategy";
 
 export const main = async () => {
     try {
+        const candleStickService = new CandleStickService()
+        const orderService = new OrderService()
+
         setInterval(async () => {
-            addOneCandle()
+            candleStickService.addOneCandle()
         }, 1000 * 60 * 5) // 5 minutes
         setInterval(async () => {
-            checkOrders()
-        }, 1000 * 2) // 5 seconds
+            orderService.checkOrders()
+        }, 1000 * 2) // 2 seconds
 
         // setTimeout(async () => {
         //     const orders = await AppDataSource.manager.find(SideOrder, {
