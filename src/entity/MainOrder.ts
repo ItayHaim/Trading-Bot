@@ -14,6 +14,9 @@ export class MainOrder {
     @Column({ type: 'enum', enum: BuyOrSell })
     buyOrSell: BuyOrSell
 
+    @Column()
+    amount: number
+
     @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.Open })
     status: OrderStatus
 

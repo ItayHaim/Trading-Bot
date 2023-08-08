@@ -3,12 +3,13 @@ import { Currency } from "../entity/Currency"
 import { MainOrder } from "../entity/MainOrder"
 import { SideOrder } from "../entity/SideOrder"
 import { BuyOrSell, OrderStatus, OrderType } from "../enums"
+import { binanceExchange } from "../operation/exchange"
 import { closeOrder, createOrder, getQuoteAmount, isOrderFilled } from "../operation/exchangeOperations"
 
 export class OrderService {
     private usdtAmount = Number(process.env.USDT_AMOUNT)
 
-    async createFullOrder(currency: Currency, orderSide: BuyOrSell) {
+    async createFullOrder(currency: Currency, orderSide: BuyOrSell): Promise<void> {
         try {
             const { symbol } = currency
 
@@ -17,6 +18,7 @@ export class OrderService {
 
             const mainOrder = await AppDataSource.manager.save(MainOrder, {
                 orderId: mainOrderId,
+                amount: amount,
                 currency: currency
             })
             await AppDataSource.manager.save(SideOrder, {
@@ -35,7 +37,7 @@ export class OrderService {
         }
     }
 
-    async checkOrders() {
+    async checkOrders(): Promise<void> {
         const orders = await AppDataSource.manager.find(SideOrder, {
             where: { status: OrderStatus.Open },
             relations: { mainOrder: { currency: true } }
@@ -43,13 +45,19 @@ export class OrderService {
 
         for (const order of orders) {
             const { mainOrder } = order
-            const { currency } = mainOrder
+            const { currency, buyOrSell, amount } = mainOrder
             const { symbol } = currency
 
             const status = await isOrderFilled(order.orderId, symbol)
             console.log(status);
 
             if (status === OrderStatus.Closed || status === OrderStatus.Canceled) {
+                // Close the position
+                const closePositionSide = buyOrSell === 'buy' ? 'sell' : 'buy'
+                const closePositionOrder = await binanceExchange.createOrder(symbol, 'market', closePositionSide, amount, null, { 'reduceOnly': true })
+                console.log(closePositionOrder);
+
+                //Close TP/SL order
                 await closeOrder(order.orderId, symbol)
 
                 // Find the other SideOrder (TP/SL) to close him
@@ -60,6 +68,7 @@ export class OrderService {
                     .getOne();
                 await closeOrder(otherSideOrder.orderId, symbol)
 
+                //Delete orders from DB
                 await AppDataSource.getRepository(MainOrder)
                     .createQueryBuilder("mainOrder")
                     .delete()

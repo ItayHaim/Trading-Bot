@@ -8,7 +8,6 @@ export class CandleStickService {
     private timeFrame = process.env.TIME_FRAME
 
     async addOneCandle(): Promise<void> {
-
         for (const coinPair in CurrenciesArray) {
             const symbol = CurrenciesArray[coinPair]
 
