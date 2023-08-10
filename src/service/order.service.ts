@@ -46,34 +46,46 @@ export class OrderService {
 
         for (const order of orders) {
             const { mainOrder } = order
-            const { currency, buyOrSell, amount } = mainOrder
+            const { currency } = mainOrder
             const { symbol } = currency
 
             const status = await isOrderFilled(order.orderId, symbol)
 
             if (status === OrderStatus.Closed || status === OrderStatus.Canceled) {
-                // Close the position
-                const closePositionSide = buyOrSell === 'buy' ? 'sell' : 'buy'
-                await binanceExchange.createOrder(symbol, 'market', closePositionSide, amount, null, { 'reduceOnly': true })
-
-                // Find the other SideOrder (TP/SL) to close him
-                const otherSideOrder = await AppDataSource.getRepository(SideOrder)
-                    .createQueryBuilder("sideOrder")
-                    .where("sideOrder.mainOrder = :mainOrderId", { mainOrderId: mainOrder.id })
-                    .andWhere("sideOrder.id != :sideOrderId", { sideOrderId: order.id })
-                    .getOne();
-                await closeOrder(otherSideOrder.orderId, symbol)
-
-                //Delete orders from DB
-                await AppDataSource.getRepository(MainOrder)
-                    .createQueryBuilder("mainOrder")
-                    .delete()
-                    .where("id = :mainOrderId", { mainOrderId: mainOrder.id })
-                    .execute();
-
-                console.log(`order: ${mainOrder.orderId} (${symbol}) is closed!`);
+                this.closeOrderFull(order)
                 break;
             }
+        }
+    }
+
+    async closeOrderFull(order: SideOrder): Promise<void> {
+        try {
+            const { mainOrder } = order
+            const { currency, buyOrSell, amount } = mainOrder
+            const { symbol } = currency
+
+            // Close the position
+            const closePositionSide = buyOrSell === 'buy' ? 'sell' : 'buy'
+            await binanceExchange.createOrder(symbol, 'market', closePositionSide, amount, null, { 'reduceOnly': true })
+
+            // Find the other SideOrder (TP/SL) to close him
+            const otherSideOrder = await AppDataSource.getRepository(SideOrder)
+                .createQueryBuilder("sideOrder")
+                .where("sideOrder.mainOrder = :mainOrderId", { mainOrderId: mainOrder.id })
+                .andWhere("sideOrder.id != :sideOrderId", { sideOrderId: order.id })
+                .getOne();
+            await closeOrder(otherSideOrder.orderId, symbol)
+
+            //Delete orders from DB
+            await AppDataSource.getRepository(MainOrder)
+                .createQueryBuilder("mainOrder")
+                .delete()
+                .where("id = :mainOrderId", { mainOrderId: mainOrder.id })
+                .execute();
+
+            console.log(`order: ${mainOrder.orderId} (${symbol}) is closed!`);
+        } catch (err) {
+            console.log(`Failed to close order!!`);
         }
     }
 }

@@ -3,7 +3,6 @@ import { AppDataSource } from "./data-source";
 import { CandleStick } from "./entity/CandleStick";
 import { Currency } from "./entity/Currency";
 import { changeLeverage, changeToIsolated, getCoinOHLCV } from "./operation/exchangeOperations";
-import { StatisticService } from "./service/statistic.service";
 
 
 AppDataSource.initialize().then(async () => {
@@ -37,11 +36,6 @@ AppDataSource.initialize().then(async () => {
         }
         // Run the trading strategy
         console.log('Connect and initialize ')
-        // console.log(statistic);
-        const x = new StatisticService()
-        x.addSuccess()
-        // console.log(statistic);
-
         // main()
     } catch (err) {
         console.log('Failed to connect or initialize');
