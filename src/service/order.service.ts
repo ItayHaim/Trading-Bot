@@ -5,9 +5,11 @@ import { SideOrder } from "../entity/SideOrder"
 import { BuyOrSell, OrderStatus, OrderType } from "../enums"
 import { binanceExchange } from "../operation/exchange"
 import { closeOrder, createOrder, getQuoteAmount, isOrderFilled } from "../operation/exchangeOperations"
+import { StatisticService } from "./statistic.service"
 
 export class OrderService {
     private usdtAmount = Number(process.env.USDT_AMOUNT)
+    private statisticService = new StatisticService()
 
     async createFullOrder(currency: Currency, orderSide: BuyOrSell): Promise<void> {
         try {
@@ -82,6 +84,10 @@ export class OrderService {
                 .delete()
                 .where("id = :mainOrderId", { mainOrderId: mainOrder.id })
                 .execute();
+
+            order.orderType === OrderType.TakeProfit
+                ? this.statisticService.addSuccess()
+                : this.statisticService.addFailed()
 
             console.log(`order: ${mainOrder.orderId} (${symbol}) is closed!`);
         } catch (err) {
