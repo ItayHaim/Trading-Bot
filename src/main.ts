@@ -9,11 +9,17 @@ export const main = async () => {
         const orderService = new OrderService()
 
         setInterval(async () => {
-            candleStickService.addOneCandle()
+            await candleStickService.addOneCandle()
         }, 1000 * 60 * 5) // 5 minutes
+
         setInterval(async () => {
-            orderService.checkOrders()
+            await strategy()
+        }, 1000 * 60 * 5) // 5 minutes
+
+        setInterval(async () => {
+            await orderService.checkOrders()
         }, 1000 * 5) // 5 seconds
+
 
         // Temp checking to createFullOrder function 
         // setTimeout(async () => {
@@ -23,8 +29,6 @@ export const main = async () => {
         //     })
         //     await closeOrder(orders[0].orderId, orders[0].mainOrder.currency.symbol)
         // }, 1000 * 15)
-
-        strategy()
     } catch (err) {
         console.log(err);
         AppDataSource.destroy()

@@ -29,4 +29,10 @@ export class CandleStickService {
         }
         console.log('Added on candle!');
     }
+
+    async getCandleSticksBySymbolId(symbolId: number) {
+        return await AppDataSource.manager.find(CandleStick, {
+            where: { currency: { id: symbolId } }
+        })
+    }
 }
