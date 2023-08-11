@@ -1,16 +1,15 @@
-import { RSI, setConfig, MACD, StochasticRSI, SMA, BollingerBands } from 'technicalindicators'
-import { MACDOutput } from "technicalindicators/declarations/moving_averages/MACD";
+import { BollingerBands, MACD, RSI, SMA, StochasticRSI } from 'technicalindicators';
 import { StochasticRSIOutput } from 'technicalindicators/declarations/momentum/StochasticRSI';
+import { MACDOutput } from "technicalindicators/declarations/moving_averages/MACD";
 
-import { RSIOutput, SMAOutput } from "./types";
 import { BollingerBandsOutput } from 'technicalindicators/declarations/volatility/BollingerBands';
-setConfig('precision', 10)
+import { RSIOutput, SMAOutput } from "./types";
 
 /**
  * Calculates the Relative Strength Index (RSI) based on the given OHLCV data and period.
  *
  * @param closedPrices - An array of closedPrices (given by the OHLCV) data.
- * @param [period] - The period for calculating RSI.
+ * @param period - The period for calculating RSI.
  * @return An array of RSI values.
  */
 export const calculateRSI = (closedPrices: number[], period: number = 14): RSIOutput => {
@@ -56,11 +55,11 @@ export const calculateStochasticRSI = (closedPrices: number[], rsiPeriod: number
  * Calculates the Moving Average Convergence Divergence (MACD) for a set of closing price data.
  *
  * @param closedPrices - An array of number representing the closing prices.
- * @param [fastPeriod] - The duration (in term of periods) considered as "fast". Default is 12.
- * @param [slowPeriod] - The duration (in term of periods) considered as "slow". Default is 26.
- * @param [signalPeriod] - The duration used to calculate the signal line. Default is 9.
- * @param [useSimpleMAOscillator] - A boolean to indicate whether or not to use a simple moving average for the oscillator. Default is false.
- * @param [useSimpleMASignal] - A boolean to indicate whether or not to use a simple moving average for the signal line. Default is false.
+ * @param fastPeriod - The duration (in term of periods) considered as "fast". Default is 12.
+ * @param slowPeriod - The duration (in term of periods) considered as "slow". Default is 26.
+ * @param signalPeriod - The duration used to calculate the signal line. Default is 9.
+ * @param useSimpleMAOscillator - A boolean to indicate whether or not to use a simple moving average for the oscillator. Default is false.
+ * @param useSimpleMASignal - A boolean to indicate whether or not to use a simple moving average for the signal line. Default is false.
  * @returns An array of objects representing the MACD (Moving Average Convergence Divergence) data.
  */
 export const calculateMACD = (closedPrices: number[], fastPeriod: number = 12, slowPeriod: number = 26, signalPeriod: number = 9, useSimpleMAOscillator: boolean = false, useSimpleMASignal: boolean = false): MACDOutput[] => {
