@@ -38,6 +38,15 @@ export const fetchTicker = async (symbol: string): Promise<Ticker> => {
 // Usage example:
 // fetchTicker('BTC/USDT').then(console.log).catch(console.error)
 
+export const loadMarkets = async () => {
+    try {
+        const res = await binanceExchange.loadMarkets()
+        return res
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 
 /**
  * Retrieves the OHLCV (Open, High, Low, Close, Volume) data for a specific symbol and time frame.
@@ -227,11 +236,21 @@ export const isOrderFilled = async (orderId: string, symbol: string): Promise<st
 // isOrderFilled('cd345m34nf234', 'BTC/USDT').then(console.log).catch(console.error)
 
 export const changeLeverage = async (leverage: number, symbol: string) => {
-    const res = await binanceExchange.setLeverage(leverage, symbol)
-    return res
+    try {
+        const res = await binanceExchange.setLeverage(leverage, symbol)
+        return res
+    } catch (err) {
+        console.log(err)
+    }
+
 }
 
 export const changeToIsolated = async (symbol: string, marginMode: string = 'isolated') => {
-    const res = await binanceExchange.setMarginMode(marginMode, symbol)
-    return res
+    try {
+        const res = await binanceExchange.setMarginMode(marginMode, symbol)
+        return res
+    } catch (err) {
+        console.log(err)
+    }
+
 }

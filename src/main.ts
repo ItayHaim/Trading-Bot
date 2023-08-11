@@ -1,7 +1,6 @@
 import { AppDataSource } from "./data-source";
 import { CandleStickService } from "./service/candlestick.service";
 import { OrderService } from "./service/order.service";
-import { strategy } from "./strategy/strategy";
 
 export const main = async () => {
     try {
@@ -13,13 +12,10 @@ export const main = async () => {
         }, 1000 * 60 * 5) // 5 minutes
 
         setInterval(async () => {
-            await strategy()
-        }, 1000 * 60 * 5) // 5 minutes
-
-        setInterval(async () => {
             await orderService.checkOrders()
         }, 1000 * 5) // 5 seconds
 
+        // await strategy()
 
         // Temp checking to createFullOrder function 
         // setTimeout(async () => {
@@ -29,6 +25,7 @@ export const main = async () => {
         //     })
         //     await closeOrder(orders[0].orderId, orders[0].mainOrder.currency.symbol)
         // }, 1000 * 15)
+
     } catch (err) {
         console.log(err);
         AppDataSource.destroy()

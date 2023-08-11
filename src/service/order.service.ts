@@ -4,7 +4,7 @@ import { MainOrder } from "../entity/MainOrder"
 import { SideOrder } from "../entity/SideOrder"
 import { BuyOrSell, OrderStatus, OrderType } from "../enums"
 import { binanceExchange } from "../operation/exchange"
-import { closeOrder, createOrder, getQuoteAmount, isOrderFilled } from "../operation/exchangeOperations"
+import { closeOrder, createOrder, getCoinBalance, getQuoteAmount, isOrderFilled } from "../operation/exchangeOperations"
 import { StatisticService } from "./statistic.service"
 
 export class OrderService {
@@ -13,6 +13,11 @@ export class OrderService {
 
     async createFullOrder(currency: Currency, orderSide: BuyOrSell): Promise<void> {
         try {
+            const balance = await getCoinBalance('USDT')
+            if ((Number(balance) - 5) <= this.usdtAmount) {
+                throw new Error('Not enough USDT amount create an order')
+            }
+
             const { symbol } = currency
 
             const amount = await getQuoteAmount(symbol, this.usdtAmount)
@@ -85,6 +90,7 @@ export class OrderService {
                 .where("id = :mainOrderId", { mainOrderId: mainOrder.id })
                 .execute();
 
+            // Add order to statistic
             order.orderType === OrderType.TakeProfit
                 ? this.statisticService.addSuccess()
                 : this.statisticService.addFailed()

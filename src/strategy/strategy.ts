@@ -1,20 +1,24 @@
 import { AppDataSource } from "../data-source";
+import { CandleStick } from "../entity/CandleStick";
 import { Currency } from "../entity/Currency";
-import { BuyOrSell } from "../enums";
-import { OrderService } from "../service/order.service";
 
 export const strategy = async () => {
     try {
-        const orderService = new OrderService()
+        const currencies = await AppDataSource.manager.find(Currency)
 
-        const currency = await AppDataSource.manager.findOneOrFail(Currency, {
-            where: { symbol: 'BTC/USDT' }
-        })
+        console.log(currencies);
 
-        await orderService.createFullOrder(currency, BuyOrSell.Buy)
+        for (const currency in currencies) {
+            const symbol = currencies[currency]
+
+            console.log(symbol);
+            const candles = await AppDataSource.manager.find(CandleStick, {
+                where: { currency: symbol }
+            })
+            console.log(candles);
+        }
 
     } catch (err) {
-        console.log('Strategy Failed: ');
-        console.log(err);
+        console.log('Strategy Failed: ' + err);
     }
 }
