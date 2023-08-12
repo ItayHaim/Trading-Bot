@@ -6,6 +6,7 @@ export class IndicatorService {
     private checkMACD(closedPrices: number[]) {
         const MACD = calculateMACD(closedPrices)
         const lastMACD = MACD[MACD.length - 1]
+        // console.log(lastMACD);
 
         if ((lastMACD.MACD > lastMACD.signal) && (lastMACD.histogram > 0)) {
             return BuyOrSell.Buy
@@ -70,19 +71,19 @@ export class IndicatorService {
 
     checkAllIndicators(closedPrices: number[], currency: Currency) {
         const { symbol } = currency
-        const MACD = this.checkMACD(closedPrices)
+        // const MACD = this.checkMACD(closedPrices)
         const RSI = this.checkRSI(closedPrices)
         const StochRSI = this.checkStochasticRSI(closedPrices)
         const BB = this.checkBolingerBands(closedPrices)
         console.log('\n');
-        console.log('MACD: ' + MACD);
+        // console.log('MACD: ' + MACD);
         console.log('RSI: ' + RSI);
         console.log('StochRSI: ' + StochRSI);
         console.log('BB: ' + BB);
 
         if (
-            MACD === BuyOrSell.Buy
-            &&
+            // MACD === BuyOrSell.Buy
+            // &&
             RSI === BuyOrSell.Buy
             &&
             StochRSI === BuyOrSell.Buy
@@ -91,8 +92,8 @@ export class IndicatorService {
         ) {
             console.log('Should create buy order ' + symbol);
         } else if (
-            MACD === BuyOrSell.Sell
-            &&
+            // MACD === BuyOrSell.Sell
+            // &&
             RSI === BuyOrSell.Sell
             &&
             StochRSI === BuyOrSell.Sell
