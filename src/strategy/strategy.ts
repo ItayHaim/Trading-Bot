@@ -2,7 +2,6 @@ import { AppDataSource } from "../data-source";
 import { CandleStick } from "../entity/CandleStick";
 import { Currency } from "../entity/Currency";
 import { IndicatorService } from "../service/indicator.service";
-// setConfig('precision', 15)
 
 export const strategy = async () => {
     try {
@@ -11,26 +10,17 @@ export const strategy = async () => {
 
         for (const currency in currencies) {
             const symbol = currencies[currency]
-            console.log(symbol);
 
             const candles = await AppDataSource.manager.find(CandleStick, {
                 where: { currency: symbol },
                 select: { closed: true }
             })
+
             const closedPrices = candles.map(candle => Number(candle.closed));
-
-            // const SMA = calculateSMA(closedPrices)
-            // console.log('SMA: ', SMA);
-
-            indicatorService.checkBolingerBands(closedPrices)
-
-
-            // if (RSI && stochasticRSI && MACD && SMA && bollingerBands) {
-
-            // }
-
+            const res = indicatorService.checkAllIndicators(closedPrices, symbol.symbol)
+            console.log(res);
         }
-
+        console.log('End strategy');
     } catch (err) {
         console.log('Strategy Failed: ' + err);
     }

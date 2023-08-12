@@ -10,13 +10,13 @@ export const main = async () => {
 
         setInterval(async () => {
             await candleStickService.addOneCandle()
+            await strategy()
         }, 1000 * 60 * 5) // 5 minutes
 
         setInterval(async () => {
             await orderService.checkOrders()
         }, 1000 * 5) // 5 seconds
 
-        await strategy()
 
         // Temp checking to createFullOrder function 
         // setTimeout(async () => {
