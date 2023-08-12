@@ -19,7 +19,6 @@ export const CurrenciesArray = [
     'CTSI/USDT',
     'CHZ/USDT',
     'CELR/USDT',
-    'CRVU/USDT',
     'C98/USDT',
 
     // D
@@ -49,7 +48,7 @@ export const CurrenciesArray = [
     'MATIC/USDT',
 
     // O
-    'OPU/USDT',
+    'OP/USDT',
 
     // R
     'RVN/USDT',
