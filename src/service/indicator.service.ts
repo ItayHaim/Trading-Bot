@@ -1,7 +1,7 @@
 import { BuyOrSell } from "../enums"
-import { calculateMACD, calculateRSI, calculateStochasticRSI } from "../operation/indicators"
+import { calculateMACD, calculateRSI } from "../operation/indicators"
 
-export class IndicatorsService {
+export class IndicatorService {
     async checkMACD(closedPrices: number[]) {
         const MACD = calculateMACD(closedPrices)
         const lastMACD = MACD[MACD.length - 1]
@@ -28,15 +28,25 @@ export class IndicatorsService {
         }
     }
 
-    async checkStochasticRSI(closedPrices: number[]) {
-        const stochasticRSI = calculateStochasticRSI(closedPrices)
-        const lastStochasticRSI = stochasticRSI[stochasticRSI.length - 1]
-        if (lastStochasticRSI.k > lastStochasticRSI.d) {
-            return BuyOrSell.Buy
-        } else if (lastStochasticRSI.k < lastStochasticRSI.d) {
-            return BuyOrSell.Sell
-        } else {
-            console.log('No signal from Stochastic RSI');
-        }
+    // async checkStochasticRSI(closedPrices: number[]) {
+    //     const stochasticRSI = calculateStochasticRSI(closedPrices)
+    //     console.log(stochasticRSI);
+    //     const lastStochasticRSI = stochasticRSI[stochasticRSI.length - 1]
+    //     if (lastStochasticRSI.k > lastStochasticRSI.d) {
+    //         return BuyOrSell.Buy
+    //     } else if (lastStochasticRSI.k < lastStochasticRSI.d) {
+    //         return BuyOrSell.Sell
+    //     } else {
+    //         console.log('No signal from Stochastic RSI');
+    //     }
+    // }
+
+    async checkBolingerBands(closedPrices: number[]) {
+
+        // const bollingerBands = calculateBollingerBands(closedPrices)
+        // const lastBolingerBands = bollingerBands[bollingerBands.length - 1]
+
+        // if(lastBolingerBands.)
+
     }
 }

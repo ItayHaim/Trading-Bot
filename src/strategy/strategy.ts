@@ -1,11 +1,12 @@
 import { AppDataSource } from "../data-source";
 import { CandleStick } from "../entity/CandleStick";
 import { Currency } from "../entity/Currency";
-import { calculateBollingerBands } from "../operation/indicators";
+import { IndicatorService } from "../service/indicator.service";
 // setConfig('precision', 15)
 
 export const strategy = async () => {
     try {
+        const indicatorService = new IndicatorService()
         const currencies = await AppDataSource.manager.find(Currency)
 
         for (const currency in currencies) {
@@ -21,8 +22,8 @@ export const strategy = async () => {
             // const SMA = calculateSMA(closedPrices)
             // console.log('SMA: ', SMA);
 
-            const bollingerBands = calculateBollingerBands(closedPrices)
-            console.log('bollingerBands: ', bollingerBands[bollingerBands.length - 1]);
+            indicatorService.checkBolingerBands(closedPrices)
+
 
             // if (RSI && stochasticRSI && MACD && SMA && bollingerBands) {
 
