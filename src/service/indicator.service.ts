@@ -13,7 +13,8 @@ export class IndicatorService {
             return BuyOrSell.Sell
         }
         else {
-            console.log('No signal from MACD');
+            return
+            // console.log('No signal from MACD');
         }
     }
 
@@ -21,13 +22,14 @@ export class IndicatorService {
         const RSI = calculateRSI(closedPrices)
         const lastRSI = RSI[RSI.length - 1]
 
-        if (lastRSI > 70) {
+        if (lastRSI < 30) {
             return BuyOrSell.Buy
-        } else if (lastRSI < 30) {
+        } else if (lastRSI > 70) {
             return BuyOrSell.Sell
         }
         else {
-            console.log('No signal from RSI');
+            return
+            // console.log('No signal from RSI');
         }
     }
 
@@ -40,7 +42,8 @@ export class IndicatorService {
         } else if ((lastStochasticRSI.k > lastStochasticRSI.d) && lastStochasticRSI.k > 80) {
             return BuyOrSell.Sell
         } else {
-            console.log('No signal from Stochastic RSI');
+            return
+            // console.log('No signal from Stochastic RSI');
         }
     }
 
@@ -55,7 +58,8 @@ export class IndicatorService {
         } else if (lastClosedPrice > lastBolingerBands.upper) {
             return BuyOrSell.Sell
         } else {
-            console.log('No signal from BolingerBands');
+            return
+            // console.log('No signal from BolingerBands');
         }
     }
 
@@ -70,6 +74,12 @@ export class IndicatorService {
         const RSI = this.checkRSI(closedPrices)
         const StochRSI = this.checkStochasticRSI(closedPrices)
         const BB = this.checkBolingerBands(closedPrices)
+        console.log('\n');
+        console.log('MACD: ' + MACD);
+        console.log('RSI: ' + RSI);
+        console.log('StochRSI: ' + StochRSI);
+        console.log('BB: ' + BB);
+
         if (
             MACD === BuyOrSell.Buy
             &&
