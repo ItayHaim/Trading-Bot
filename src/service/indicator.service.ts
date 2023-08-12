@@ -74,6 +74,8 @@ export class IndicatorService {
 
     async checkAllIndicators(closedPrices: number[], currency: Currency) {
         const { symbol } = currency
+        symbol.includes('RSR') && console.log(calculateRSI(closedPrices));
+
         // const MACD = this.checkMACD(closedPrices)
         const RSI = this.checkRSI(closedPrices)
         const StochRSI = this.checkStochasticRSI(closedPrices)

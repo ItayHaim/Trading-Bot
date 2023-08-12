@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
-import { BuyOrSell, OrderStatus, OrderType } from "../enums"
+import { OrderStatus, OrderType } from "../enums"
 import { MainOrder } from "./MainOrder"
 
 @Entity()
@@ -12,9 +12,6 @@ export class SideOrder {
 
     @Column({ type: 'enum', enum: OrderType })
     orderType: OrderType
-
-    @Column({ type: 'enum', enum: BuyOrSell })
-    buyOrSell: BuyOrSell
 
     @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.Open })
     status: OrderStatus
