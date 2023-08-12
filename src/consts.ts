@@ -47,6 +47,9 @@ export const CurrenciesArray = [
     // M
     'MATIC/USDT',
 
+    // N
+    'NEAR/USDT',
+
     // O
     'OP/USDT',
 
