@@ -13,6 +13,14 @@ export class OrderService {
 
     async createFullOrder(currency: Currency, orderSide: BuyOrSell): Promise<void> {
         try {
+            const existingOrder = await AppDataSource.manager.findOne(MainOrder, {
+                where: { currency: currency }
+            })
+
+            if (existingOrder) {
+                return console.log(`Order on this symbol ${currency.symbol} already exists`)
+            }
+
             const balance = await getCoinBalance('USDT')
             if ((Number(balance) - 5) <= this.usdtAmount) {
                 throw new Error('Not enough USDT amount create an order')
@@ -41,7 +49,7 @@ export class OrderService {
             })
             console.log('Order created successfully');
         } catch (error) {
-            console.log('Order did NOT save in DB!');
+            console.log('Order did NOT save in DB!' + error);
         }
     }
 
@@ -57,6 +65,8 @@ export class OrderService {
             const { symbol } = currency
 
             const status = await isOrderFilled(order.orderId, symbol)
+            console.log(`${symbol} order : ${status}`);
+
 
             if (status === OrderStatus.Closed || status === OrderStatus.Canceled) {
                 this.closeOrderFull(order)
@@ -70,13 +80,6 @@ export class OrderService {
             const { mainOrder } = order
             const { currency, buyOrSell, amount } = mainOrder
             const { symbol } = currency
-
-            const existingOrder = await AppDataSource.manager.findOne(MainOrder, {
-                where: { currency: currency }
-            })
-
-            if (existingOrder)
-                return console.log(`Order on this symbol ${currency.symbol} already exists`)
 
             // Close the position
             const closePositionSide = buyOrSell === 'buy' ? 'sell' : 'buy'

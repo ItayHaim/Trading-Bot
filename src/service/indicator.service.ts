@@ -1,8 +1,11 @@
 import { Currency } from "../entity/Currency"
 import { BuyOrSell } from "../enums"
 import { calculateBollingerBands, calculateMACD, calculateRSI, calculateSMA, calculateStochasticRSI } from "../operation/indicators"
+import { OrderService } from "./order.service"
 
 export class IndicatorService {
+    private orderService = new OrderService()
+
     private checkMACD(closedPrices: number[]) {
         const MACD = calculateMACD(closedPrices)
         const lastMACD = MACD[MACD.length - 1]
@@ -69,7 +72,7 @@ export class IndicatorService {
         console.log('SMA: ', SMA);
     }
 
-    checkAllIndicators(closedPrices: number[], currency: Currency) {
+    async checkAllIndicators(closedPrices: number[], currency: Currency) {
         const { symbol } = currency
         // const MACD = this.checkMACD(closedPrices)
         const RSI = this.checkRSI(closedPrices)
@@ -90,6 +93,7 @@ export class IndicatorService {
             &&
             BB === BuyOrSell.Buy
         ) {
+            await this.orderService.createFullOrder(currency, BuyOrSell.Buy)
             console.log('Should create buy order ' + symbol);
         } else if (
             // MACD === BuyOrSell.Sell
@@ -100,6 +104,7 @@ export class IndicatorService {
             &&
             BB === BuyOrSell.Sell
         ) {
+            await this.orderService.createFullOrder(currency, BuyOrSell.Sell)
             console.log('Should create sell order ' + symbol);
         } else {
             console.log('Should NOT create order ' + symbol);

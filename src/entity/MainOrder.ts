@@ -14,7 +14,7 @@ export class MainOrder {
     @Column({ type: 'enum', enum: BuyOrSell })
     buyOrSell: BuyOrSell
 
-    @Column({ type: 'decimal', precision: 25, scale: 25 })
+    @Column({ type: 'decimal', precision: 25, scale: 15 })
     amount: number
 
     @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.Open })
