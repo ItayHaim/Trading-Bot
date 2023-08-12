@@ -9,7 +9,6 @@ export class IndicatorService {
     private checkMACD(closedPrices: number[]) {
         const MACD = calculateMACD(closedPrices)
         const lastMACD = MACD[MACD.length - 1]
-        // console.log(lastMACD);
 
         if ((lastMACD.MACD > lastMACD.signal) && (lastMACD.histogram > 0)) {
             return BuyOrSell.Buy
@@ -74,7 +73,6 @@ export class IndicatorService {
 
     async checkAllIndicators(closedPrices: number[], currency: Currency) {
         const { symbol } = currency
-        symbol.includes('RSR') && console.log(calculateRSI(closedPrices));
 
         // const MACD = this.checkMACD(closedPrices)
         const RSI = this.checkRSI(closedPrices)

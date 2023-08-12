@@ -9,19 +9,19 @@ export class CandleStick {
     @Column()
     date: Date
 
-    @Column({ type: 'decimal', precision: 15, scale: 5 })
+    @Column({ type: 'decimal', precision: 18, scale: 8 })
     open: number
 
-    @Column({ type: 'decimal', precision: 15, scale: 5 })
+    @Column({ type: 'decimal', precision: 18, scale: 8 })
     high: number
 
-    @Column({ type: 'decimal', precision: 15, scale: 5 })
+    @Column({ type: 'decimal', precision: 18, scale: 8 })
     low: number
 
-    @Column({ type: 'decimal', precision: 15, scale: 5 })
+    @Column({ type: 'decimal', precision: 18, scale: 8 })
     closed: number
 
-    @Column({ type: 'decimal', precision: 15, scale: 5 })
+    @Column({ type: 'decimal', precision: 18, scale: 8 })
     volume: number
 
     @ManyToOne(() => Currency, (currency) => currency.id)
