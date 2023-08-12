@@ -17,8 +17,7 @@ export const strategy = async () => {
             })
 
             const closedPrices = candles.map(candle => Number(candle.closed));
-            const res = indicatorService.checkAllIndicators(closedPrices, symbol.symbol)
-            console.log(res);
+            indicatorService.checkAllIndicators(closedPrices, symbol)
         }
         console.log('End strategy');
     } catch (err) {

@@ -35,9 +35,9 @@ export class IndicatorService {
         const stochasticRSI = calculateStochasticRSI(closedPrices)
         const lastStochasticRSI = stochasticRSI[stochasticRSI.length - 1]
 
-        if ((lastStochasticRSI.k > lastStochasticRSI.d) && lastStochasticRSI.d < 20) {
+        if ((lastStochasticRSI.k < lastStochasticRSI.d) && lastStochasticRSI.d < 20) {
             return BuyOrSell.Buy
-        } else if ((lastStochasticRSI.k < lastStochasticRSI.d) && lastStochasticRSI.k > 80) {
+        } else if ((lastStochasticRSI.k > lastStochasticRSI.d) && lastStochasticRSI.k > 80) {
             return BuyOrSell.Sell
         } else {
             console.log('No signal from Stochastic RSI');
@@ -64,25 +64,30 @@ export class IndicatorService {
         console.log('SMA: ', SMA);
     }
 
-    checkAllIndicators(closedPrices: number[], symbol: Currency['symbol']) {
+    checkAllIndicators(closedPrices: number[], currency: Currency) {
+        const { symbol } = currency
+        const MACD = this.checkMACD(closedPrices)
+        const RSI = this.checkRSI(closedPrices)
+        const StochRSI = this.checkStochasticRSI(closedPrices)
+        const BB = this.checkBolingerBands(closedPrices)
         if (
-            this.checkMACD(closedPrices) === BuyOrSell.Buy
+            MACD === BuyOrSell.Buy
             &&
-            this.checkRSI(closedPrices) === BuyOrSell.Buy
+            RSI === BuyOrSell.Buy
             &&
-            this.checkStochasticRSI(closedPrices) === BuyOrSell.Buy
+            StochRSI === BuyOrSell.Buy
             &&
-            this.checkBolingerBands(closedPrices) === BuyOrSell.Buy
+            BB === BuyOrSell.Buy
         ) {
             console.log('Should create buy order ' + symbol);
         } else if (
-            this.checkMACD(closedPrices) === BuyOrSell.Sell
+            MACD === BuyOrSell.Sell
             &&
-            this.checkRSI(closedPrices) === BuyOrSell.Sell
+            RSI === BuyOrSell.Sell
             &&
-            this.checkStochasticRSI(closedPrices) === BuyOrSell.Sell
+            StochRSI === BuyOrSell.Sell
             &&
-            this.checkBolingerBands(closedPrices) === BuyOrSell.Sell
+            BB === BuyOrSell.Sell
         ) {
             console.log('Should create sell order ' + symbol);
         } else {

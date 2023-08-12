@@ -71,6 +71,13 @@ export class OrderService {
             const { currency, buyOrSell, amount } = mainOrder
             const { symbol } = currency
 
+            const existingOrder = await AppDataSource.manager.findOne(MainOrder, {
+                where: { currency: currency }
+            })
+
+            if (existingOrder)
+                return console.log(`Order on this symbol ${currency.symbol} already exists`)
+
             // Close the position
             const closePositionSide = buyOrSell === 'buy' ? 'sell' : 'buy'
             await binanceExchange.createOrder(symbol, 'market', closePositionSide, amount, null, { 'reduceOnly': true })

@@ -8,6 +8,8 @@ export const main = async () => {
         const candleStickService = new CandleStickService()
         const orderService = new OrderService()
 
+        await strategy()
+
         setInterval(async () => {
             await candleStickService.addOneCandle()
             await strategy()
