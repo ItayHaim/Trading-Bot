@@ -5,6 +5,7 @@ export const CurrenciesArray = [
     'AVAX/USDT',
     'AAVE/USDT',
     'ADA/USDT',
+    'APT/USDT',
 
     // B
     'BTC/USDT',
@@ -18,6 +19,8 @@ export const CurrenciesArray = [
     'CTSI/USDT',
     'CHZ/USDT',
     'CELR/USDT',
+    'CRVU/USDT',
+    'C98/USDT',
 
     // D
     'DOT/USDT',
@@ -35,11 +38,18 @@ export const CurrenciesArray = [
     // G
     'GALA/USDT',
 
+    // I
+    'ICP/USDT',
+
     // L
     'LINK/USDT',
+    'LTC/USDT',
 
     // M
     'MATIC/USDT',
+
+    // O
+    'OPU/USDT',
 
     // R
     'RVN/USDT',
@@ -51,6 +61,7 @@ export const CurrenciesArray = [
     'SNX/USDT',
     'SAND/USDT',
     'STMX/USDT',
+    'STG/USDT',
 
     // L
     'LRC/USDT',
@@ -64,6 +75,12 @@ export const CurrenciesArray = [
     // X
     'XRP/USDT',
     'XLM/USDT',
+
+    // W
+    'WLD/USDT',
+
+    // Y
+    'YGG/USDT',
 
     // Z
     'ZRX/USDT',
