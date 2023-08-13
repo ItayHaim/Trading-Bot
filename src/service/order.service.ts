@@ -4,31 +4,43 @@ import { MainOrder } from "../entity/MainOrder"
 import { SideOrder } from "../entity/SideOrder"
 import { BuyOrSell, OrderStatus, OrderType } from "../enums"
 import { binanceExchange } from "../operation/exchange"
-import { closeOrder, createOrder, getCoinBalance, getQuoteAmount, isOrderFilled } from "../operation/exchangeOperations"
+import { closeOrder, createOrder, getQuoteAmount, isOrderFilled } from "../operation/exchangeOperations"
 import { StatisticService } from "./statistic.service"
 
 export class OrderService {
     private usdtAmount = Number(process.env.USDT_AMOUNT)
+    private openOrdersAllowed = Number(process.env.OPEN_ORDER_ALLOWED)
     private statisticService = new StatisticService()
+
+    async calculateOrderUSDTAmount(symbol: string): Promise<number> {
+        const amount = await getQuoteAmount(symbol, this.usdtAmount)
+        return amount
+    }
 
     async createFullOrder(currency: Currency, orderSide: BuyOrSell): Promise<void> {
         try {
+
+            //Check if order is already existing on this symbol
             const existingOrder = await AppDataSource.manager.findOne(MainOrder, {
                 where: { currency: currency }
             })
-
             if (existingOrder) {
-                return console.log(`Order on this symbol ${currency.symbol} already exists`)
+                console.log(`Order on this symbol ${currency.symbol} already exists`)
+                return
             }
 
-            const balance = await getCoinBalance('USDT')
-            if ((Number(balance) - 5) <= this.usdtAmount) {
-                throw new Error('Not enough USDT amount create an order')
+            // Limit number of orders on the same time (depend on the balance of USDT you have)
+            // You supposed to hold this equation: 
+            // (USDT_AMOUNT * OPEN_ORDER_ALLOWED * 2 < USDT Balance)!!!
+            const amountOfOrders = await AppDataSource.manager.count(MainOrder)
+            if (amountOfOrders >= this.openOrdersAllowed) {
+                console.log('Too many orders are open!!');
+                return
             }
 
+            // Create main order (include SL/TP) and save them in DB
             const { symbol } = currency
-
-            const amount = await getQuoteAmount(symbol, this.usdtAmount)
+            const amount = await this.calculateOrderUSDTAmount(symbol)
             const { StopLossId, TakeProfitId, mainOrderId } = await createOrder(symbol, orderSide, amount)
 
             const mainOrder = await AppDataSource.manager.save(MainOrder, {
@@ -59,6 +71,7 @@ export class OrderService {
             relations: { mainOrder: { currency: true } }
         })
 
+        // Run over all the SL/TP orders and check if they're closed/canceled
         for (const order of orders) {
             const { mainOrder } = order
             const { currency } = mainOrder
@@ -66,7 +79,6 @@ export class OrderService {
 
             const status = await isOrderFilled(order.orderId, symbol)
             console.log(`${symbol} order : ${status}`);
-
 
             if (status === OrderStatus.Closed || status === OrderStatus.Canceled) {
                 this.closeOrderFull(order)

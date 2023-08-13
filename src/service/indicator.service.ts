@@ -6,7 +6,7 @@ import { OrderService } from "./order.service"
 export class IndicatorService {
     private orderService = new OrderService()
 
-    private checkMACD(closedPrices: number[]) {
+    private checkMACD(closedPrices: number[]): BuyOrSell {
         const MACD = calculateMACD(closedPrices)
         const lastMACD = MACD[MACD.length - 1]
 
@@ -15,13 +15,10 @@ export class IndicatorService {
         } else if ((lastMACD.MACD < lastMACD.signal) && (lastMACD.histogram < 0)) {
             return BuyOrSell.Sell
         }
-        else {
-            return
-            // console.log('No signal from MACD');
-        }
+        return
     }
 
-    private checkRSI(closedPrices: number[]) {
+    private checkRSI(closedPrices: number[]): BuyOrSell {
         const RSI = calculateRSI(closedPrices)
         const lastRSI = RSI[RSI.length - 1]
 
@@ -30,13 +27,10 @@ export class IndicatorService {
         } else if (lastRSI > 70) {
             return BuyOrSell.Sell
         }
-        else {
-            return
-            // console.log('No signal from RSI');
-        }
+        return
     }
 
-    private checkStochasticRSI(closedPrices: number[]) {
+    private checkStochasticRSI(closedPrices: number[]): BuyOrSell {
         const stochasticRSI = calculateStochasticRSI(closedPrices)
         const lastStochasticRSI = stochasticRSI[stochasticRSI.length - 1]
 
@@ -44,26 +38,21 @@ export class IndicatorService {
             return BuyOrSell.Buy
         } else if ((lastStochasticRSI.k > lastStochasticRSI.d) && lastStochasticRSI.k > 80) {
             return BuyOrSell.Sell
-        } else {
-            return
-            // console.log('No signal from Stochastic RSI');
         }
+        return
     }
 
-    private checkBolingerBands(closedPrices: number[]) {
+    private checkBolingerBands(closedPrices: number[]): BuyOrSell {
         const bollingerBands = calculateBollingerBands(closedPrices)
         const lastBolingerBands = bollingerBands[bollingerBands.length - 1]
         const lastClosedPrice = closedPrices[closedPrices.length - 1]
 
-        // Multiple by this numbers to give a little space for the last closed price 
         if (lastClosedPrice < lastBolingerBands.lower) {
             return BuyOrSell.Buy
         } else if (lastClosedPrice > lastBolingerBands.upper) {
             return BuyOrSell.Sell
-        } else {
-            return
-            // console.log('No signal from BolingerBands');
         }
+        return
     }
 
     private checkSMA(closedPrices: number[]) {
@@ -78,12 +67,6 @@ export class IndicatorService {
         const RSI = this.checkRSI(closedPrices)
         const StochRSI = this.checkStochasticRSI(closedPrices)
         const BB = this.checkBolingerBands(closedPrices)
-        console.log('\n');
-        // console.log('MACD: ' + MACD);
-        console.log('RSI: ' + RSI);
-        console.log('StochRSI: ' + StochRSI);
-        console.log('BB: ' + BB);
-
         if (
             // MACD === BuyOrSell.Buy
             // &&
