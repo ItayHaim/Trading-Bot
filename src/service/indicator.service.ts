@@ -68,8 +68,6 @@ export class IndicatorService {
         const StochRSI = this.checkStochasticRSI(closedPrices)
         const BB = this.checkBolingerBands(closedPrices)
         if (
-            // MACD === BuyOrSell.Buy
-            // &&
             RSI === BuyOrSell.Buy
             &&
             StochRSI === BuyOrSell.Buy
@@ -79,8 +77,6 @@ export class IndicatorService {
             await this.orderService.createFullOrder(currency, BuyOrSell.Buy)
             console.log('Should create buy order ' + symbol);
         } else if (
-            // MACD === BuyOrSell.Sell
-            // &&
             RSI === BuyOrSell.Sell
             &&
             StochRSI === BuyOrSell.Sell
