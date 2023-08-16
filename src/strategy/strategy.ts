@@ -7,7 +7,7 @@ export const strategy = async () => {
     try {
         const indicatorService = new IndicatorService()
 
-        // Get all currencies and run the indicator of each currency
+        // Get all currencies and run the indicator on each currency
         const currencies = await AppDataSource.manager.find(Currency)
         for (const index in currencies) {
             const currency = currencies[index]
