@@ -9,16 +9,16 @@ export const strategy = async () => {
 
         // Get all currencies and run the indicator of each currency
         const currencies = await AppDataSource.manager.find(Currency)
-        for (const currency in currencies) {
-            const symbol = currencies[currency]
+        for (const index in currencies) {
+            const currency = currencies[index]
 
             const candles = await AppDataSource.manager.find(CandleStick, {
-                where: { currency: symbol },
+                where: { currency: currency },
                 select: { closed: true }
             })
             const closedPrices = candles.map(candle => Number(candle.closed));
 
-            indicatorService.checkAllIndicators(closedPrices, symbol)
+            indicatorService.checkAllIndicators(closedPrices, currency)
         }
         console.log('End strategy');
     } catch (err) {
