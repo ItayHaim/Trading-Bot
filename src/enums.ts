@@ -13,3 +13,8 @@ export enum BuyOrSell {
     Sell = 'sell',
     Buy = 'buy'
 }
+
+export enum Crosses {
+    CrossDown = 'crossDown',
+    CrossUp = 'crossUp'
+}

@@ -1,6 +1,6 @@
 import { Currency } from "../entity/Currency"
-import { BuyOrSell } from "../enums"
-import { calculateBollingerBands, calculateMACD, calculateRSI, calculateSMA, calculateStochasticRSI } from "../operation/indicators"
+import { BuyOrSell, Crosses } from "../enums"
+import { calculateBollingerBands, calculateCrosses, calculateMACD, calculateRSI, calculateSMA, calculateStochasticRSI } from "../operation/indicators"
 import { OrderService } from "./order.service"
 
 export class IndicatorService {
@@ -60,13 +60,24 @@ export class IndicatorService {
         console.log('SMA: ', SMA);
     }
 
+    private checkCrosses(closedPrices: number[]): BuyOrSell {
+        const res = calculateCrosses(closedPrices)
+
+        if (res === Crosses.CrossUp) {
+            return BuyOrSell.Buy
+        } else if (res === Crosses.CrossDown) {
+            return BuyOrSell.Sell
+        }
+        return
+    }
+
     async checkAllIndicators(closedPrices: number[], currency: Currency) {
         const { symbol } = currency
 
-        // const MACD = this.checkMACD(closedPrices)
         const RSI = this.checkRSI(closedPrices)
         const StochRSI = this.checkStochasticRSI(closedPrices)
         const BB = this.checkBolingerBands(closedPrices)
+
         if (
             RSI === BuyOrSell.Buy
             &&
@@ -89,4 +100,6 @@ export class IndicatorService {
             console.log('Should NOT create order ' + symbol);
         }
     }
+
+    
 }

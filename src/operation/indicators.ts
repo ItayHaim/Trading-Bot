@@ -1,9 +1,10 @@
-import { BollingerBands, MACD, RSI, SMA, StochasticRSI } from 'technicalindicators';
+import { BollingerBands, MACD, RSI, SMA, StochasticRSI, CrossDown, CrossUp } from 'technicalindicators';
 import { StochasticRSIOutput } from 'technicalindicators/declarations/momentum/StochasticRSI';
 import { MACDOutput } from "technicalindicators/declarations/moving_averages/MACD";
 
 import { BollingerBandsOutput } from 'technicalindicators/declarations/volatility/BollingerBands';
-import { RSIOutput, SMAOutput } from "./types";
+import { CrossesOutput, RSIOutput, SMAOutput, SMAPeriods } from "./types";
+import { Crosses } from '../enums';
 
 /**
  * Calculates the Relative Strength Index (RSI) based on the given OHLCV data and period.
@@ -84,13 +85,13 @@ export const calculateMACD = (closedPrices: number[], fastPeriod: number = 12, s
 * in the 'periods' array using the closing prices provided in 'closedPrices'.
 *
 * @param closedPrices - An array of closing prices. If provided array is [110, 105, 102, 100], then 110 is the most recent price.
-* @param periods - An array of periods for which the SMA should be calculated. Default periods used are [10, 21, 80, 100, 200].
+* @param periods - An array of periods for which the SMA should be calculated. Default periods used are [9, 21, 80, 100, 200].
 * 
 * @returns Returns an array of objects. Each object contains two properties: 'period' and 'sma'.
 *        'period' is the period for which the SMA is calculated.
 *        'sma' is the calculated Simple Moving Average for that period.
 */
-export const calculateSMA = (closedPrices: number[], periods: number[] = [10, 21, 80, 100, 200]): SMAOutput => {
+export const calculateSMA = (closedPrices: number[], periods: SMAPeriods[] = [9, 21, 80, 100, 200]): SMAOutput => {
     return periods.map(period => ({
         period,
         sma: SMA.calculate({
@@ -127,3 +128,29 @@ export const calculateBollingerBands = (closedPrices: number[], period: number =
 //     .then(data => calculateSMA(data.map(candle => candle[4])))
 //     .then(res => console.log(res))
 //     .catch(err => console.error(err));
+
+export const calculateCrosses = (closedPrices: number[], lineAPeriod: SMAPeriods = 9, lineBPeriod: SMAPeriods = 100): CrossesOutput => {
+    const lineA = calculateSMA(closedPrices).find(sma => sma.period === lineAPeriod).sma
+    const lineB = calculateSMA(closedPrices).find(sma => sma.period === lineBPeriod).sma
+
+    const calculateCrossDown = CrossDown.calculate({
+        lineA: lineA,
+        lineB: lineB,
+    })
+    const calculateCrossUp = CrossUp.calculate({
+        lineA: lineA,
+        lineB: lineB,
+    })
+    console.log('✌️calculateCrossUp --->', calculateCrossUp);
+    console.log('✌️calculateCrossDown --->', calculateCrossDown);
+
+    
+    if (calculateCrossUp[calculateCrossUp.length - 1] === true) {
+        return Crosses.CrossUp
+    }
+    else if (calculateCrossDown[calculateCrossDown.length - 1] === true) {
+        return Crosses.CrossDown
+    } else {
+        return 'noCross'
+    }
+}
