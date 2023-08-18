@@ -19,7 +19,6 @@ export class OrderService {
 
     async createFullOrder(currency: Currency, orderSide: BuyOrSell): Promise<void> {
         try {
-
             //Check if order is already existing on this symbol
             const existingOrder = await AppDataSource.manager.findOne(MainOrder, {
                 where: { currency: currency }
