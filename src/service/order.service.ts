@@ -92,10 +92,6 @@ export class OrderService {
             const { currency, buyOrSell, amount } = mainOrder
             const { symbol } = currency
 
-            // Close the position
-            const closePositionSide = buyOrSell === 'buy' ? 'sell' : 'buy'
-            await binanceExchange.createOrder(symbol, 'market', closePositionSide, amount, null, { 'reduceOnly': true })
-
             // Find the other SideOrder (TP/SL) to close him
             const otherSideOrder = await AppDataSource.getRepository(SideOrder)
                 .createQueryBuilder("sideOrder")
@@ -111,6 +107,10 @@ export class OrderService {
                 .where("id = :mainOrderId", { mainOrderId: mainOrder.id })
                 .execute();
 
+            // Close the position
+            const closePositionSide = buyOrSell === 'buy' ? 'sell' : 'buy'
+            await binanceExchange.createOrder(symbol, 'market', closePositionSide, amount, null, { 'reduceOnly': true })
+
             // Add order to statistic
             order.orderType === OrderType.TakeProfit
                 ? this.statisticService.addSuccess()
@@ -118,6 +118,7 @@ export class OrderService {
 
             console.log(`order: ${mainOrder.orderId} (${symbol}) is closed!`);
         } catch (err) {
+            console.log(err);
             console.log(`Failed to close order!!`);
         }
     }

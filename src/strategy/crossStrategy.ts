@@ -20,6 +20,7 @@ export const crossStrategy = async () => {
             })
             const closedPrices = candles.map(candle => Number(candle.closed));
 
+            //! If using the SMA cross indicator must change candles amount in .env to 200! 
             // await strategyService.crossesStrategy(closedPrices,CrossIndicator.SMA,currency)
             await strategyService.crossesStrategy(closedPrices,CrossIndicator.MACD,currency)
         }
