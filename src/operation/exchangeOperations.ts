@@ -1,7 +1,7 @@
 import { OHLCV, Ticker } from "ccxt"
 import { Order, OrderSide, OrderType } from "ccxt/js/src/base/types"
 import { binanceExchange } from "./exchange"
-import { CreateOrderReturnType } from "./types"
+import { CreateOrderReturnType } from "../types"
 
 /**
  * Retrieves the balance of a specified coin.

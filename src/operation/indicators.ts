@@ -3,7 +3,7 @@ import { StochasticRSIOutput } from 'technicalindicators/declarations/momentum/S
 import { MACDOutput } from "technicalindicators/declarations/moving_averages/MACD";
 
 import { BollingerBandsOutput } from 'technicalindicators/declarations/volatility/BollingerBands';
-import { CrossesOutput, RSIOutput, SMAOutput, SMAPeriods } from "./types";
+import { CrossesOutput, RSIOutput, SMAOutput, SMAPeriods } from "../types";
 import { CrossIndicator, Crosses } from '../enums';
 
 /**
@@ -131,14 +131,17 @@ export const calculateBollingerBands = (closedPrices: number[], period: number =
 
 export const calculateCrosses = (closedPrices: number[], crossIndicator: CrossIndicator): CrossesOutput => {
     try {
-        let lineA: number[], lineB: number[];
+        let lineA: number[], lineB: number[], lastResult: MACDOutput | undefined;
 
         if (crossIndicator === CrossIndicator.SMA) {
-            lineA = calculateSMA(closedPrices).find(sma => sma.period === 9).sma.slice(-30)
-            lineB = calculateSMA(closedPrices).find(sma => sma.period === 100).sma.slice(-30)
+            const SMA = calculateSMA(closedPrices)
+            lineA = SMA.find(sma => sma.period === 9).sma.slice(-30)
+            lineB = SMA.find(sma => sma.period === 100).sma.slice(-30)
         } else if (crossIndicator === CrossIndicator.MACD) {
-            lineA = calculateMACD(closedPrices).map(macd => macd.MACD).slice(-30)
-            lineB = calculateMACD(closedPrices).map(macd => macd.signal).slice(-30)
+            const MACD = calculateMACD(closedPrices)
+            lineA = MACD.map(macd => macd.MACD).slice(-30)
+            lineB = MACD.map(macd => macd.signal).slice(-30)
+            lastResult = MACD[MACD.length - 1]
         }
 
         const calculateCrossUp = CrossUp.calculate({
@@ -151,8 +154,8 @@ export const calculateCrosses = (closedPrices: number[], crossIndicator: CrossIn
         })
 
         return [
-            { crossType: Crosses.CrossUp, values: calculateCrossUp },
-            { crossType: Crosses.CrossDown, values: calculateCrossDown }
+            { crossType: Crosses.CrossUp, values: calculateCrossUp, lastResult: lastResult },
+            { crossType: Crosses.CrossDown, values: calculateCrossDown, lastResult: lastResult }
         ]
     }
     catch (err) {
