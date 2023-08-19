@@ -28,15 +28,6 @@ export class OrderService {
                 return
             }
 
-            // Limit number of orders on the same time (depend on the balance of USDT you have)
-            // You supposed to hold this equation: 
-            // (USDT_AMOUNT * OPEN_ORDER_ALLOWED * 2 < USDT Balance)!!!
-            const amountOfOrders = await AppDataSource.manager.count(MainOrder)
-            if (amountOfOrders >= this.openOrdersAllowed) {
-                console.log('Too many orders are open!!');
-                return
-            }
-
             // Create main order (include SL/TP) and save them in DB
             const { symbol } = currency
             const amount = await this.calculateOrderUSDTAmount(symbol)
@@ -91,6 +82,7 @@ export class OrderService {
             const { mainOrder } = order
             const { currency, buyOrSell, amount } = mainOrder
             const { symbol } = currency
+            console.log(order);
 
             // Find the other SideOrder (TP/SL) to close him
             const otherSideOrder = await AppDataSource.getRepository(SideOrder)
@@ -120,6 +112,17 @@ export class OrderService {
         } catch (err) {
             console.log(err);
             console.log(`Failed to close order!!`);
+        }
+    }
+
+    async canCreateOrder(): Promise<boolean> {
+        // Limit number of orders on the same time (depend on the balance of USDT you have)
+        // You supposed to hold this equation: 
+        // (USDT_AMOUNT * OPEN_ORDER_ALLOWED * 2 < USDT Balance)!!!
+        const amountOfOrders = await AppDataSource.manager.count(MainOrder)
+        if (amountOfOrders >= this.openOrdersAllowed) {
+            console.log('Too many orders are open!!');
+            return
         }
     }
 }

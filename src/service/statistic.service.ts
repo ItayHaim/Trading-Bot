@@ -3,7 +3,7 @@ import { resolve } from 'path';
 import statistic from '../statistic.json';
 
 export class StatisticService {
-    private filePath = resolve('/home/hilma/Desktop/Trading-Bot-New/src/statistic.json')
+    private filePath = resolve('src/statistic.json')
 
     async addSuccess() {
         try {
