@@ -18,3 +18,8 @@ export enum Crosses {
     CrossDown = 'crossDown',
     CrossUp = 'crossUp'
 }
+
+export enum CrossIndicator {
+    MACD = 'MACD',
+    SMA= 'SMA'
+}

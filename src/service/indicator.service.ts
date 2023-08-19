@@ -1,12 +1,8 @@
-import { Currency } from "../entity/Currency"
-import { BuyOrSell, Crosses } from "../enums"
-import { calculateBollingerBands, calculateCrosses, calculateMACD, calculateRSI, calculateSMA, calculateStochasticRSI } from "../operation/indicators"
-import { OrderService } from "./order.service"
+import { BuyOrSell, CrossIndicator, Crosses } from "../enums"
+import { calculateBollingerBands, calculateCrosses, calculateMACD, calculateRSI, calculateStochasticRSI } from "../operation/indicators"
 
 export class IndicatorService {
-    private orderService = new OrderService()
-
-    private checkMACD(closedPrices: number[]): BuyOrSell {
+    public checkMACD(closedPrices: number[]): BuyOrSell {
         const MACD = calculateMACD(closedPrices)
         const lastMACD = MACD[MACD.length - 1]
 
@@ -18,7 +14,7 @@ export class IndicatorService {
         return
     }
 
-    private checkRSI(closedPrices: number[]): BuyOrSell {
+    public checkRSI(closedPrices: number[]): BuyOrSell {
         const RSI = calculateRSI(closedPrices)
         const lastRSI = RSI[RSI.length - 1]
 
@@ -30,7 +26,7 @@ export class IndicatorService {
         return
     }
 
-    private checkStochasticRSI(closedPrices: number[]): BuyOrSell {
+    public checkStochasticRSI(closedPrices: number[]): BuyOrSell {
         const stochasticRSI = calculateStochasticRSI(closedPrices)
         const lastStochasticRSI = stochasticRSI[stochasticRSI.length - 1]
 
@@ -42,7 +38,7 @@ export class IndicatorService {
         return
     }
 
-    private checkBolingerBands(closedPrices: number[]): BuyOrSell {
+    public checkBolingerBands(closedPrices: number[]): BuyOrSell {
         const bollingerBands = calculateBollingerBands(closedPrices)
         const lastBolingerBands = bollingerBands[bollingerBands.length - 1]
         const lastClosedPrice = closedPrices[closedPrices.length - 1]
@@ -55,51 +51,15 @@ export class IndicatorService {
         return
     }
 
-    private checkSMA(closedPrices: number[]) {
-        const SMA = calculateSMA(closedPrices)
-        console.log('SMA: ', SMA);
-    }
+    public checkCrosses(closedPrices: number[], crossIndicator: CrossIndicator): BuyOrSell {
+        const crosses = calculateCrosses(closedPrices, crossIndicator)
+        const lastCross = crosses[crosses.length - 1]
 
-    private checkCrosses(closedPrices: number[]): BuyOrSell {
-        const res = calculateCrosses(closedPrices)
-
-        if (res === Crosses.CrossUp) {
+        if (lastCross === Crosses.CrossUp) {
             return BuyOrSell.Buy
-        } else if (res === Crosses.CrossDown) {
+        } else if (lastCross === Crosses.CrossDown) {
             return BuyOrSell.Sell
         }
         return
     }
-
-    async checkAllIndicators(closedPrices: number[], currency: Currency) {
-        const { symbol } = currency
-
-        const RSI = this.checkRSI(closedPrices)
-        const StochRSI = this.checkStochasticRSI(closedPrices)
-        const BB = this.checkBolingerBands(closedPrices)
-
-        if (
-            RSI === BuyOrSell.Buy
-            &&
-            StochRSI === BuyOrSell.Buy
-            &&
-            BB === BuyOrSell.Buy
-        ) {
-            await this.orderService.createFullOrder(currency, BuyOrSell.Buy)
-            console.log('Should create buy order ' + symbol);
-        } else if (
-            RSI === BuyOrSell.Sell
-            &&
-            StochRSI === BuyOrSell.Sell
-            &&
-            BB === BuyOrSell.Sell
-        ) {
-            await this.orderService.createFullOrder(currency, BuyOrSell.Sell)
-            console.log('Should create sell order ' + symbol);
-        } else {
-            console.log('Should NOT create order ' + symbol);
-        }
-    }
-
-    
 }

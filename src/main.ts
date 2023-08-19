@@ -1,18 +1,19 @@
 import { AppDataSource } from "./data-source";
 import { CandleStickService } from "./service/candlestick.service";
 import { OrderService } from "./service/order.service";
-import { strategy } from "./strategy/strategy";
+import { crossStrategy } from "./strategy/crossStrategy";
+import { indicatorsStrategy } from "./strategy/indicatorsStrategy";
 
 export const main = async () => {
     try {
         const candleStickService = new CandleStickService()
         const orderService = new OrderService()
 
-        await strategy()
+        await crossStrategy()
 
         setInterval(async () => {
             await candleStickService.addOneCandle()
-            await strategy()
+            await crossStrategy()
         }, 1000 * 60 * 5) // 5 minutes
 
         setInterval(async () => {

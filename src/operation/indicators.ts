@@ -4,7 +4,7 @@ import { MACDOutput } from "technicalindicators/declarations/moving_averages/MAC
 
 import { BollingerBandsOutput } from 'technicalindicators/declarations/volatility/BollingerBands';
 import { CrossesOutput, RSIOutput, SMAOutput, SMAPeriods } from "./types";
-import { Crosses } from '../enums';
+import { CrossIndicator, Crosses } from '../enums';
 
 /**
  * Calculates the Relative Strength Index (RSI) based on the given OHLCV data and period.
@@ -129,28 +129,39 @@ export const calculateBollingerBands = (closedPrices: number[], period: number =
 //     .then(res => console.log(res))
 //     .catch(err => console.error(err));
 
-export const calculateCrosses = (closedPrices: number[], lineAPeriod: SMAPeriods = 9, lineBPeriod: SMAPeriods = 100): CrossesOutput => {
-    const lineA = calculateSMA(closedPrices).find(sma => sma.period === lineAPeriod).sma
-    const lineB = calculateSMA(closedPrices).find(sma => sma.period === lineBPeriod).sma
+export const calculateCrosses = (closedPrices: number[], crossIndicator: CrossIndicator): CrossesOutput => {
+    try {
+        let lineA: number[], lineB: number[];
 
-    const calculateCrossDown = CrossDown.calculate({
-        lineA: lineA,
-        lineB: lineB,
-    })
-    const calculateCrossUp = CrossUp.calculate({
-        lineA: lineA,
-        lineB: lineB,
-    })
-    console.log('✌️calculateCrossUp --->', calculateCrossUp);
-    console.log('✌️calculateCrossDown --->', calculateCrossDown);
+        if (crossIndicator === CrossIndicator.SMA) {
+            lineA = calculateSMA(closedPrices).find(sma => sma.period === 9).sma
+            lineB = calculateSMA(closedPrices).find(sma => sma.period === 100).sma
+        } else if (crossIndicator === CrossIndicator.MACD) {
+            lineA = calculateMACD(closedPrices).map(macd => macd.signal)
+            lineB = calculateMACD(closedPrices).map(macd => macd.MACD)
+        }
 
-    
-    if (calculateCrossUp[calculateCrossUp.length - 1] === true) {
-        return Crosses.CrossUp
+        const calculateCrossDown = CrossDown.calculate({
+            lineA: lineA,
+            lineB: lineB,
+        })
+        const calculateCrossUp = CrossUp.calculate({
+            lineA: lineA,
+            lineB: lineB,
+        })
+        console.log('✌️calculateCrossUp --->', calculateCrossUp);
+        console.log('✌️calculateCrossDown --->', calculateCrossDown);
+
+        if (calculateCrossUp[calculateCrossUp.length - 1] === true) {
+            return Crosses.CrossUp
+        }
+        else if (calculateCrossDown[calculateCrossDown.length - 1] === true) {
+            return Crosses.CrossDown
+        } else {
+            return 'noCross'
+        }
     }
-    else if (calculateCrossDown[calculateCrossDown.length - 1] === true) {
-        return Crosses.CrossDown
-    } else {
-        return 'noCross'
+    catch (err) {
+        throw new Error('Failed to calculate cross')
     }
 }

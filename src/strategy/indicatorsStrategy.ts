@@ -1,11 +1,11 @@
 import { AppDataSource } from "../data-source";
 import { CandleStick } from "../entity/CandleStick";
 import { Currency } from "../entity/Currency";
-import { IndicatorService } from "../service/indicator.service";
+import { StrategyService } from "../service/strategy.service";
 
-export const strategy = async () => {
+export const indicatorsStrategy = async () => {
     try {
-        const indicatorService = new IndicatorService()
+        const strategyService = new StrategyService()
 
         // Get all currencies and run the indicator on each currency
         const currencies = await AppDataSource.manager.find(Currency)
@@ -18,7 +18,7 @@ export const strategy = async () => {
             })
             const closedPrices = candles.map(candle => Number(candle.closed));
 
-            indicatorService.checkAllIndicators(closedPrices, currency)
+            await strategyService.indicatorsStrategy(closedPrices, currency)
         }
         console.log('End strategy');
     } catch (err) {
