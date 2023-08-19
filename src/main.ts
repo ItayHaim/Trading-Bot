@@ -32,8 +32,9 @@ export const main = async () => {
         // const sideOrder = await AppDataSource.manager.find(SideOrder, {
         //     relations: { mainOrder: { currency: true } }
         // })
-        // await closeOrder(sideOrder[0].orderId, 'ATOM/USDT')
-        // await orderService.closeOrderFull(sideOrder[0])
+        // setTimeout(async () => {
+        //     await closeOrder(sideOrder[0].orderId, 'ATOM/USDT')
+        // }, 1010 * 60 )
 
     } catch (err) {
         console.log(err);

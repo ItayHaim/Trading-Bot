@@ -4,7 +4,7 @@ import { MainOrder } from "../entity/MainOrder"
 import { SideOrder } from "../entity/SideOrder"
 import { BuyOrSell, OrderStatus, OrderType } from "../enums"
 import { binanceExchange } from "../operation/exchange"
-import { closeOrder, createOrder, getQuoteAmount, isOrderFilled } from "../operation/exchangeOperations"
+import { closeOrder, createOrder, getOrder, getQuoteAmount, isOrderFilled } from "../operation/exchangeOperations"
 import { StatisticService } from "./statistic.service"
 
 export class OrderService {
@@ -19,6 +19,11 @@ export class OrderService {
 
     async createFullOrder(currency: Currency, orderSide: BuyOrSell): Promise<void> {
         try {
+            // Check if can create an order (according to openOrderAllowed)
+            if (await this.canCreateOrder() === false) {
+                return
+            }
+
             //Check if order is already existing on this symbol
             const existingOrder = await AppDataSource.manager.findOne(MainOrder, {
                 where: { currency: currency }
@@ -82,7 +87,6 @@ export class OrderService {
             const { mainOrder } = order
             const { currency, buyOrSell, amount } = mainOrder
             const { symbol } = currency
-            console.log(order);
 
             // Find the other SideOrder (TP/SL) to close him
             const otherSideOrder = await AppDataSource.getRepository(SideOrder)
@@ -98,10 +102,6 @@ export class OrderService {
                 .delete()
                 .where("id = :mainOrderId", { mainOrderId: mainOrder.id })
                 .execute();
-
-            // Close the position
-            const closePositionSide = buyOrSell === 'buy' ? 'sell' : 'buy'
-            await binanceExchange.createOrder(symbol, 'market', closePositionSide, amount, null, { 'reduceOnly': true })
 
             // Add order to statistic
             order.orderType === OrderType.TakeProfit
@@ -121,8 +121,8 @@ export class OrderService {
         // (USDT_AMOUNT * OPEN_ORDER_ALLOWED * 2 < USDT Balance)!!!
         const amountOfOrders = await AppDataSource.manager.count(MainOrder)
         if (amountOfOrders >= this.openOrdersAllowed) {
-            console.log('Too many orders are open!!');
-            return
+            return false
         }
+        return true
     }
 }
