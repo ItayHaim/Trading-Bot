@@ -81,17 +81,17 @@ export class IndicatorService {
         const lastBB = BB[BB.length - 1]
         const lastClosedPrice = closedPrices[closedPrices.length - 1]
 
-        const { lastResult, order } = cross
+        const { order } = cross
 
         if (order === BuyOrSell.Buy) {
             if (lastClosedPrice >= lastBB.middle) {
                 console.log('Should create buy order ' + symbol);
-                return { currency: currency, buyOrSell: BuyOrSell.Buy, MACDDiff: Math.abs(lastResult.MACD - lastResult.signal) }
+                return { currency: currency, buyOrSell: BuyOrSell.Buy, MACDDiff: Math.abs(cross.lastResult.MACD - cross.lastResult.signal) }
             }
         } else if (order === BuyOrSell.Sell) {
             if (lastClosedPrice <= lastBB.middle) {
                 console.log('Should create sell order ' + symbol);
-                return { currency: currency, buyOrSell: BuyOrSell.Buy, MACDDiff: Math.abs(lastResult.MACD - lastResult.signal) }
+                return { currency: currency, buyOrSell: BuyOrSell.Buy, MACDDiff: Math.abs(cross.lastResult.MACD - cross.lastResult.signal) }
             }
         } else {
             console.log('Should NOT create order ' + symbol);
