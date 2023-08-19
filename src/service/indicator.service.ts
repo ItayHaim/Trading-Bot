@@ -54,7 +54,7 @@ export class IndicatorService {
         return
     }
 
-    public checkCrosses(closedPrices: number[], crossIndicator: CrossIndicator): { order: BuyOrSell, lastResult: MACDOutput } {
+    public checkCrosses(closedPrices: number[], crossIndicator: CrossIndicator): { order: BuyOrSell, lastResult: MACDOutput } | undefined {
         const crosses = calculateCrosses(closedPrices, crossIndicator)
 
         // crossUp must be on index 0!!! (according to the type)
@@ -81,20 +81,20 @@ export class IndicatorService {
         const lastBB = BB[BB.length - 1]
         const lastClosedPrice = closedPrices[closedPrices.length - 1]
 
-        const { order } = cross
-
-        if (order === BuyOrSell.Buy) {
-            if (lastClosedPrice >= lastBB.middle) {
-                console.log('Should create buy order ' + symbol);
-                return { currency: currency, buyOrSell: BuyOrSell.Buy, MACDDiff: Math.abs(cross.lastResult.MACD - cross.lastResult.signal) }
+        if (cross) {
+            if (cross.order === BuyOrSell.Buy) {
+                if (lastClosedPrice >= lastBB.middle) {
+                    console.log('Should create buy order ' + symbol);
+                    return { currency: currency, buyOrSell: BuyOrSell.Buy, MACDDiff: Math.abs((cross.lastResult.MACD - cross.lastResult.signal) / ((cross.lastResult.MACD + cross.lastResult.signal) / 2)) * 100 }
+                }
+            } else if (cross.order === BuyOrSell.Sell) {
+                if (lastClosedPrice <= lastBB.middle) {
+                    console.log('Should create sell order ' + symbol);
+                    return { currency: currency, buyOrSell: BuyOrSell.Buy, MACDDiff: Math.abs((cross.lastResult.MACD - cross.lastResult.signal) / ((cross.lastResult.MACD + cross.lastResult.signal) / 2)) * 100 }
+                }
+            } else {
+                console.log('Should NOT create order ' + symbol);
             }
-        } else if (order === BuyOrSell.Sell) {
-            if (lastClosedPrice <= lastBB.middle) {
-                console.log('Should create sell order ' + symbol);
-                return { currency: currency, buyOrSell: BuyOrSell.Buy, MACDDiff: Math.abs(cross.lastResult.MACD - cross.lastResult.signal) }
-            }
-        } else {
-            console.log('Should NOT create order ' + symbol);
         }
     }
 }
