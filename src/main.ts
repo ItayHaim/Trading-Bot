@@ -1,12 +1,7 @@
 import { AppDataSource } from "./data-source";
-import { Currency } from "./entity/Currency";
-import { SideOrder } from "./entity/SideOrder";
-import { BuyOrSell } from "./enums";
-import { closeOrder } from "./operation/exchangeOperations";
 import { CandleStickService } from "./service/candlestick.service";
 import { OrderService } from "./service/order.service";
 import { crossStrategy } from "./strategy/crossStrategy";
-import { indicatorsStrategy } from "./strategy/indicatorsStrategy";
 
 export const main = async () => {
     try {

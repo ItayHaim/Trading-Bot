@@ -85,7 +85,7 @@ export class OrderService {
     async closeOrderFull(order: SideOrder): Promise<void> {
         try {
             const { mainOrder } = order
-            const { currency, buyOrSell, amount } = mainOrder
+            const { currency } = mainOrder
             const { symbol } = currency
 
             // Find the other SideOrder (TP/SL) to close him
