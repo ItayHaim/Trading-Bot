@@ -1,5 +1,8 @@
+import { MACDOutput } from "technicalindicators/declarations/moving_averages/MACD"
 import { BuyOrSell, CrossIndicator, Crosses } from "../enums"
 import { calculateBollingerBands, calculateCrosses, calculateMACD, calculateRSI, calculateStochasticRSI } from "../operation/indicators"
+import { Currency } from "../entity/Currency"
+import { WaitingCrossesArrayType } from "../types"
 
 export class IndicatorService {
     public checkMACD(closedPrices: number[]): BuyOrSell {
@@ -51,7 +54,7 @@ export class IndicatorService {
         return
     }
 
-    public checkCrosses(closedPrices: number[], crossIndicator: CrossIndicator): BuyOrSell {
+    public checkCrosses(closedPrices: number[], crossIndicator: CrossIndicator): { order: BuyOrSell, lastResult: MACDOutput } {
         const crosses = calculateCrosses(closedPrices, crossIndicator)
 
         // crossUp must be on index 0!!! (according to the type)
@@ -63,10 +66,35 @@ export class IndicatorService {
         const lastCrossDown = crossDownValues[crossDownValues.length - 1]
 
         if (lastCrossUp === true) {
-            return BuyOrSell.Buy
+            return { order: BuyOrSell.Buy, lastResult: crosses[0].lastResult }
         } else if (lastCrossDown === true) {
-            return BuyOrSell.Sell
+            return { order: BuyOrSell.Sell, lastResult: crosses[1].lastResult }
         }
         return
+    }
+
+    async checkCrossesAndBB(closedPrices: number[], crossIndicator: CrossIndicator, currency: Currency): Promise<void | WaitingCrossesArrayType> {
+        const { symbol } = currency
+
+        const cross = this.checkCrosses(closedPrices, crossIndicator)
+        const BB = calculateBollingerBands(closedPrices)
+        const lastBB = BB[BB.length - 1]
+        const lastClosedPrice = closedPrices[closedPrices.length - 1]
+
+        const { lastResult, order } = cross
+
+        if (order === BuyOrSell.Buy) {
+            if (lastClosedPrice >= lastBB.middle) {
+                console.log('Should create buy order ' + symbol);
+                return { currency: currency, buyOrSell: BuyOrSell.Buy, MACDDiff: Math.abs(lastResult.MACD - lastResult.signal) }
+            }
+        } else if (order === BuyOrSell.Sell) {
+            if (lastClosedPrice <= lastBB.middle) {
+                console.log('Should create sell order ' + symbol);
+                return { currency: currency, buyOrSell: BuyOrSell.Buy, MACDDiff: Math.abs(lastResult.MACD - lastResult.signal) }
+            }
+        } else {
+            console.log('Should NOT create order ' + symbol);
+        }
     }
 }
