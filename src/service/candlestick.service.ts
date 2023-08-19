@@ -1,4 +1,4 @@
-import { CurrenciesArray } from "../consts"
+import { CurrenciesArray } from "../currencies"
 import { AppDataSource } from "../data-source"
 import { CandleStick } from "../entity/CandleStick"
 import { Currency } from "../entity/Currency"

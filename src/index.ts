@@ -1,4 +1,4 @@
-import { CurrenciesArray } from "./consts";
+import { CurrenciesArray } from "./currencies";
 import { AppDataSource } from "./data-source";
 import { CandleStick } from "./entity/CandleStick";
 import { Currency } from "./entity/Currency";
@@ -7,7 +7,7 @@ import { changeLeverage, changeToIsolated, getCoinOHLCV } from "./operation/exch
 
 
 AppDataSource.initialize().then(async () => {
-    // First initialize the last 10 candles
+    // First initialize the last 100 candles
     try {
         const timeFrame = process.env.TIME_FRAME
         const leverage = Number(process.env.LEVERAGE)
