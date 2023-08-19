@@ -21,6 +21,7 @@ export const crossStrategy = async () => {
             const closedPrices = candles.map(candle => Number(candle.closed));
 
             await strategyService.crossesStrategy(closedPrices,CrossIndicator.SMA,currency)
+            // await strategyService.crossesStrategy(closedPrices,CrossIndicator.MACD,currency)
         }
         console.log('End strategy');
     } catch (err) {

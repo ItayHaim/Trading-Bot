@@ -53,11 +53,19 @@ export class IndicatorService {
 
     public checkCrosses(closedPrices: number[], crossIndicator: CrossIndicator): BuyOrSell {
         const crosses = calculateCrosses(closedPrices, crossIndicator)
-        const lastCross = crosses[crosses.length - 1]
+        console.log(crosses);
 
-        if (lastCross === Crosses.CrossUp) {
+        // crossUp must be on index 0!!! (according to the type)
+        const crossUpValues = crosses[0].values
+        // crossDown must be on index 1!!! (according to the type)
+        const crossDownValues = crosses[1].values
+
+        const lastCrossUp = crossUpValues[crossUpValues.length - 1]
+        const lastCrossDown = crossDownValues[crossDownValues.length - 1]
+
+        if (lastCrossUp === true) {
             return BuyOrSell.Buy
-        } else if (lastCross === Crosses.CrossDown) {
+        } else if (lastCrossDown === true) {
             return BuyOrSell.Sell
         }
         return

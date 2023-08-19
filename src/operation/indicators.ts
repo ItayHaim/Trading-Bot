@@ -141,25 +141,19 @@ export const calculateCrosses = (closedPrices: number[], crossIndicator: CrossIn
             lineB = calculateMACD(closedPrices).map(macd => macd.MACD)
         }
 
-        const calculateCrossDown = CrossDown.calculate({
-            lineA: lineA,
-            lineB: lineB,
-        })
         const calculateCrossUp = CrossUp.calculate({
             lineA: lineA,
             lineB: lineB,
         })
-        console.log('✌️calculateCrossUp --->', calculateCrossUp);
-        console.log('✌️calculateCrossDown --->', calculateCrossDown);
+        const calculateCrossDown = CrossDown.calculate({
+            lineA: lineA,
+            lineB: lineB,
+        })
 
-        if (calculateCrossUp[calculateCrossUp.length - 1] === true) {
-            return Crosses.CrossUp
-        }
-        else if (calculateCrossDown[calculateCrossDown.length - 1] === true) {
-            return Crosses.CrossDown
-        } else {
-            return 'noCross'
-        }
+        return [
+            { crossType: Crosses.CrossUp, values: calculateCrossUp },
+            { crossType: Crosses.CrossDown, values: calculateCrossDown }
+        ]
     }
     catch (err) {
         throw new Error('Failed to calculate cross')
