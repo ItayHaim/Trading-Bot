@@ -1,5 +1,6 @@
 import { Currency } from "../entity/Currency";
-import { BuyOrSell, CrossIndicator } from "../enums";
+import { BuyOrSell } from "../enums";
+import { WaitingCrossesArrayType } from "../types";
 import { IndicatorService } from "./indicator.service";
 import { OrderService } from "./order.service";
 
@@ -37,18 +38,15 @@ export class StrategyService {
         }
     }
 
-    async crossesStrategy(closedPrices: number[], crossIndicator: CrossIndicator, currency: Currency): Promise<void> {
-        const { symbol } = currency
+    async crossesAndBBStrategy(waitingOrders: WaitingCrossesArrayType[]) {
+        console.log('✌️waitingOrders before --->', waitingOrders);
+        waitingOrders.sort((a, b) => b.MACDDiff - a.MACDDiff)
+        console.log('✌️waitingOrders after--->', waitingOrders);
 
-        const res = this.indicatorService.checkCrosses(closedPrices, crossIndicator)
-        if (res === BuyOrSell.Buy) {
-            await this.orderService.createFullOrder(currency, BuyOrSell.Buy)
-            console.log('Should create buy order ' + symbol);
-        } else if (res === BuyOrSell.Sell) {
-            await this.orderService.createFullOrder(currency, BuyOrSell.Sell)
-            console.log('Should create sell order ' + symbol);
-        } else {
-            console.log('Should NOT create order ' + symbol);
+        for (let index in waitingOrders) {
+            const order = waitingOrders[index]
+            console.log(order);
+            await this.orderService.createFullOrder(order.currency, order.buyOrSell)
         }
     }
 }
