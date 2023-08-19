@@ -134,11 +134,11 @@ export const calculateCrosses = (closedPrices: number[], crossIndicator: CrossIn
         let lineA: number[], lineB: number[];
 
         if (crossIndicator === CrossIndicator.SMA) {
-            lineA = calculateSMA(closedPrices).find(sma => sma.period === 9).sma
-            lineB = calculateSMA(closedPrices).find(sma => sma.period === 100).sma
+            lineA = calculateSMA(closedPrices).find(sma => sma.period === 9).sma.slice(-30)
+            lineB = calculateSMA(closedPrices).find(sma => sma.period === 100).sma.slice(-30)
         } else if (crossIndicator === CrossIndicator.MACD) {
-            lineA = calculateMACD(closedPrices).map(macd => macd.signal)
-            lineB = calculateMACD(closedPrices).map(macd => macd.MACD)
+            lineA = calculateMACD(closedPrices).map(macd => macd.MACD).slice(-30)
+            lineB = calculateMACD(closedPrices).map(macd => macd.signal).slice(-30)
         }
 
         const calculateCrossUp = CrossUp.calculate({

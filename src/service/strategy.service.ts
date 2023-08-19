@@ -42,12 +42,10 @@ export class StrategyService {
 
         const res = this.indicatorService.checkCrosses(closedPrices, crossIndicator)
         if (res === BuyOrSell.Buy) {
-            console.log(res);
-            // await this.orderService.createFullOrder(currency, BuyOrSell.Buy)
+            await this.orderService.createFullOrder(currency, BuyOrSell.Buy)
             console.log('Should create buy order ' + symbol);
         } else if (res === BuyOrSell.Sell) {
-            console.log(res);
-            // await this.orderService.createFullOrder(currency, BuyOrSell.Sell)
+            await this.orderService.createFullOrder(currency, BuyOrSell.Sell)
             console.log('Should create sell order ' + symbol);
         } else {
             console.log('Should NOT create order ' + symbol);

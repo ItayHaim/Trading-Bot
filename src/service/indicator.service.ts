@@ -53,7 +53,6 @@ export class IndicatorService {
 
     public checkCrosses(closedPrices: number[], crossIndicator: CrossIndicator): BuyOrSell {
         const crosses = calculateCrosses(closedPrices, crossIndicator)
-        console.log(crosses);
 
         // crossUp must be on index 0!!! (according to the type)
         const crossUpValues = crosses[0].values
