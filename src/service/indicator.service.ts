@@ -82,21 +82,19 @@ export class IndicatorService {
         const lastClosedPrice = closedPrices[closedPrices.length - 1]
 
         if (cross) {
-            if (cross.order === BuyOrSell.Buy) {
+            const biggerNumber = Math.max(cross.lastResult.MACD, cross.lastResult.signal)
+            const smallerNumber = Math.min(cross.lastResult.MACD, cross.lastResult.signal)
+            const calculateMACDDiff = Math.abs(((biggerNumber - smallerNumber) / smallerNumber) * 100)
+
+            if (cross.order === BuyOrSell.Buy && calculateMACDDiff >= 10) {
                 if ((lastClosedPrice <= (lastBB.upper + (lastBB.upper * 0.0011))) && (lastClosedPrice >= lastBB.middle)) {
                     console.log('Should create buy order ' + symbol);
-                    const biggerNumber = Math.max(cross.lastResult.MACD, cross.lastResult.signal)
-                    const smallerNumber = Math.min(cross.lastResult.MACD, cross.lastResult.signal)
-
-                    return { currency: currency, buyOrSell: BuyOrSell.Buy, MACDDiff: ((biggerNumber - smallerNumber) / smallerNumber) * 100 }
+                    return { currency: currency, buyOrSell: BuyOrSell.Buy, MACDDiff: calculateMACDDiff }
                 }
             } else if (cross.order === BuyOrSell.Sell) {
                 if ((lastClosedPrice >= (lastBB.lower - (lastBB.lower * 0.0011))) && (lastClosedPrice <= lastBB.middle)) {
                     console.log('Should create sell order ' + symbol);
-                    const biggerNumber = Math.max(cross.lastResult.MACD, cross.lastResult.signal)
-                    const smallerNumber = Math.min(cross.lastResult.MACD, cross.lastResult.signal)
-
-                    return { currency: currency, buyOrSell: BuyOrSell.Sell, MACDDiff: ((biggerNumber - smallerNumber) / smallerNumber) * 100 }
+                    return { currency: currency, buyOrSell: BuyOrSell.Sell, MACDDiff: calculateMACDDiff }
                 }
             } else {
                 console.log('Should NOT create order ' + symbol);

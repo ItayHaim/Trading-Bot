@@ -42,6 +42,7 @@ export const CurrenciesArray = [
 
     // L
     'LINK/USDT',
+    'LRC/USDT',
     'LTC/USDT',
 
     // M
@@ -64,9 +65,6 @@ export const CurrenciesArray = [
     'SAND/USDT',
     'STMX/USDT',
     'STG/USDT',
-
-    // L
-    'LRC/USDT',
 
     // T
     'TRX/USDT',
