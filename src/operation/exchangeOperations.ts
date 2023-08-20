@@ -251,3 +251,18 @@ export const changeToIsolated = async (symbol: string, marginMode: string = 'iso
     }
 
 }
+
+/**
+ * Retrieves the unrealized PNL (Profit and Loss) for a given symbol from the Binance exchange.
+ *
+ * @param symbol - The symbol of the position to retrieve the PNL for.
+ * @return The unrealized PNL for the given symbol.
+ */
+export const getPositionPNL = async (symbol: string): Promise<number> => {
+    try {
+        const res = await binanceExchange.fetchPositions([symbol])
+        return res[0].unrealizedPnl
+    } catch (err) {
+        console.log(err)
+    }
+}

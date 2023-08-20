@@ -4,7 +4,7 @@ import { MainOrder } from "../entity/MainOrder"
 import { SideOrder } from "../entity/SideOrder"
 import { BuyOrSell, OrderStatus, OrderType } from "../enums"
 import { binanceExchange } from "../operation/exchange"
-import { closeOrder, createOrder, getOrder, getQuoteAmount, isOrderFilled } from "../operation/exchangeOperations"
+import { closeOrder, createOrder, getPositionPNL, getQuoteAmount, isOrderFilled } from "../operation/exchangeOperations"
 import { StatisticService } from "./statistic.service"
 
 export class OrderService {
@@ -61,7 +61,7 @@ export class OrderService {
         }
     }
 
-    async checkOrders(): Promise<void> {
+    async checkOrdersStatus(): Promise<void> {
         const orders = await AppDataSource.manager.find(SideOrder, {
             where: { status: OrderStatus.Open },
             relations: { mainOrder: { currency: true } }
@@ -76,29 +76,23 @@ export class OrderService {
             const status = await isOrderFilled(order.orderId, symbol)
 
             if (status === OrderStatus.Closed || status === OrderStatus.Canceled) {
-                this.closeOrderFull(order)
+                this.closeOrderAutomatically(order)
                 break;
             }
         }
     }
 
-    async closeOrderFull(order: SideOrder, manually: boolean = false): Promise<void> {
+    async closeOrderAutomatically(sideOrder: SideOrder): Promise<void> {
         try {
-            const { mainOrder } = order
-            const { currency, buyOrSell, amount } = mainOrder
+            const { mainOrder } = sideOrder
+            const { currency } = mainOrder
             const { symbol } = currency
-
-            // Close the position
-            if (manually) {
-                const closePositionSide = buyOrSell === 'buy' ? 'sell' : 'buy'
-                await binanceExchange.createOrder(symbol, 'market', closePositionSide, amount, null, { 'reduceOnly': true })
-            }
 
             // Find the other SideOrder (TP/SL) to close him
             const otherSideOrder = await AppDataSource.getRepository(SideOrder)
                 .createQueryBuilder("sideOrder")
                 .where("sideOrder.mainOrder = :mainOrderId", { mainOrderId: mainOrder.id })
-                .andWhere("sideOrder.id != :sideOrderId", { sideOrderId: order.id })
+                .andWhere("sideOrder.id != :sideOrderId", { sideOrderId: sideOrder.id })
                 .getOne();
             await closeOrder(otherSideOrder.orderId, symbol)
 
@@ -110,14 +104,70 @@ export class OrderService {
                 .execute();
 
             // Add order to statistic
-            order.orderType === OrderType.TakeProfit
+            sideOrder.orderType === OrderType.TakeProfit
                 ? this.statisticService.addSuccess()
                 : this.statisticService.addFailed()
 
             console.log(`order: ${mainOrder.orderId} (${symbol}) is closed!`);
         } catch (err) {
             console.log(err);
-            console.log(`Failed to close order!!`);
+            console.log('Failed to close order!!');
+        }
+    }
+
+    async closeOrderManually(mainOrder: MainOrder, PNL: number): Promise<void> {
+        try {
+            const { currency, buyOrSell, amount, sideOrders } = mainOrder
+            const { symbol } = currency
+
+            // Close the position
+            const closePositionSide = buyOrSell === 'buy' ? 'sell' : 'buy'
+            await binanceExchange.createOrder(symbol, 'market', closePositionSide, amount, null, { 'reduceOnly': true })
+
+            // Close all the side orders
+            for (const index in sideOrders) {
+                const { orderId } = sideOrders[index]
+                await closeOrder(orderId, symbol)
+            }
+
+            // Delete order (include TP/SL) from DB
+            await AppDataSource.getRepository(MainOrder)
+                .createQueryBuilder("mainOrder")
+                .delete()
+                .where("id = :mainOrderId", { mainOrderId: mainOrder.id })
+                .execute();
+
+            // Add order to statistic
+            PNL > 0
+                ? this.statisticService.addSuccess()
+                : this.statisticService.addFailed()
+
+            console.log(`order: ${mainOrder.orderId} (${symbol}) is closed!`);
+        } catch (err) {
+            console.log(err);
+            console.log('Failed to close order!!');
+        }
+    }
+
+    async checkOrderByTime() {
+        const orders = await AppDataSource.manager.find(MainOrder, {
+            where: { status: OrderStatus.Open },
+            relations: { currency: true, sideOrders: true }
+        })
+        const currentTime = new Date();
+
+        // Run over all the main orders and check if they're open more than 40 minutes
+        for (const index in orders) {
+            const order = orders[index]
+            const { createdAt, currency } = order
+            const { symbol } = currency
+
+            const timeDifference = (currentTime.getTime() - createdAt.getTime()) / (1000 * 60)
+
+            if (timeDifference >= 40) {
+                const PNL = await getPositionPNL(symbol)
+                await this.closeOrderManually(order, PNL)
+            }
         }
     }
 
