@@ -20,6 +20,9 @@ export class MainOrder {
     @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.Open })
     status: OrderStatus
 
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', name: 'created_at' })
+    createdAt: Date;
+
     @ManyToOne(() => Currency, (currency) => currency.id)
     @JoinColumn({ name: "currency_id" })
     currency: Currency
