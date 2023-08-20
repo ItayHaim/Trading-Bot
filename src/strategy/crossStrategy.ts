@@ -27,7 +27,6 @@ export const crossStrategy = async () => {
             // await strategyService.crossesStrategy(closedPrices,CrossIndicator.SMA,currency)
             const result = await indicatorService.checkCrossesAndBB(closedPrices, CrossIndicator.MACD, currency)
             if (result) {
-                console.log('✌️result pushing --->', result);
                 waitingOrders.push(result)
             }
         }

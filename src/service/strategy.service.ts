@@ -39,13 +39,10 @@ export class StrategyService {
     }
 
     async crossesAndBBStrategy(waitingOrders: WaitingCrossesArrayType[]) {
-        console.log('✌️waitingOrders before --->', waitingOrders);
         waitingOrders.sort((a, b) => b.MACDDiff - a.MACDDiff)
-        console.log('✌️waitingOrders after--->', waitingOrders);
 
         for (let index in waitingOrders) {
             const order = waitingOrders[index]
-            console.log(order);
             await this.orderService.createFullOrder(order.currency, order.buyOrSell)
         }
     }

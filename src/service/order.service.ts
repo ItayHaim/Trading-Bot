@@ -20,7 +20,8 @@ export class OrderService {
     async createFullOrder(currency: Currency, orderSide: BuyOrSell): Promise<void> {
         try {
             // Check if can create an order (according to openOrderAllowed)
-            if (await this.canCreateOrder() === false) {
+            const canCreateOrder = await this.canCreateOrder()
+            if (canCreateOrder === false) {
                 return
             }
 
