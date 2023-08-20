@@ -40,6 +40,7 @@ export class StrategyService {
 
     async crossesAndBBStrategy(waitingOrders: WaitingCrossesArrayType[]) {
         waitingOrders.sort((a, b) => b.MACDDiff - a.MACDDiff)
+        console.log('✌️waitingOrders --->', waitingOrders);
 
         for (let index in waitingOrders) {
             const order = waitingOrders[index]
