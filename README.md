@@ -14,17 +14,15 @@ Make sure you have [Node.js](http://nodejs.org/) and npm installed.
 
 1. Clone the repository:
 
-bash git clone https://github.com/ItayHaim/Trading-Bot-New.git
-
+`git clone https://github.com/ItayHaim/Trading-Bot-New.git`
 
 2. Navigate into the project directory:
 
-bash cd Trading-Bot-New
-
+`cd Trading-Bot-New`
 
 3. Install the dependencies:
 
-bash npm install
+`npm install`
 
 
 ---
@@ -37,7 +35,7 @@ bash npm install
 
 ## Binance Setup
 
-- Register an account or sign in to your account in Binance.
+- Sign in to your account in Binance.
 - Generate API and Secret keys (make sure to enable the Futures Trading on your account).
 - Save these keys as you will need these in the next steps.
 
@@ -48,11 +46,11 @@ bash npm install
 - Rename the `.env.sample` file (if exist) to `.env`.
 - Open the `.env` file and customize the following fields: 
 
-bash API_KEY=your-binance-api-key API_SECRET=your-binance-api-secret
+` API_KEY=your-binance-api-key API_SECRET=your-binance-api-secret`
 
 - Make sure you have enough balance in your USDT wallet:
 
-bash USDT_AMOUNT * OPEN_ORDER_ALLOWED * 2 < Your USDT Balance
+` USDT_AMOUNT * OPEN_ORDER_ALLOWED * 2 < Your USDT Balance`
 
   Adjust the `USDT_AMOUNT` and `OPEN_ORDER_ALLOWED` in your `.env` file accordingly.
 
@@ -62,7 +60,7 @@ bash USDT_AMOUNT * OPEN_ORDER_ALLOWED * 2 < Your USDT Balance
 
 - After completing the steps above, you are now ready to run the bot:
 
-bash npm start
+`npm start`
 
 
 ---
@@ -81,8 +79,6 @@ This project is licensed under [MIT License](LICENSE).
 
 ## Acknowledgement
 
-This bot is built using React for the client side and Node.js for the server side, and utilizes the ccxt npm package for trading functions. 
+This bot is built using Node.js for the server side, and utilizes the ccxt npm package for trading functions. 
 
 ---
-
-_If you encounter any problems, do not hesitate to raise an issue or submit a pull request._

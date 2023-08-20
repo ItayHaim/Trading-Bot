@@ -87,12 +87,12 @@ export class IndicatorService {
             const calculateMACDDiff = Math.abs(((biggerNumber - smallerNumber) / smallerNumber) * 100)
 
             if (cross.order === BuyOrSell.Buy && calculateMACDDiff >= 10) {
-                if ((lastClosedPrice <= (lastBB.upper + (lastBB.upper * 0.0011))) && (lastClosedPrice >= lastBB.middle)) {
+                if ((lastClosedPrice <= lastBB.upper) && (lastClosedPrice >= lastBB.middle)) {
                     console.log('Should create buy order ' + symbol);
                     return { currency: currency, buyOrSell: BuyOrSell.Buy, MACDDiff: calculateMACDDiff }
                 }
-            } else if (cross.order === BuyOrSell.Sell) {
-                if ((lastClosedPrice >= (lastBB.lower - (lastBB.lower * 0.0011))) && (lastClosedPrice <= lastBB.middle)) {
+            } else if (cross.order === BuyOrSell.Sell && calculateMACDDiff >= 10) {
+                if ((lastClosedPrice >= lastBB.lower) && (lastClosedPrice <= lastBB.middle)) {
                     console.log('Should create sell order ' + symbol);
                     return { currency: currency, buyOrSell: BuyOrSell.Sell, MACDDiff: calculateMACDDiff }
                 }

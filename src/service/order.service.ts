@@ -90,15 +90,11 @@ export class OrderService {
 
             // Find the other SideOrder (TP/SL) to close him
             const otherSideOrder = await AppDataSource.getRepository(SideOrder)
-            .createQueryBuilder("sideOrder")
-            .where("sideOrder.mainOrder = :mainOrderId", { mainOrderId: mainOrder.id })
-            .andWhere("sideOrder.id != :sideOrderId", { sideOrderId: sideOrder.id })
-            .getOne();
-            
-            console.log('✌️sideOrder --->', sideOrder);
-            console.log('✌️{ mainOrderId: mainOrder.id } --->', { mainOrderId: mainOrder.id });
-            console.log('✌️{ sideOrderId: sideOrder.id } --->', { sideOrderId: sideOrder.id });
-            console.log('✌️otherSideOrder --->', otherSideOrder);
+                .createQueryBuilder("sideOrder")
+                .where("sideOrder.mainOrder = :mainOrderId", { mainOrderId: mainOrder.id })
+                .andWhere("sideOrder.id != :sideOrderId", { sideOrderId: sideOrder.id })
+                .getOne();
+
             await closeOrder(otherSideOrder.orderId, symbol)
 
             //Delete orders from DB
