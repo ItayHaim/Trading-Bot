@@ -83,7 +83,7 @@ export class IndicatorService {
 
         if (cross) {
             if (cross.order === BuyOrSell.Buy) {
-                if ((lastClosedPrice <= (lastBB.upper + (lastBB.upper * 0.001))) && (lastClosedPrice >= lastBB.middle)) {
+                if ((lastClosedPrice <= (lastBB.upper + (lastBB.upper * 0.0011))) && (lastClosedPrice >= lastBB.middle)) {
                     console.log('Should create buy order ' + symbol);
                     const biggerNumber = Math.max(cross.lastResult.MACD, cross.lastResult.signal)
                     const smallerNumber = Math.min(cross.lastResult.MACD, cross.lastResult.signal)
@@ -91,7 +91,7 @@ export class IndicatorService {
                     return { currency: currency, buyOrSell: BuyOrSell.Buy, MACDDiff: ((biggerNumber - smallerNumber) / smallerNumber) * 100 }
                 }
             } else if (cross.order === BuyOrSell.Sell) {
-                if ((lastClosedPrice >= (lastBB.lower - (lastBB.lower * 0.001))) && (lastClosedPrice <= lastBB.middle)) {
+                if ((lastClosedPrice >= (lastBB.lower - (lastBB.lower * 0.0011))) && (lastClosedPrice <= lastBB.middle)) {
                     console.log('Should create sell order ' + symbol);
                     const biggerNumber = Math.max(cross.lastResult.MACD, cross.lastResult.signal)
                     const smallerNumber = Math.min(cross.lastResult.MACD, cross.lastResult.signal)
