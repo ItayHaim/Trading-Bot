@@ -82,11 +82,17 @@ export class OrderService {
         }
     }
 
-    async closeOrderFull(order: SideOrder): Promise<void> {
+    async closeOrderFull(order: SideOrder, manually: boolean = false): Promise<void> {
         try {
             const { mainOrder } = order
-            const { currency } = mainOrder
+            const { currency, buyOrSell, amount } = mainOrder
             const { symbol } = currency
+
+            // Close the position
+            if (manually) {
+                const closePositionSide = buyOrSell === 'buy' ? 'sell' : 'buy'
+                await binanceExchange.createOrder(symbol, 'market', closePositionSide, amount, null, { 'reduceOnly': true })
+            }
 
             // Find the other SideOrder (TP/SL) to close him
             const otherSideOrder = await AppDataSource.getRepository(SideOrder)
