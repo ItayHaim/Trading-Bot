@@ -164,7 +164,7 @@ export class OrderService {
 
             const timeDifference = (currentTime.getTime() - createdAt.getTime()) / (1000 * 60)
 
-            if (timeDifference >= 40) {
+            if (timeDifference >= 35) {
                 const PNL = await getPositionPNL(symbol)
                 await this.closeOrderManually(order, PNL)
             }
