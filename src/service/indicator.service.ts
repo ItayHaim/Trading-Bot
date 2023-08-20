@@ -90,7 +90,7 @@ export class IndicatorService {
             } else if (cross.order === BuyOrSell.Sell) {
                 if (lastClosedPrice <= lastBB.middle) {
                     console.log('Should create sell order ' + symbol);
-                    return { currency: currency, buyOrSell: BuyOrSell.Buy, MACDDiff: Math.abs((cross.lastResult.MACD - cross.lastResult.signal) / ((cross.lastResult.MACD + cross.lastResult.signal) / 2)) * 100 }
+                    return { currency: currency, buyOrSell: BuyOrSell.Sell, MACDDiff: Math.abs((cross.lastResult.MACD - cross.lastResult.signal) / ((cross.lastResult.MACD + cross.lastResult.signal) / 2)) * 100 }
                 }
             } else {
                 console.log('Should NOT create order ' + symbol);
