@@ -7,18 +7,20 @@ import { changeLeverage, changeToIsolated, getCoinOHLCV } from "./operation/exch
 
 
 AppDataSource.initialize().then(async () => {
-    // First initialize the last 100 candles
     try {
         const timeFrame = process.env.TIME_FRAME
         const leverage = Number(process.env.LEVERAGE)
         const candleAmount = Number(process.env.CANDLE_AMOUNT)
 
-        for (const coinPair in CurrenciesArray) {
-            const symbol = CurrenciesArray[coinPair]
+        // First initialize all the currencies and save them and their candlesticks in DB
+        for (const index in CurrenciesArray) {
+            const symbol = CurrenciesArray[index]
 
             const currency = await AppDataSource.manager.save(Currency, {
                 symbol: symbol
             })
+
+            // Change currency to isolated and change his leverage
             await changeLeverage(leverage, currency.symbol)
             await changeToIsolated(currency.symbol)
 

@@ -41,7 +41,7 @@ export const fetchTicker = async (symbol: string): Promise<Ticker> => {
  * @param [sinceDate] - The starting date for the OHLCV data. Defaults to the current date.
  * @param [limit] - The maximum number of results to retrieve. Defaults to all results.
  * @param [params] - Additional parameters for the request.
- * @return A promise that resolves to an array of OHLCV data.
+ * @return An array of OHLCV data.
  */
 export const getCoinOHLCV = async (symbol: string, timeFrame: string, sinceDate?: Date, limit?: number, params?: Record<any, any>): Promise<Array<OHLCV>> => {
     try {
