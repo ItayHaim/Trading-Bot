@@ -8,7 +8,7 @@ export class MainOrder {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({ name: 'order_id', type: 'varchar', length: 100 })
+    @Column({ name: 'order_id', type: 'varchar', length: 30 })
     orderId: string
 
     @Column({ type: 'enum', enum: BuyOrSell })
@@ -21,12 +21,12 @@ export class MainOrder {
     status: OrderStatus
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', name: 'created_at' })
-    createdAt: Date;
+    createdAt: Date
 
     @ManyToOne(() => Currency, (currency) => currency.id)
     @JoinColumn({ name: "currency_id" })
     currency: Currency
 
     @OneToMany(() => SideOrder, (sideOrder) => sideOrder.mainOrder, { cascade: true, onDelete: 'CASCADE' })
-    sideOrders: SideOrder[];
+    sideOrders: SideOrder[]
 }

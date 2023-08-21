@@ -7,7 +7,7 @@ export class SideOrder {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({ name: 'order_id', type: 'varchar', length: 100 })
+    @Column({ name: 'order_id', type: 'varchar', length: 30 })
     orderId: string
 
     @Column({ type: 'enum', enum: OrderType })
