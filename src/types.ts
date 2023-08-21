@@ -11,12 +11,6 @@ export type CreateOrderReturnType = { mainOrderId: string, StopLossId: string, T
 
 export type CrossesOutput = [{ crossType: Crosses.CrossUp, values: boolean[], lastResult: MACDOutput | undefined }, { crossType: Crosses.CrossDown, values: boolean[], lastResult: MACDOutput | undefined }]
 
-export interface OrderDataType {
-    mainOrderId: string
-    StopLossId: string
-    TakeProfitId: string
-}
-
 //--------------------------INDICATORS TYPES--------------------------------
 export type SMAPeriods = 9 | 21 | 80 | 100 | 200
 
