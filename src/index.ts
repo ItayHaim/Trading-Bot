@@ -12,11 +12,11 @@ AppDataSource.initialize().then(async () => {
         const leverage = Number(process.env.LEVERAGE)
         const candleAmount = Number(process.env.CANDLE_AMOUNT)
 
-        // Remove data from currency and candlestick tables
-        await AppDataSource.createQueryRunner()
-            .dropTable('currency')
-        await AppDataSource.createQueryRunner()
-            .dropTable('candlestick')
+        // Deleting data from currency and candlestick tables
+        await AppDataSource.getRepository(CandleStick)
+            .delete({})
+        await AppDataSource.getRepository(Currency)
+            .delete({})
 
         // First initialize all the currencies and save them and their candlesticks in DB
         for (const index in CurrenciesArray) {
@@ -45,7 +45,7 @@ AppDataSource.initialize().then(async () => {
         }
         // Run the trading strategy
         console.log('Connect and initialize ')
-        main()
+        // main()
     } catch (err) {
         console.log('Failed to connect or initialize: ' + err);
         AppDataSource.destroy()
