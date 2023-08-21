@@ -2,6 +2,7 @@ import { CurrenciesArray } from "./currencies";
 import { AppDataSource } from "./data-source";
 import { CandleStick } from "./entity/CandleStick";
 import { Currency } from "./entity/Currency";
+import { SideOrder } from "./entity/SideOrder";
 import { main } from "./main";
 import { changeLeverage, changeToIsolated, getCoinOHLCV } from "./operation/exchangeOperations";
 
@@ -12,10 +13,12 @@ AppDataSource.initialize().then(async () => {
         const leverage = Number(process.env.LEVERAGE)
         const candleAmount = Number(process.env.CANDLE_AMOUNT)
 
-        // Deleting data from currency and candlestick tables
+        // Deleting data from currency, candlestick and sid orders tables
         await AppDataSource.getRepository(CandleStick)
             .delete({})
         await AppDataSource.getRepository(Currency)
+            .delete({})
+        await AppDataSource.getRepository(SideOrder)
             .delete({})
 
         // First initialize all the currencies and save them and their candlesticks in DB
