@@ -9,8 +9,8 @@ export class StatisticService {
         try {
             statistic.success++;
             await writeFile(this.filePath, JSON.stringify(statistic), 'utf-8');
-        } catch (error) {
-            console.error('Error writing to file:', error);
+        } catch (err) {
+            throw new Error('Error writing to file: ' + err);
         }
     }
 
@@ -18,8 +18,8 @@ export class StatisticService {
         try {
             statistic.failed++;
             await writeFile(this.filePath, JSON.stringify(statistic), 'utf-8');
-        } catch (error) {
-            console.error('Error writing to file:', error);
+        } catch (err) {
+            throw new Error('Error writing to file: ' + err);
         }
     }
 }
