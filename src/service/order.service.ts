@@ -197,6 +197,8 @@ export class OrderService {
             // Limit number of orders on the same time (depend on the balance of USDT you have)
             // You supposed to hold this equation: 
             // (USDT_AMOUNT * OPEN_ORDER_ALLOWED * 2 < USDT Balance)!!!
+
+            //! Fix this!!
             const amountOfOrders = await AppDataSource.manager.count(MainOrder)
             if (amountOfOrders >= this.openOrdersAllowed) {
                 return false
