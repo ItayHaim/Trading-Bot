@@ -34,6 +34,6 @@ export const crossStrategy = async () => {
 
         console.log('End strategy');
     } catch (err) {
-        console.log('Strategy Failed: ' + err);
+        throw new Error('Cross strategy Failed: ' + err);
     }
 }

@@ -10,6 +10,7 @@ import { StatisticService } from "./statistic.service"
 export class OrderService {
     private usdtAmount = Number(process.env.USDT_AMOUNT)
     private openOrdersAllowed = Number(process.env.OPEN_ORDER_ALLOWED)
+    private openOrderAllowedTime = Number(process.env.OPEN_ORDER_ALLOWED_TIME)
     private statisticService = new StatisticService()
 
     async calculateOrderUSDTAmount(symbol: string): Promise<number> {
@@ -172,7 +173,7 @@ export class OrderService {
 
                 const timeDifference = (currentTime.getTime() - createdAt.getTime()) / (1000 * 60)
 
-                if (timeDifference >= 20) {
+                if (timeDifference >= this.openOrderAllowedTime) {
                     const PNL = await getPositionPNL(symbol)
                     await this.closeOrderManually(order, PNL)
                 }
