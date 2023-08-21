@@ -11,7 +11,8 @@ const convertOHLCVToCandleData = (OHLCV: OHLCV): StockData => {
             close: [OHLCV[4]]
         }
     } catch (err) {
-        throw new Error('Failed to convert OHCLV to candle data: ' + err)
+        console.error('Failed to convert OHCLV to candle data: ' + err)
+        throw err
     }
 }
 
@@ -22,7 +23,8 @@ export const isDoji = (OHLCV: OHLCV): boolean => {
         const res = doji(value)
         return res
     } catch (err) {
-        throw new Error('Failed to check candle type: ' + err)
+        console.error('Failed to check candle type: ' + err)
+        throw err
     }
 }
 
@@ -33,7 +35,8 @@ export const isBullishEngulfingPattern = (OHLCV: OHLCV): boolean => {
         const res = bullishengulfingpattern(value)
         return res
     } catch (err) {
-        throw new Error('Failed to check candle type: ' + err)
+        console.error('Failed to check candle type: ' + err)
+        throw err
     }
 }
 
@@ -43,7 +46,8 @@ export const isBullishHarami = (OHLCV: OHLCV): boolean => {
         const res = bullishharami(value)
         return res
     } catch (err) {
-        throw new Error('Failed to check candle type: ' + err)
+        console.error('Failed to check candle type: ' + err)
+        throw err
     }
 }
 
@@ -53,7 +57,8 @@ export const isBullishHammer = (OHLCV: OHLCV): boolean => {
         const res = bullishhammerstick(value)
         return res
     } catch (err) {
-        throw new Error('Failed to check candle type: ' + err)
+        console.error('Failed to check candle type: ' + err)
+        throw err
     }
 }
 
@@ -63,7 +68,8 @@ export const isMorningStar = (OHLCV: OHLCV): boolean => {
         const res = morningstar(value)
         return res
     } catch (err) {
-        throw new Error('Failed to check candle type: ' + err)
+        console.error('Failed to check candle type: ' + err)
+        throw err
     }
 }
 
@@ -74,7 +80,8 @@ export const isBearishEngulfingPattern = (OHLCV: OHLCV): boolean => {
         const res = bearishengulfingpattern(value)
         return res
     } catch (err) {
-        throw new Error('Failed to check candle type: ' + err)
+        console.error('Failed to check candle type: ' + err)
+        throw err
     }
 }
 
@@ -84,7 +91,8 @@ export const isBearishHarami = (OHLCV: OHLCV): boolean => {
         const res = bearishharami(value)
         return res
     } catch (err) {
-        throw new Error('Failed to check candle type: ' + err)
+        console.error('Failed to check candle type: ' + err)
+        throw err
     }
 }
 
@@ -94,7 +102,8 @@ export const isBearishHammer = (OHLCV: OHLCV): boolean => {
         const res = bearishhammerstick(value)
         return res
     } catch (err) {
-        throw new Error('Failed to check candle type: ' + err)
+        console.error('Failed to check candle type: ' + err)
+        throw err
     }
 }
 
@@ -104,6 +113,7 @@ export const isShootingStar = (OHLCV: OHLCV): boolean => {
         const res = shootingstar(value)
         return res
     } catch (err) {
-        throw new Error('Failed to check candle type: ' + err)
+        console.error('Failed to check candle type: ' + err)
+        throw err
     }
 }

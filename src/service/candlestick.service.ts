@@ -30,7 +30,8 @@ export class CandleStickService {
             }
             console.log('Added on candle!');
         } catch (err) {
-            throw new Error('Failed to add one candle: ' + err)
+            console.error('Failed to add one candle: ' + err)
+            throw err
         }
     }
 }

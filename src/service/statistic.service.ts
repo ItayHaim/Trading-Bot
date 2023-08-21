@@ -10,7 +10,8 @@ export class StatisticService {
             statistic.success++;
             await writeFile(this.filePath, JSON.stringify(statistic), 'utf-8');
         } catch (err) {
-            throw new Error('Error writing to file: ' + err);
+            console.error('Error writing to file: ' + err)
+            throw err
         }
     }
 
@@ -19,7 +20,8 @@ export class StatisticService {
             statistic.failed++;
             await writeFile(this.filePath, JSON.stringify(statistic), 'utf-8');
         } catch (err) {
-            throw new Error('Error writing to file: ' + err);
+            console.error('Error writing to file: ' + err)
+            throw err
         }
     }
 }

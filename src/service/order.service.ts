@@ -18,7 +18,8 @@ export class OrderService {
             const amount = await getQuoteAmount(symbol, this.usdtAmount)
             return amount
         } catch (err) {
-            throw new Error('Failed to calculate order USDT amount: ' + err)
+            console.error('Failed to calculate order USDT amount: ' + err)
+            throw err
         }
     }
 
@@ -62,7 +63,8 @@ export class OrderService {
             })
             console.log('Order created successfully');
         } catch (err) {
-            throw new Error('Failed to create full order: ' + err)
+            console.error('Failed to create full order: ' + err)
+            throw err
         }
     }
 
@@ -87,7 +89,8 @@ export class OrderService {
                 }
             }
         } catch (err) {
-            throw new Error('Failed to check order status: ' + err)
+            console.error('Failed to check order status: ' + err)
+            throw err
         }
     }
 
@@ -120,7 +123,8 @@ export class OrderService {
 
             console.log(`order: ${mainOrder.orderId} (${symbol}) is closed!`);
         } catch (err) {
-            throw new Error('Failed to close order (Automatically): ' + err);
+            console.error('Failed to close order (Automatically): ' + err)
+            throw err;
         }
     }
 
@@ -153,7 +157,8 @@ export class OrderService {
 
             console.log(`order: ${mainOrder.orderId} (${symbol}) is closed!`);
         } catch (err) {
-            throw new Error('Failed to close order (Manually): ' + err);
+            console.error('Failed to close order (Manually): ' + err)
+            throw err;
         }
     }
 
@@ -179,7 +184,8 @@ export class OrderService {
                 }
             }
         } catch (err) {
-            throw new Error('Failed to check order by time: ' + err);
+            console.error('Failed to check order by time: ' + err)
+            throw err
         }
     }
 
@@ -194,7 +200,8 @@ export class OrderService {
             }
             return true
         } catch (err) {
-            throw new Error('Failed to check if can create order: ' + err)
+            console.error('Failed to check if can create order: ' + err)
+            throw err
         }
     }
 }

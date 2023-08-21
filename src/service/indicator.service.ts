@@ -17,7 +17,8 @@ export class IndicatorService {
             }
             return
         } catch (err) {
-            throw new Error('Failed to check MACD: ' + err)
+            console.error('Failed to check MACD: ' + err)
+            throw err
         }
     }
 
@@ -33,7 +34,8 @@ export class IndicatorService {
             }
             return
         } catch (err) {
-            throw new Error('Failed to check RSI: ' + err)
+            console.error('Failed to check RSI: ' + err)
+            throw err
         }
     }
 
@@ -49,7 +51,8 @@ export class IndicatorService {
             }
             return
         } catch (err) {
-            throw new Error('Failed to check StochasticRSI: ' + err)
+            console.error('Failed to check StochasticRSI: ' + err)
+            throw err
         }
     }
 
@@ -66,7 +69,8 @@ export class IndicatorService {
             }
             return
         } catch (err) {
-            throw new Error('Failed to check BB: ' + err)
+            console.error('Failed to check BB: ' + err)
+            throw err
         }
     }
 
@@ -89,7 +93,8 @@ export class IndicatorService {
             }
             return
         } catch (err) {
-            throw new Error('Failed to check crosses: ' + err)
+            console.error('Failed to check crosses: ' + err)
+            throw err
         }
     }
 
@@ -122,7 +127,8 @@ export class IndicatorService {
                 }
             }
         } catch (err) {
-            throw new Error('Failed to check cross and BB: ' + err)
+            console.error('Failed to check cross and BB: ' + err)
+            throw err
         }
     }
 }

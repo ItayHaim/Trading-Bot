@@ -24,6 +24,7 @@ export const indicatorsStrategy = async () => {
         }
         console.log('End strategy');
     } catch (err) {
-        throw new Error('Indicator strategy Failed: ' + err);
+        console.error('Indicator strategy Failed: ' + err)
+        throw err
     }
 }

@@ -38,7 +38,8 @@ export class StrategyService {
                 console.log('Should NOT create order ' + symbol);
             }
         } catch (err) {
-            throw new Error('Failed to run indicator strategy: ' + err)
+            console.error('Failed to run indicator strategy: ' + err)
+            throw err
         }
     }
 
@@ -52,7 +53,8 @@ export class StrategyService {
                 await this.orderService.createFullOrder(order.currency, order.buyOrSell)
             }
         } catch (err) {
-            throw new Error('Failed to run cross and BB strategy: ' + err)
+            console.error('Failed to run cross and BB strategy: ' + err)
+            throw err
         }
     }
 }
