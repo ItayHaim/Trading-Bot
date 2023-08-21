@@ -1,4 +1,4 @@
-import { OHLCV, Ticker } from "ccxt"
+import { OHLCV, OrderImmediatelyFillable, Ticker } from "ccxt"
 import { Order, OrderSide, OrderType } from "ccxt/js/src/base/types"
 import { binanceExchange } from "./exchange"
 import { CreateOrderReturnType } from "../types"
@@ -105,6 +105,10 @@ export const createOrder = async (symbol: string, buyOrSell: OrderSide, amountIn
         return { mainOrderId: mainOrder.id, StopLossId: SL.id, TakeProfitId: TP.id }
     }
     catch (err) {
+        if (err instanceof OrderImmediatelyFillable) {
+            closeAllOrdersBySymbol(symbol)
+            return
+        }
         console.error('Failed to create the order:' + err)
         throw err
     }

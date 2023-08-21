@@ -50,7 +50,7 @@ AppDataSource.initialize().then(async () => {
         console.log('Connect and initialize ')
         main()
     } catch (err) {
-        console.log('Failed to connect or initialize: ' + err);
+        console.error('Failed to connect or initialize: ' + err);
         AppDataSource.destroy()
     }
-}).catch(error => console.log(error))
+}).catch(error => console.error(error))

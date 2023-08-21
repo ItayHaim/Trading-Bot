@@ -1,3 +1,4 @@
+import { NetworkError, OrderNotFound } from "ccxt";
 import { AppDataSource } from "./data-source";
 import { MainOrder } from "./entity/MainOrder";
 import { OrderStatus } from "./enums";
@@ -36,7 +37,13 @@ export const main = async () => {
         // }, 1010 * 60 )
 
     } catch (err) {
-        console.log(err);
+        console.error(err);
+        if (err instanceof NetworkError) {
+            return
+        }
+        if (err instanceof OrderNotFound) {
+            return
+        }
         const openOrders = await AppDataSource.getRepository(MainOrder).find({
             where: { status: OrderStatus.Open },
             relations: { currency: true }
