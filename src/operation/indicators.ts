@@ -1,10 +1,10 @@
-import { BollingerBands, MACD, RSI, SMA, StochasticRSI, CrossDown, CrossUp } from 'technicalindicators';
-import { StochasticRSIOutput } from 'technicalindicators/declarations/momentum/StochasticRSI';
-import { MACDOutput } from "technicalindicators/declarations/moving_averages/MACD";
+import { BollingerBands, MACD, RSI, SMA, StochasticRSI, CrossDown, CrossUp } from 'technicalindicators'
+import { StochasticRSIOutput } from 'technicalindicators/declarations/momentum/StochasticRSI'
+import { MACDOutput } from "technicalindicators/declarations/moving_averages/MACD"
+import { BollingerBandsOutput } from 'technicalindicators/declarations/volatility/BollingerBands'
+import { CrossesOutput, RSIOutput, SMAOutput, SMAPeriods } from "../types"
+import { CrossIndicator, Crosses } from '../enums'
 
-import { BollingerBandsOutput } from 'technicalindicators/declarations/volatility/BollingerBands';
-import { CrossesOutput, RSIOutput, SMAOutput, SMAPeriods } from "../types";
-import { CrossIndicator, Crosses } from '../enums';
 
 /**
  * Calculates the Relative Strength Index (RSI) based on the given OHLCV data and period.
@@ -14,17 +14,17 @@ import { CrossIndicator, Crosses } from '../enums';
  * @return An array of RSI values.
  */
 export const calculateRSI = (closedPrices: number[], period: number = 14): RSIOutput => {
-    const res = RSI.calculate({
-        values: closedPrices,
-        period: period
-    });
-    return res;
+    try {
+        const res = RSI.calculate({
+            values: closedPrices,
+            period: period
+        })
+        return res
+    } catch (err) {
+        console.log(err)
+        throw new Error('Failed to calculate StochasticRSI')
+    }
 }
-// Usage example:
-// getCoinOHLCV('BTC/USDT', '5m', undefined, 100)
-//     .then(data => calculateRSI(data.map(candle => candle[4])))
-//     .then(res => console.log(res))
-//     .catch(err => console.error(err));
 
 /**
  * This function calculates the Stochastic Relative Strength Index (RSI) based on provided 'closedPrices' and various periods.
@@ -38,19 +38,21 @@ export const calculateRSI = (closedPrices: number[], period: number = 14): RSIOu
  * @returns Returns an array of StochasticRSIOutput objects (each having k and d values).
  */
 export const calculateStochasticRSI = (closedPrices: number[], rsiPeriod: number = 14, stochasticPeriod: number = 14, kPeriod: number = 3, dPeriod: number = 3): StochasticRSIOutput[] => {
-    const res = StochasticRSI.calculate({
-        values: closedPrices,
-        dPeriod: dPeriod,
-        kPeriod: kPeriod,
-        rsiPeriod: rsiPeriod,
-        stochasticPeriod: stochasticPeriod
-    })
-    return res
+    try {
+        const res = StochasticRSI.calculate({
+            values: closedPrices,
+            dPeriod: dPeriod,
+            kPeriod: kPeriod,
+            rsiPeriod: rsiPeriod,
+            stochasticPeriod: stochasticPeriod
+        })
+        return res
+    } catch (err) {
+        console.log(err)
+        throw new Error('Failed to calculate StochasticRSI')
+    }
+
 }
-// getCoinOHLCV('BTC/USDT', '5m', undefined, 100)
-//     .then(data => calculateStochasticRSI(data.map(candle => candle[4])))
-//     .then(res => console.log(res))
-//     .catch(err => console.error(err));
 
 /**
  * Calculates the Moving Average Convergence Divergence (MACD) for a set of closing price data.
@@ -64,21 +66,22 @@ export const calculateStochasticRSI = (closedPrices: number[], rsiPeriod: number
  * @returns An array of objects representing the MACD (Moving Average Convergence Divergence) data.
  */
 export const calculateMACD = (closedPrices: number[], fastPeriod: number = 12, slowPeriod: number = 26, signalPeriod: number = 9, useSimpleMAOscillator: boolean = false, useSimpleMASignal: boolean = false): MACDOutput[] => {
-    const res = MACD.calculate({
-        values: closedPrices,
-        fastPeriod: fastPeriod,
-        slowPeriod: slowPeriod,
-        signalPeriod: signalPeriod,
-        SimpleMAOscillator: useSimpleMAOscillator,
-        SimpleMASignal: useSimpleMASignal
-    })
-    return res
+    try {
+
+        const res = MACD.calculate({
+            values: closedPrices,
+            fastPeriod: fastPeriod,
+            slowPeriod: slowPeriod,
+            signalPeriod: signalPeriod,
+            SimpleMAOscillator: useSimpleMAOscillator,
+            SimpleMASignal: useSimpleMASignal
+        })
+        return res
+    } catch (err) {
+        console.log(err)
+        throw new Error('Failed to calculate MACD')
+    }
 }
-// Usage example:
-// getCoinOHLCV('BTC/USDT', '5m', undefined, 100)
-//     .then(data => calculateMACD(data.map(candle => candle[4])))
-//     .then(res => console.log(res))
-//     .catch(err => console.error(err));
 
 /**
 * Calculates the Simple Moving Average (SMA) for each period
@@ -92,19 +95,19 @@ export const calculateMACD = (closedPrices: number[], fastPeriod: number = 12, s
 *        'sma' is the calculated Simple Moving Average for that period.
 */
 export const calculateSMA = (closedPrices: number[], periods: SMAPeriods[] = [9, 21, 80, 100, 200]): SMAOutput => {
-    return periods.map(period => ({
-        period,
-        sma: SMA.calculate({
-            values: closedPrices,
-            period
-        })
-    }));
+    try {
+        return periods.map(period => ({
+            period,
+            sma: SMA.calculate({
+                values: closedPrices,
+                period
+            })
+        }))
+    } catch (err) {
+        console.log(err)
+        throw new Error('Failed to calculate SMA')
+    }
 }
-// Usage example:
-// getCoinOHLCV('BTC/USDT', '5m', undefined, 100)
-//     .then(data => calculateSMA(data.map(candle => candle[4])))
-//     .then(res => console.log(res))
-//     .catch(err => console.error(err));
 
 /**
 * Calculates Bollinger Bands for the given closing prices.
@@ -116,22 +119,29 @@ export const calculateSMA = (closedPrices: number[], periods: SMAPeriods[] = [9,
 * @returns Returns an array of objects. Each object typically includes upper band value, middle band (SMA), and lower band for each time interval based on the provided period and stdDev.
 */
 export const calculateBollingerBands = (closedPrices: number[], period: number = 20, stdDev: number = 2): BollingerBandsOutput[] => {
-    const res = BollingerBands.calculate({
-        values: closedPrices,
-        period: period,
-        stdDev: stdDev
-    })
-    return res
+    try {
+        const res = BollingerBands.calculate({
+            values: closedPrices,
+            period: period,
+            stdDev: stdDev
+        })
+        return res
+    } catch (err) {
+        console.log(err)
+        throw new Error('Failed to calculate BB')
+    }
 }
-// Usage example:
-// getCoinOHLCV('BTC/USDT', '5m', undefined, 100)
-//     .then(data => calculateSMA(data.map(candle => candle[4])))
-//     .then(res => console.log(res))
-//     .catch(err => console.error(err));
 
+/**
+ * Calculates crosses based on closed prices and cross indicator.
+ *
+ * @param closedPrices - An array of closed prices.
+ * @param crossIndicator - The cross indicator to use (SMA or MACD).
+ * @return An array of cross objects.
+ */
 export const calculateCrosses = (closedPrices: number[], crossIndicator: CrossIndicator): CrossesOutput => {
     try {
-        let lineA: number[], lineB: number[], lastResult: MACDOutput | undefined;
+        let lineA: number[], lineB: number[], lastResult: MACDOutput | undefined
 
         if (crossIndicator === CrossIndicator.SMA) {
             const SMA = calculateSMA(closedPrices)
@@ -159,6 +169,7 @@ export const calculateCrosses = (closedPrices: number[], crossIndicator: CrossIn
         ]
     }
     catch (err) {
+        console.log(err)
         throw new Error('Failed to calculate cross')
     }
 }
