@@ -1,4 +1,7 @@
 import { AppDataSource } from "./data-source";
+import { MainOrder } from "./entity/MainOrder";
+import { OrderStatus } from "./enums";
+import { closeAllOrdersBySymbol } from "./operation/exchangeOperations";
 import { CandleStickService } from "./service/candlestick.service";
 import { OrderService } from "./service/order.service";
 import { crossStrategy } from "./strategy/crossStrategy";
@@ -34,6 +37,16 @@ export const main = async () => {
 
     } catch (err) {
         console.log(err);
+        const openOrders = await AppDataSource.getRepository(MainOrder).find({
+            where: { status: OrderStatus.Open },
+            relations: { currency: true }
+        })
+        for (const index in openOrders) {
+            const order = openOrders[index]
+            const { currency } = order
+            const { symbol } = currency
+            await closeAllOrdersBySymbol(symbol)
+        }
         AppDataSource.destroy()
     }
 }

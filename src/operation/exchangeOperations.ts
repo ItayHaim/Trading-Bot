@@ -14,7 +14,8 @@ export const getCoinBalance = async (coin: string = 'USDT'): Promise<string | nu
         const res = await binanceExchange.fetchBalance()
         return res[coin].free
     } catch (err) {
-        throw new Error('Failed to get coin balance: ' + err)
+        console.error('Failed to get coin balance: ' + err)
+        throw err
     }
 }
 
@@ -29,7 +30,8 @@ export const fetchTicker = async (symbol: string): Promise<Ticker> => {
         const res = await binanceExchange.fetchTicker(symbol)
         return res
     } catch (err) {
-        throw new Error('Failed to fetch ticker: ' + err)
+        console.error('Failed to fetch ticker: ' + err)
+        throw err
     }
 }
 
@@ -49,7 +51,8 @@ export const getCoinOHLCV = async (symbol: string, timeFrame: string, sinceDate?
         const res = await binanceExchange.fetchOHLCV(symbol, timeFrame, since, limit, params)
         return res
     } catch (err) {
-        throw new Error('Failed to get coin OHLCV: ' + err)
+        console.error('Failed to get coin OHLCV: ' + err)
+        throw err
     }
 }
 
@@ -66,8 +69,8 @@ export const getQuoteAmount = async (symbol: string, quoteAmount: number): Promi
         const price = ticker.close
         return quoteAmount / price
     } catch (err) {
-        throw new Error('Failed to get the quote amount: ' + err)
-
+        console.error('Failed to get the quote amount: ' + err)
+        throw err
     }
 }
 
@@ -102,7 +105,8 @@ export const createOrder = async (symbol: string, buyOrSell: OrderSide, amountIn
         return { mainOrderId: mainOrder.id, StopLossId: SL.id, TakeProfitId: TP.id }
     }
     catch (err) {
-        throw new Error('Failed to create the order:' + err)
+        console.error('Failed to create the order:' + err)
+        throw err
     }
 }
 
@@ -119,7 +123,8 @@ export const closeOrder = async (orderId: string, symbol: string, params: Record
         const res = await binanceExchange.cancelOrder(orderId, symbol, params)
         return res
     } catch (err) {
-        throw new Error('Failed to close the order: ' + err)
+        console.error('Failed to close the order: ' + err)
+        throw err
     }
 }
 
@@ -140,7 +145,8 @@ export const editOrder = async (orderId: string, symbol: string, buyOrSell: stri
         const res = await binanceExchange.editOrder(orderId, symbol, type, buyOrSell, amountInUSDT, price, params)
         return res
     } catch (err) {
-        throw new Error('Failed to edit the order: ' + err)
+        console.error('Failed to edit the order: ' + err)
+        throw err
     }
 }
 
@@ -151,12 +157,13 @@ export const editOrder = async (orderId: string, symbol: string, buyOrSell: stri
  * @param params - Additional parameters for the cancellation request.
  * @return An array of cancelled orders.
  */
-export const cancelAllOrdersBySymbol = async (symbol: string, params: Record<any, any> = undefined): Promise<Array<Order>> => {
+export const closeAllOrdersBySymbol = async (symbol: string, params: Record<any, any> = undefined): Promise<Array<Order>> => {
     try {
         const res = await binanceExchange.cancelAllOrders(symbol, params)
         return res
     } catch (err) {
-        throw new Error('Failed to cancel all orders: ' + err)
+        console.error('Failed to cancel all orders: ' + err)
+        throw err
     }
 }
 
@@ -172,7 +179,8 @@ export const getOrder = async (orderId: string, symbol: string): Promise<Order> 
         const res = await binanceExchange.fetchOrder(orderId, symbol)
         return res
     } catch (err) {
-        throw new Error('Failed to get order: ' + err)
+        console.error('Failed to get order: ' + err)
+        throw err
     }
 }
 
@@ -191,7 +199,8 @@ export const getOpenOrders = async (symbol?: string, sinceDate?: Date, limit?: n
         const res = await binanceExchange.fetchOpenOrders(symbol, since, limit, params)
         return res
     } catch (err) {
-        throw new Error('Failed to get the open orders: ' + err)
+        console.error('Failed to get the open orders: ' + err)
+        throw err
     }
 }
 
@@ -207,7 +216,8 @@ export const isOrderFilled = async (orderId: string, symbol: string): Promise<st
         const res = await binanceExchange.fetchOrderStatus(orderId, symbol)
         return res
     } catch (err) {
-        throw new Error('Failed to check if order is filled: ' + err)
+        console.error('Failed to check if order is filled: ' + err)
+        throw err
     }
 }
 
@@ -222,7 +232,8 @@ export const changeLeverage = async (leverage: number, symbol: string): Promise<
         const res = await binanceExchange.setLeverage(leverage, symbol)
         return res
     } catch (err) {
-        throw new Error('Failed to change leverage: ' + err)
+        console.error('Failed to change leverage: ' + err)
+        throw err
     }
 
 }
@@ -238,7 +249,8 @@ export const changeToIsolated = async (symbol: string, marginMode: string = 'iso
         const res = await binanceExchange.setMarginMode(marginMode, symbol)
         return res
     } catch (err) {
-        throw new Error('Failed to change to isolated: ' + err)
+        console.error('Failed to change to isolated: ' + err)
+        throw err
     }
 
 }
@@ -254,6 +266,7 @@ export const getPositionPNL = async (symbol: string): Promise<number> => {
         const res = await binanceExchange.fetchPositions([symbol])
         return res[0].unrealizedPnl
     } catch (err) {
-        throw new Error('Failed to get position PNL: ' + err)
+        console.error('Failed to get position PNL: ' + err)
+        throw err
     }
 }

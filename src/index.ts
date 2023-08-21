@@ -48,7 +48,7 @@ AppDataSource.initialize().then(async () => {
         }
         // Run the trading strategy
         console.log('Connect and initialize ')
-        // main()
+        main()
     } catch (err) {
         console.log('Failed to connect or initialize: ' + err);
         AppDataSource.destroy()
