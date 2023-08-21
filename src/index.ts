@@ -12,6 +12,7 @@ AppDataSource.initialize().then(async () => {
         const leverage = Number(process.env.LEVERAGE)
         const candleAmount = Number(process.env.CANDLE_AMOUNT)
 
+        // Remove data from currency and candlestick tables
         await AppDataSource.createQueryRunner()
             .dropTable('currency')
         await AppDataSource.createQueryRunner()
