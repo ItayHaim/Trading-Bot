@@ -21,8 +21,7 @@ export const calculateRSI = (closedPrices: number[], period: number = 14): RSIOu
         })
         return res
     } catch (err) {
-        console.log(err)
-        throw new Error('Failed to calculate StochasticRSI')
+        throw new Error('Failed to calculate RSI: ' + err)
     }
 }
 
@@ -48,8 +47,7 @@ export const calculateStochasticRSI = (closedPrices: number[], rsiPeriod: number
         })
         return res
     } catch (err) {
-        console.log(err)
-        throw new Error('Failed to calculate StochasticRSI')
+        throw new Error('Failed to calculate StochasticRSI: ' + err)
     }
 
 }
@@ -78,8 +76,7 @@ export const calculateMACD = (closedPrices: number[], fastPeriod: number = 12, s
         })
         return res
     } catch (err) {
-        console.log(err)
-        throw new Error('Failed to calculate MACD')
+        throw new Error('Failed to calculate MACD: ' + err)
     }
 }
 
@@ -104,8 +101,7 @@ export const calculateSMA = (closedPrices: number[], periods: SMAPeriods[] = [9,
             })
         }))
     } catch (err) {
-        console.log(err)
-        throw new Error('Failed to calculate SMA')
+        throw new Error('Failed to calculate SMA: ' + err)
     }
 }
 
@@ -127,8 +123,7 @@ export const calculateBollingerBands = (closedPrices: number[], period: number =
         })
         return res
     } catch (err) {
-        console.log(err)
-        throw new Error('Failed to calculate BB')
+        throw new Error('Failed to calculate BB: ' + err)
     }
 }
 
@@ -169,7 +164,6 @@ export const calculateCrosses = (closedPrices: number[], crossIndicator: CrossIn
         ]
     }
     catch (err) {
-        console.log(err)
-        throw new Error('Failed to calculate cross')
+        throw new Error('Failed to calculate cross: ' + err)
     }
 }
