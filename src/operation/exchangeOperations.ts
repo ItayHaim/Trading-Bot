@@ -17,9 +17,6 @@ export const getCoinBalance = async (coin: string = 'USDT'): Promise<string | nu
         console.log(err)
     }
 }
-// Usage example:
-// getCoinBalance('BTC').then(console.log).catch(console.error)
-
 
 /**
  * Fetches ticker information from Binance.
@@ -35,18 +32,6 @@ export const fetchTicker = async (symbol: string): Promise<Ticker> => {
         console.log(err)
     }
 }
-// Usage example:
-// fetchTicker('BTC/USDT').then(console.log).catch(console.error)
-
-export const loadMarkets = async () => {
-    try {
-        const res = await binanceExchange.loadMarkets()
-        return res
-    } catch (err) {
-        console.log(err)
-    }
-}
-
 
 /**
  * Retrieves the OHLCV (Open, High, Low, Close, Volume) data for a specific symbol and time frame.
@@ -67,8 +52,6 @@ export const getCoinOHLCV = async (symbol: string, timeFrame: string, sinceDate?
         console.log(err)
     }
 }
-// Usage example:
-// getCoinOHLCV('BTC/USDT', '5m', undefined, 10).then(console.log).catch(console.error)
 
 /**
  * Calculates the amount of a base currency according to the given quote amount.
@@ -82,8 +65,6 @@ export const getQuoteAmount = async (symbol: string, quoteAmount: number): Promi
     const price = ticker.close
     return quoteAmount / price
 }
-// Usage example:
-// getQuoteAmount('BTC/USDT',50).then(console.log).catch(console.error)
 
 /**
  * Creates an order.
@@ -119,9 +100,6 @@ export const createOrder = async (symbol: string, buyOrSell: OrderSide, amountIn
         console.log(err)
     }
 }
-// Usage example:
-// getQuoteAmount('BTC/USDT',50).then(USDTAmount => createOrder('BTC/USDT','buy',USDTAmount)).catch(console.error)
-
 
 /**
  * Cancels an order.
@@ -139,8 +117,6 @@ export const closeOrder = async (orderId: string, symbol: string, params: Record
         console.log(err)
     }
 }
-// Usage example:
-// cancelOrder(order.orderId,'BTC/USDT').then(console.log).catch(console.error)
 
 /**
  * Edits an order.
@@ -162,8 +138,6 @@ export const editOrder = async (orderId: string, symbol: string, buyOrSell: stri
         console.log(err)
     }
 }
-// Usage example:
-// getQuoteAmount('BTC/USDT',50).then(USDTAmount => editOrder('BTC/USDT','buy',USDTAmount)).catch(console.error)
 
 /**
  * Cancels all orders for a given symbol.
@@ -180,8 +154,6 @@ export const cancelAllOrdersBySymbol = async (symbol: string, params: Record<any
         console.log(err)
     }
 }
-// Usage example:
-// cancelAllOrdersBySymbol('BTC/USDT').then(console.log).catch(console.error)
 
 /**
  * Retrieves an order from the Binance exchange.
@@ -194,8 +166,6 @@ export const getOrder = async (orderId: string, symbol: string): Promise<Order> 
     const res = await binanceExchange.fetchOrder(orderId, symbol)
     return res
 }
-// Usage example:
-// getOpenOrders('4411342324').then(console.log).catch(console.error)
 
 /**
  * Retrieves the open orders for a given symbol, since a specific date, and with an optional limit and additional parameters.
@@ -215,8 +185,6 @@ export const getOpenOrders = async (symbol?: string, sinceDate?: Date, limit?: n
         console.log(err)
     }
 }
-// Usage example:
-// getOpenOrders('BTC/USDT',new Date(),5).then(console.log).catch(console.error)
 
 /**
  * Checks if an order is filled.
@@ -226,13 +194,21 @@ export const getOpenOrders = async (symbol?: string, sinceDate?: Date, limit?: n
  * @return The order status.
  */
 export const isOrderFilled = async (orderId: string, symbol: string): Promise<string> => {
-    const res = await binanceExchange.fetchOrderStatus(orderId, symbol)
-    return res
+    try {
+        const res = await binanceExchange.fetchOrderStatus(orderId, symbol)
+        return res
+    } catch (err) {
+        console.log(err)
+    }
 }
-// Usage example:
-// isOrderFilled('cd345m34nf234', 'BTC/USDT').then(console.log).catch(console.error)
 
-export const changeLeverage = async (leverage: number, symbol: string) => {
+/**
+ * Changes the leverage for a given symbol on the Binance exchange.
+ *
+ * @param leverage - The leverage to set.
+ * @param symbol - The symbol for which to change the leverage.
+ */
+export const changeLeverage = async (leverage: number, symbol: string): Promise<any> => {
     try {
         const res = await binanceExchange.setLeverage(leverage, symbol)
         return res
@@ -242,6 +218,12 @@ export const changeLeverage = async (leverage: number, symbol: string) => {
 
 }
 
+/**
+ * Changes the margin mode of a symbol to isolated.
+ *
+ * @param symbol - The symbol to change the margin mode for.
+ * @param marginMode - The margin mode to set. Defaults to 'isolated'.
+ */
 export const changeToIsolated = async (symbol: string, marginMode: string = 'isolated') => {
     try {
         const res = await binanceExchange.setMarginMode(marginMode, symbol)
