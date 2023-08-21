@@ -4,7 +4,6 @@ import StockData from "technicalindicators/declarations/StockData";
 
 const convertOHLCVToCandleData = (OHLCV: OHLCV): StockData => {
     try {
-
         return {
             open: [OHLCV[1]],
             low: [OHLCV[2]],

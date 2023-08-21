@@ -13,8 +13,12 @@ export class OrderService {
     private statisticService = new StatisticService()
 
     async calculateOrderUSDTAmount(symbol: string): Promise<number> {
-        const amount = await getQuoteAmount(symbol, this.usdtAmount)
-        return amount
+        try {
+            const amount = await getQuoteAmount(symbol, this.usdtAmount)
+            return amount
+        } catch (err) {
+            throw new Error('Failed to calculate order USDT amount: ' + err)
+        }
     }
 
     async createFullOrder(currency: Currency, orderSide: BuyOrSell): Promise<void> {
@@ -56,29 +60,33 @@ export class OrderService {
                 mainOrder: mainOrder
             })
             console.log('Order created successfully');
-        } catch (error) {
-            console.log('Order did NOT save in DB!' + error);
+        } catch (err) {
+            throw new Error('Failed to create full order: ' + err)
         }
     }
 
     async checkOrdersStatus(): Promise<void> {
-        const orders = await AppDataSource.manager.find(SideOrder, {
-            where: { status: OrderStatus.Open },
-            relations: { mainOrder: { currency: true } }
-        })
+        try {
+            const orders = await AppDataSource.manager.find(SideOrder, {
+                where: { status: OrderStatus.Open },
+                relations: { mainOrder: { currency: true } }
+            })
 
-        // Run over all the SL/TP orders and check if they're closed/canceled
-        for (const order of orders) {
-            const { mainOrder } = order
-            const { currency } = mainOrder
-            const { symbol } = currency
+            // Run over all the SL/TP orders and check if they're closed/canceled
+            for (const order of orders) {
+                const { mainOrder } = order
+                const { currency } = mainOrder
+                const { symbol } = currency
 
-            const status = await isOrderFilled(order.orderId, symbol)
+                const status = await isOrderFilled(order.orderId, symbol)
 
-            if (status === OrderStatus.Closed || status === OrderStatus.Canceled) {
-                this.closeOrderAutomatically(order)
-                break;
+                if (status === OrderStatus.Closed || status === OrderStatus.Canceled) {
+                    this.closeOrderAutomatically(order)
+                    break;
+                }
             }
+        } catch (err) {
+            throw new Error('Failed to check order status: ' + err)
         }
     }
 
@@ -111,8 +119,7 @@ export class OrderService {
 
             console.log(`order: ${mainOrder.orderId} (${symbol}) is closed!`);
         } catch (err) {
-            console.log(err);
-            console.log('Failed to close order!!');
+            throw new Error('Failed to close order (Automatically): ' + err);
         }
     }
 
@@ -145,41 +152,48 @@ export class OrderService {
 
             console.log(`order: ${mainOrder.orderId} (${symbol}) is closed!`);
         } catch (err) {
-            console.log(err);
-            console.log('Failed to close order!!');
+            throw new Error('Failed to close order (Manually): ' + err);
         }
     }
 
     async checkOrderByTime() {
-        const orders = await AppDataSource.manager.find(MainOrder, {
-            where: { status: OrderStatus.Open },
-            relations: { currency: true, sideOrders: true }
-        })
-        const currentTime = new Date();
+        try {
+            const orders = await AppDataSource.manager.find(MainOrder, {
+                where: { status: OrderStatus.Open },
+                relations: { currency: true, sideOrders: true }
+            })
+            const currentTime = new Date();
 
-        // Run over all the main orders and check if they're open more than 40 minutes
-        for (const index in orders) {
-            const order = orders[index]
-            const { createdAt, currency } = order
-            const { symbol } = currency
+            // Run over all the main orders and check if they're open more than 40 minutes
+            for (const index in orders) {
+                const order = orders[index]
+                const { createdAt, currency } = order
+                const { symbol } = currency
 
-            const timeDifference = (currentTime.getTime() - createdAt.getTime()) / (1000 * 60)
+                const timeDifference = (currentTime.getTime() - createdAt.getTime()) / (1000 * 60)
 
-            if (timeDifference >= 20) {
-                const PNL = await getPositionPNL(symbol)
-                await this.closeOrderManually(order, PNL)
+                if (timeDifference >= 20) {
+                    const PNL = await getPositionPNL(symbol)
+                    await this.closeOrderManually(order, PNL)
+                }
             }
+        } catch (err) {
+            throw new Error('Failed to check order by time: ' + err);
         }
     }
 
     async canCreateOrder(): Promise<boolean> {
-        // Limit number of orders on the same time (depend on the balance of USDT you have)
-        // You supposed to hold this equation: 
-        // (USDT_AMOUNT * OPEN_ORDER_ALLOWED * 2 < USDT Balance)!!!
-        const amountOfOrders = await AppDataSource.manager.count(MainOrder)
-        if (amountOfOrders >= this.openOrdersAllowed) {
-            return false
+        try {
+            // Limit number of orders on the same time (depend on the balance of USDT you have)
+            // You supposed to hold this equation: 
+            // (USDT_AMOUNT * OPEN_ORDER_ALLOWED * 2 < USDT Balance)!!!
+            const amountOfOrders = await AppDataSource.manager.count(MainOrder)
+            if (amountOfOrders >= this.openOrdersAllowed) {
+                return false
+            }
+            return true
+        } catch (err) {
+            throw new Error('Failed to check if can create order: ' + err)
         }
-        return true
     }
 }

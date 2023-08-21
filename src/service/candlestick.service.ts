@@ -33,10 +33,4 @@ export class CandleStickService {
             console.log(err);
         }
     }
-
-    async getCandleSticksBySymbolId(symbolId: number) {
-        return await AppDataSource.manager.find(CandleStick, {
-            where: { currency: { id: symbolId } }
-        })
-    }
 }
