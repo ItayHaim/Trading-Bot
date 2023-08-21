@@ -97,7 +97,7 @@ export class OrderService {
     async closeOrderAutomatically(sideOrder: SideOrder): Promise<void> {
         try {
             const { mainOrder } = sideOrder
-            const { currency } = mainOrder
+            const { currency, sideOrders } = mainOrder
             const { symbol } = currency
 
             // Find the other SideOrder (TP/SL) to close him
@@ -109,12 +109,13 @@ export class OrderService {
 
             await closeOrder(otherSideOrder.orderId, symbol)
 
-            //Delete orders from DB
-            await AppDataSource.getRepository(MainOrder)
-                .createQueryBuilder("mainOrder")
-                .delete()
-                .where("id = :mainOrderId", { mainOrderId: mainOrder.id })
-                .execute();
+            //Delete side orders from DB
+            await AppDataSource.getRepository(SideOrder).remove(sideOrders)
+            // await AppDataSource.getRepository(MainOrder)
+            //     .createQueryBuilder("mainOrder")
+            //     .delete()
+            //     .where("id = :mainOrderId", { mainOrderId: mainOrder.id })
+            //     .execute();
 
             // Add order to statistic
             sideOrder.orderType === OrderType.TakeProfit
@@ -143,12 +144,13 @@ export class OrderService {
                 await closeOrder(orderId, symbol)
             }
 
-            // Delete order (include TP/SL) from DB
-            await AppDataSource.getRepository(MainOrder)
-                .createQueryBuilder("mainOrder")
-                .delete()
-                .where("id = :mainOrderId", { mainOrderId: mainOrder.id })
-                .execute();
+            // Delete side orders from DB
+            await AppDataSource.getRepository(SideOrder).remove(sideOrders)
+            // await AppDataSource.getRepository(MainOrder)
+            //     .createQueryBuilder("mainOrder")
+            //     .delete()
+            //     .where("id = :mainOrderId", { mainOrderId: mainOrder.id })
+            //     .execute();
 
             // Add order to statistic
             PNL > 0
