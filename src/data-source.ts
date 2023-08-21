@@ -16,7 +16,7 @@ export const AppDataSource = new DataSource({
     synchronize: true,
     logging: false,
     entities: [Currency, CandleStick, MainOrder, SideOrder],
-    dropSchema: true,
+    // dropSchema: true,
     migrations: [],
-    subscribers: [],
+    subscribers: []
 })

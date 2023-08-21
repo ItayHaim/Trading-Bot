@@ -12,6 +12,11 @@ AppDataSource.initialize().then(async () => {
         const leverage = Number(process.env.LEVERAGE)
         const candleAmount = Number(process.env.CANDLE_AMOUNT)
 
+        await AppDataSource.createQueryRunner()
+            .dropTable('currency')
+        await AppDataSource.createQueryRunner()
+            .dropTable('candlestick')
+
         // First initialize all the currencies and save them and their candlesticks in DB
         for (const index in CurrenciesArray) {
             const symbol = CurrenciesArray[index]
