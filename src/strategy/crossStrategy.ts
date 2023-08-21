@@ -19,7 +19,6 @@ export const crossStrategy = async () => {
 
             const candles = await AppDataSource.manager.find(CandleStick, {
                 where: { currency: currency },
-                select: { closed: true },
                 order: { date: 'DESC' },
                 take: 100
             })

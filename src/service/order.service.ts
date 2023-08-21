@@ -48,6 +48,7 @@ export class OrderService {
             const mainOrder = await AppDataSource.manager.save(MainOrder, {
                 orderId: mainOrderId,
                 amount: amount,
+                symbol: symbol,
                 buyOrSell: orderSide,
                 currency: currency
             })

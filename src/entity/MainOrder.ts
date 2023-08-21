@@ -23,10 +23,13 @@ export class MainOrder {
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', name: 'created_at' })
     createdAt: Date
 
+    @Column({ type: 'varchar', length: 12 })
+    symbol: string    
+
     @ManyToOne(() => Currency, (currency) => currency.id)
     @JoinColumn({ name: "currency_id" })
     currency: Currency
 
-    @OneToMany(() => SideOrder, (sideOrder) => sideOrder.mainOrder, { cascade: true, onDelete: 'CASCADE' })
+    @OneToMany(() => SideOrder, (sideOrder) => sideOrder.mainOrder, { cascade: true, onDelete: 'CASCADE', nullable: true })
     sideOrders: SideOrder[]
 }
