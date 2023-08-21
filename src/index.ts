@@ -23,7 +23,7 @@ AppDataSource.initialize().then(async () => {
             await changeToIsolated(currency.symbol)
 
             const OHLCV = await getCoinOHLCV(symbol, timeFrame, undefined, candleAmount)
-            for await (const candle of OHLCV) {
+            for (const candle of OHLCV) {
                 await AppDataSource.manager.save(CandleStick, {
                     currency: currency,
                     date: new Date(candle[0]),
@@ -39,8 +39,7 @@ AppDataSource.initialize().then(async () => {
         console.log('Connect and initialize ')
         main()
     } catch (err) {
-        console.log('Failed to connect or initialize');
-        console.log(err);
+        console.log('Failed to connect or initialize: ' + err);
         AppDataSource.destroy()
     }
 }).catch(error => console.log(error))
