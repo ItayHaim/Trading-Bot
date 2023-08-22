@@ -16,7 +16,7 @@ export const main = async () => {
 
         setInterval(async () => {
             await candleStickService.addOneCandle();
-            await orderService.checkOrderByTime()
+            await orderService.checkOrderTime()
             const canCreateOrder = await orderService.canCreateOrder()
             canCreateOrder && await crossStrategy()
         }, 1000 * 60 * 5) // 5 minutes
@@ -30,7 +30,10 @@ export const main = async () => {
         // })
         // await orderService.createFullOrder(currency, BuyOrSell.Buy)
         // setInterval(async () => {
-        //     await orderService.checkOrderByTime()
+        //     const sideOrder = await AppDataSource.manager.findOne(SideOrder, {
+        //         where: { orderType: OrderType.TakeProfit }
+        //     })
+        //     await closeOrder(sideOrder.orderId, 'ATOM/USDT')
         // }, 1000 * 20)
 
     } catch (err) {

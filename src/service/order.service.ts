@@ -74,7 +74,7 @@ export class OrderService {
         try {
             const orders = await AppDataSource.manager.find(SideOrder, {
                 where: { status: OrderStatus.Open },
-                relations: { mainOrder: { currency: true } }
+                relations: { mainOrder: { currency: true, sideOrders: true } }
             })
 
             // Run over all the SL/TP orders and check if they're closed/canceled
@@ -154,7 +154,7 @@ export class OrderService {
         }
     }
 
-    async checkOrderByTime() {
+    async checkOrderTime() {
         try {
             const orders = await AppDataSource.manager.find(MainOrder, {
                 where: { status: OrderStatus.Open },
