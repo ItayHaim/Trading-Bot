@@ -1,11 +1,13 @@
 import { NetworkError, OrderNotFound } from "ccxt";
 import { AppDataSource } from "./data-source";
 import { MainOrder } from "./entity/MainOrder";
-import { OrderStatus } from "./enums";
-import { closeAllOrdersBySymbol } from "./operation/exchangeOperations";
+import { BuyOrSell, OrderStatus } from "./enums";
+import { closeAllOrdersBySymbol, closeOrder } from "./operation/exchangeOperations";
 import { CandleStickService } from "./service/candlestick.service";
 import { OrderService } from "./service/order.service";
 import { crossStrategy } from "./strategy/crossStrategy";
+import { Currency } from "./entity/Currency";
+import { SideOrder } from "./entity/SideOrder";
 
 export const main = async () => {
     try {
@@ -29,12 +31,9 @@ export const main = async () => {
         //     where: { symbol: 'ATOM/USDT' }
         // })
         // await orderService.createFullOrder(currency, BuyOrSell.Buy)
-        // const sideOrder = await AppDataSource.manager.find(SideOrder, {
-        //     relations: { mainOrder: { currency: true } }
-        // })
-        // setTimeout(async () => {
-        //     await closeOrder(sideOrder[0].orderId, 'ATOM/USDT')
-        // }, 1010 * 60 )
+        // setInterval(async () => {
+        //     await orderService.checkOrderByTime()
+        // }, 1000 * 20)
 
     } catch (err) {
         console.error(err);
