@@ -24,12 +24,12 @@ export class MainOrder {
     createdAt: Date
 
     @Column({ type: 'varchar', length: 12 })
-    symbol: string    
+    symbol: string
 
-    @ManyToOne(() => Currency, (currency) => currency.id)
+    @ManyToOne(() => Currency, (currency) => currency.id, { nullable: true })
     @JoinColumn({ name: "currency_id" })
     currency: Currency
 
-    @OneToMany(() => SideOrder, (sideOrder) => sideOrder.mainOrder, { cascade: true, onDelete: 'CASCADE', nullable: true })
+    @OneToMany(() => SideOrder, (sideOrder) => sideOrder.mainOrder, { cascade: true, onDelete: 'CASCADE' })
     sideOrders: SideOrder[]
 }
