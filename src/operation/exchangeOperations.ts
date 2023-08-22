@@ -239,7 +239,6 @@ export const changeLeverage = async (leverage: number, symbol: string): Promise<
         console.error('Failed to change leverage: ' + err)
         throw err
     }
-
 }
 
 /**
@@ -256,7 +255,6 @@ export const changeToIsolated = async (symbol: string, marginMode: string = 'iso
         console.error('Failed to change to isolated: ' + err)
         throw err
     }
-
 }
 
 /**
