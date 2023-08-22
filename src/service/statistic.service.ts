@@ -19,4 +19,15 @@ export class StatisticService {
             throw err
         }
     }
+
+    async saveOrderStatistic(PNL: number) {
+        try {
+            PNL > 0
+                ? this.addSuccess()
+                : this.addFailed()
+        } catch (err) {
+            console.error('Error saving order in statistic: ' + err)
+            throw err
+        }
+    }
 }

@@ -112,17 +112,16 @@ export class OrderService {
             await closeOrder(otherSideOrder.orderId, symbol)
 
             //Delete orders from DB
-            await AppDataSource.getRepository(SideOrder).remove(sideOrders)
-            await AppDataSource.getRepository(MainOrder).update(mainOrder.id, {
-                status: OrderStatus.Closed,
-                pnl: PNL,
-                closedAt: new Date().toISOString().slice(0, 19).replace('T', ' ')
-            })
+            await this.deleteOrderFromDB(sideOrders, mainOrder, PNL)
+            // await AppDataSource.getRepository(SideOrder).remove(sideOrders)
+            // await AppDataSource.getRepository(MainOrder).update(mainOrder.id, {
+            //     status: OrderStatus.Closed,
+            //     pnl: PNL,
+            //     closedAt: new Date().toISOString().slice(0, 19).replace('T', ' ')
+            // })
 
             // Add order to statistic
-            PNL > 0
-                ? this.statisticService.addSuccess()
-                : this.statisticService.addFailed()
+            this.statisticService.saveOrderStatistic(PNL)
 
             console.log(`order: ${mainOrder.orderId} (${symbol}) is closed!`);
         } catch (err) {
@@ -148,17 +147,10 @@ export class OrderService {
             }
 
             // Delete orders from DB
-            await AppDataSource.getRepository(SideOrder).remove(sideOrders)
-            await AppDataSource.getRepository(MainOrder).update(mainOrder.id, {
-                status: OrderStatus.Closed,
-                pnl: PNL,
-                closedAt: new Date().toISOString().slice(0, 19).replace('T', ' ')
-            })
+            await this.deleteOrderFromDB(sideOrders, mainOrder, PNL)
 
             // Add order to statistic
-            PNL > 0
-                ? this.statisticService.addSuccess()
-                : this.statisticService.addFailed()
+            this.statisticService.saveOrderStatistic(PNL)
 
             console.log(`order: ${mainOrder.orderId} (${symbol}) is closed!`);
         } catch (err) {
@@ -204,6 +196,20 @@ export class OrderService {
                 return false
             }
             return true
+        } catch (err) {
+            console.error('Failed to check if can create order: ' + err)
+            throw err
+        }
+    }
+
+    async deleteOrderFromDB(sideOrders: SideOrder[], mainOrder: MainOrder, PNL: number) {
+        try {
+            await AppDataSource.getRepository(SideOrder).remove(sideOrders)
+            await AppDataSource.getRepository(MainOrder).update(mainOrder.id, {
+                status: OrderStatus.Closed,
+                pnl: PNL,
+                closedAt: new Date().toISOString().slice(0, 19).replace('T', ' ')
+            })
         } catch (err) {
             console.error('Failed to check if can create order: ' + err)
             throw err
