@@ -4,6 +4,7 @@ import { CandleStick } from "./entity/CandleStick"
 import { Currency } from "./entity/Currency"
 import { MainOrder } from "./entity/MainOrder"
 import { SideOrder } from "./entity/SideOrder"
+import { Statistic } from "./entity/Statistic"
 require('dotenv').config();
 
 export const AppDataSource = new DataSource({
@@ -15,7 +16,7 @@ export const AppDataSource = new DataSource({
     database: "trading_bot",
     synchronize: true,
     logging: false,
-    entities: [Currency, CandleStick, MainOrder, SideOrder],
+    entities: [Currency, CandleStick, MainOrder, SideOrder, Statistic],
     // dropSchema: true,
     migrations: [],
     subscribers: []
