@@ -114,12 +114,6 @@ export class OrderService {
 
             //Delete orders from DB
             await this.deleteOrderFromDB(sideOrders, mainOrder, PNL)
-            // await AppDataSource.getRepository(SideOrder).remove(sideOrders)
-            // await AppDataSource.getRepository(MainOrder).update(mainOrder.id, {
-            //     status: OrderStatus.Closed,
-            //     pnl: PNL,
-            //     closedAt: new Date().toISOString().slice(0, 19).replace('T', ' ')
-            // })
 
             // Add order to statistic
             await this.statisticService.saveOrderStatistic(PNL)
