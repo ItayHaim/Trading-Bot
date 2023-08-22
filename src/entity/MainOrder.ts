@@ -23,8 +23,14 @@ export class MainOrder {
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', name: 'created_at' })
     createdAt: Date
 
+    @Column({ type: 'timestamp', name: 'closed_at', nullable: true })
+    closedAt: Date
+
     @Column({ type: 'varchar', length: 12 })
     symbol: string
+
+    @Column({ type: 'decimal', precision: 25, scale: 15, nullable: true })
+    pnl: number
 
     @ManyToOne(() => Currency, (currency) => currency.id, { nullable: true })
     @JoinColumn({ name: "currency_id" })

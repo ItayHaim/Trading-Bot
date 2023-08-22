@@ -100,6 +100,7 @@ export class OrderService {
             const { mainOrder } = sideOrder
             const { currency, sideOrders } = mainOrder
             const { symbol } = currency
+            const PNL = await getPositionPNL(symbol)
 
             // Find the other SideOrder (TP/SL) to close him
             const otherSideOrder = await AppDataSource.getRepository(SideOrder)
@@ -113,16 +114,13 @@ export class OrderService {
             //Delete orders from DB
             await AppDataSource.getRepository(SideOrder).remove(sideOrders)
             await AppDataSource.getRepository(MainOrder).update(mainOrder.id, {
-                status: OrderStatus.Closed
+                status: OrderStatus.Closed,
+                pnl: PNL,
+                closedAt: new Date().toISOString().slice(0, 19).replace('T', ' ')
             })
-            // await AppDataSource.getRepository(MainOrder)
-            //     .createQueryBuilder("mainOrder")
-            //     .delete()
-            //     .where("id = :mainOrderId", { mainOrderId: mainOrder.id })
-            //     .execute();
 
             // Add order to statistic
-            sideOrder.orderType === OrderType.TakeProfit
+            PNL > 0
                 ? this.statisticService.addSuccess()
                 : this.statisticService.addFailed()
 
@@ -133,10 +131,11 @@ export class OrderService {
         }
     }
 
-    async closeOrderManually(mainOrder: MainOrder, PNL: number): Promise<void> {
+    async closeOrderManually(mainOrder: MainOrder): Promise<void> {
         try {
             const { currency, buyOrSell, amount, sideOrders } = mainOrder
             const { symbol } = currency
+            const PNL = await getPositionPNL(symbol)
 
             // Close the position
             const closePositionSide = buyOrSell === 'buy' ? 'sell' : 'buy'
@@ -151,13 +150,10 @@ export class OrderService {
             // Delete orders from DB
             await AppDataSource.getRepository(SideOrder).remove(sideOrders)
             await AppDataSource.getRepository(MainOrder).update(mainOrder.id, {
-                status: OrderStatus.Closed
+                status: OrderStatus.Closed,
+                pnl: PNL,
+                closedAt: new Date().toISOString().slice(0, 19).replace('T', ' ')
             })
-            // await AppDataSource.getRepository(MainOrder)
-            //     .createQueryBuilder("mainOrder")
-            //     .delete()
-            //     .where("id = :mainOrderId", { mainOrderId: mainOrder.id })
-            //     .execute();
 
             // Add order to statistic
             PNL > 0
@@ -182,14 +178,12 @@ export class OrderService {
             // Run over all the main orders and check if they're open more than 40 minutes
             for (const index in orders) {
                 const order = orders[index]
-                const { createdAt, currency } = order
-                const { symbol } = currency
+                const { createdAt } = order
 
                 const timeDifference = (currentTime.getTime() - createdAt.getTime()) / (1000 * 60)
 
                 if (timeDifference >= this.openOrderAllowedTime) {
-                    const PNL = await getPositionPNL(symbol)
-                    await this.closeOrderManually(order, PNL)
+                    await this.closeOrderManually(order)
                 }
             }
         } catch (err) {

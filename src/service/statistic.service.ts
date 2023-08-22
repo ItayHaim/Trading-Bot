@@ -1,10 +1,7 @@
-import { resolve } from 'path';
 import { AppDataSource } from '../data-source';
 import { Statistic } from '../entity/Statistic';
 
 export class StatisticService {
-    private filePath = resolve('src/statistic.json')
-
     async addSuccess() {
         try {
             await AppDataSource.manager.increment(Statistic, {}, 'success', 1);
@@ -22,6 +19,4 @@ export class StatisticService {
             throw err
         }
     }
-
-
 }
