@@ -110,8 +110,11 @@ export class OrderService {
 
             await closeOrder(otherSideOrder.orderId, symbol)
 
-            //Delete side orders from DB
+            //Delete orders from DB
             await AppDataSource.getRepository(SideOrder).remove(sideOrders)
+            await AppDataSource.getRepository(MainOrder).update(mainOrder.id, {
+                status: OrderStatus.Closed
+            })
             // await AppDataSource.getRepository(MainOrder)
             //     .createQueryBuilder("mainOrder")
             //     .delete()
@@ -145,8 +148,11 @@ export class OrderService {
                 await closeOrder(orderId, symbol)
             }
 
-            // Delete side orders from DB
+            // Delete orders from DB
             await AppDataSource.getRepository(SideOrder).remove(sideOrders)
+            await AppDataSource.getRepository(MainOrder).update(mainOrder.id, {
+                status: OrderStatus.Closed
+            })
             // await AppDataSource.getRepository(MainOrder)
             //     .createQueryBuilder("mainOrder")
             //     .delete()
