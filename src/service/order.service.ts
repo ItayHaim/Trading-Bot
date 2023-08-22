@@ -1,3 +1,4 @@
+import { IsNull, Not } from "typeorm"
 import { AppDataSource } from "../data-source"
 import { Currency } from "../entity/Currency"
 import { MainOrder } from "../entity/MainOrder"
@@ -85,7 +86,7 @@ export class OrderService {
                 const status = await isOrderFilled(order.orderId, symbol)
 
                 if (status === OrderStatus.Closed || status === OrderStatus.Canceled) {
-                    this.closeOrderAutomatically(order)
+                    await this.closeOrderAutomatically(order)
                     break;
                 }
             }
@@ -121,7 +122,7 @@ export class OrderService {
             // })
 
             // Add order to statistic
-            this.statisticService.saveOrderStatistic(PNL)
+            await this.statisticService.saveOrderStatistic(PNL)
 
             console.log(`order: ${mainOrder.orderId} (${symbol}) is closed!`);
         } catch (err) {
@@ -150,7 +151,7 @@ export class OrderService {
             await this.deleteOrderFromDB(sideOrders, mainOrder, PNL)
 
             // Add order to statistic
-            this.statisticService.saveOrderStatistic(PNL)
+            await this.statisticService.saveOrderStatistic(PNL)
 
             console.log(`order: ${mainOrder.orderId} (${symbol}) is closed!`);
         } catch (err) {
@@ -190,7 +191,7 @@ export class OrderService {
             // You supposed to hold this equation: 
             // (USDT_AMOUNT * OPEN_ORDER_ALLOWED * 2 < USDT Balance)!!!
             const amountOfOrders = await AppDataSource.manager.count(MainOrder, {
-                where: { currency: null }
+                where: { currency: Not(IsNull()) }
             })
             if (amountOfOrders >= this.openOrdersAllowed) {
                 return false
@@ -208,10 +209,11 @@ export class OrderService {
             await AppDataSource.getRepository(MainOrder).update(mainOrder.id, {
                 status: OrderStatus.Closed,
                 pnl: PNL,
-                closedAt: new Date().toISOString().slice(0, 19).replace('T', ' ')
+                closedAt: new Date().toISOString().slice(0, 19).replace('T', ' '),
+                currency: null
             })
         } catch (err) {
-            console.error('Failed to check if can create order: ' + err)
+            console.error('Failed to delete orders from DB: ' + err)
             throw err
         }
     }
