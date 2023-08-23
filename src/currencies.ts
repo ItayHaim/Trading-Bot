@@ -15,10 +15,10 @@ export const CurrenciesArray = [
     'BAL/USDT',
 
     // C
-    'CHR/USDT',
+    // 'CHR/USDT',//!
     'CTSI/USDT',
-    'CHZ/USDT',
-    'CELR/USDT',
+    // 'CHZ/USDT',//!
+    // 'CELR/USDT',//!
     'C98/USDT',
 
     // D
@@ -31,7 +31,7 @@ export const CurrenciesArray = [
     'ENJ/USDT',
 
     // F
-    'FLM/USDT',
+    // 'FLM/USDT',//!
     'FTM/USDT',
 
     // G
@@ -56,7 +56,7 @@ export const CurrenciesArray = [
 
     // R
     'RVN/USDT',
-    'RSR/USDT',
+    // 'RSR/USDT', //!
 
     // S
     'SOL/USDT',
