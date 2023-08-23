@@ -83,5 +83,5 @@ export const CurrenciesArray = [
     'YGG/USDT',
 
     // Z
-    'ZRX/USDT',
+    'ZRX/USDT'
 ]
