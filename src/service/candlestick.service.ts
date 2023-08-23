@@ -9,8 +9,8 @@ export class CandleStickService {
 
     async addOneCandle(): Promise<void> {
         try {
-            for (const coinPair in CurrenciesArray) {
-                const symbol = CurrenciesArray[coinPair]
+            for (const index in CurrenciesArray) {
+                const symbol = CurrenciesArray[index]
 
                 const currency = await AppDataSource.manager.findOneOrFail(Currency, {
                     where: { symbol: symbol }

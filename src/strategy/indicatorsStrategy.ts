@@ -13,8 +13,7 @@ export const indicatorsStrategy = async () => {
             const currency = currencies[index]
 
             const candles = await AppDataSource.manager.find(CandleStick, {
-                where: { currency: currency },
-                take: 100
+                where: { currency: currency }
             })
             const closedPrices = candles.map(candle => Number(candle.closed));
 
