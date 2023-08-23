@@ -102,8 +102,6 @@ export class OrderService {
             const { currency, sideOrders } = mainOrder
             const { symbol } = currency
             const PNL = await getPositionPNL(symbol)
-            console.log('✌️PNL auto--->', PNL);
-
 
             // Find the other SideOrder (TP/SL) to close him
             const otherSideOrder = await AppDataSource.getRepository(SideOrder)
@@ -132,7 +130,6 @@ export class OrderService {
             const { currency, buyOrSell, amount, sideOrders } = mainOrder
             const { symbol } = currency
             const PNL = await getPositionPNL(symbol)
-            console.log('✌️PNL man--->', PNL);
 
             // Close the position
             const closePositionSide = buyOrSell === 'buy' ? 'sell' : 'buy'

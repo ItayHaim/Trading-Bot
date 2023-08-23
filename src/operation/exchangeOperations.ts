@@ -266,6 +266,7 @@ export const changeToIsolated = async (symbol: string, marginMode: string = 'iso
 export const getPositionPNL = async (symbol: string): Promise<number> => {
     try {
         const res = await binanceExchange.fetchPositions([symbol])
+        console.log('✌️res --->', res);
         return res[0].unrealizedPnl
     } catch (err) {
         console.error('Failed to get position PNL: ' + err)
