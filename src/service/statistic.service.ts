@@ -1,5 +1,6 @@
 import { AppDataSource } from '../data-source';
 import { Statistic } from '../entity/Statistic';
+import { OrderType } from '../enums';
 
 export class StatisticService {
     async addSuccess() {
@@ -20,11 +21,15 @@ export class StatisticService {
         }
     }
 
-    async saveOrderStatistic(PNL: number) {
+    async saveOrderStatistic(PNL: number, orderType: OrderType) {
         try {
-            PNL > 0
-                ? this.addSuccess()
-                : this.addFailed()
+            PNL
+                ? PNL > 0
+                    ? this.addSuccess()
+                    : this.addFailed()
+                : orderType === OrderType.TakeProfit
+                    ? this.addSuccess()
+                    : this.addFailed()
         } catch (err) {
             console.error('Error saving order in statistic: ' + err)
             throw err

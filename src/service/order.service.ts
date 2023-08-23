@@ -102,6 +102,8 @@ export class OrderService {
             const { currency, sideOrders } = mainOrder
             const { symbol } = currency
             const PNL = await getPositionPNL(symbol)
+            console.log('✌️PNL auto--->', PNL);
+
 
             // Find the other SideOrder (TP/SL) to close him
             const otherSideOrder = await AppDataSource.getRepository(SideOrder)
@@ -116,7 +118,7 @@ export class OrderService {
             await this.deleteOrderFromDB(sideOrders, mainOrder, PNL)
 
             // Add order to statistic
-            await this.statisticService.saveOrderStatistic(PNL)
+            await this.statisticService.saveOrderStatistic(undefined, sideOrder.orderType)
 
             console.log(`order: ${mainOrder.orderId} (${symbol}) is closed!`);
         } catch (err) {
@@ -130,6 +132,7 @@ export class OrderService {
             const { currency, buyOrSell, amount, sideOrders } = mainOrder
             const { symbol } = currency
             const PNL = await getPositionPNL(symbol)
+            console.log('✌️PNL man--->', PNL);
 
             // Close the position
             const closePositionSide = buyOrSell === 'buy' ? 'sell' : 'buy'
@@ -145,7 +148,7 @@ export class OrderService {
             await this.deleteOrderFromDB(sideOrders, mainOrder, PNL)
 
             // Add order to statistic
-            await this.statisticService.saveOrderStatistic(PNL)
+            await this.statisticService.saveOrderStatistic(PNL, undefined)
 
             console.log(`order: ${mainOrder.orderId} (${symbol}) is closed!`);
         } catch (err) {
@@ -181,9 +184,6 @@ export class OrderService {
 
     async canCreateOrder(): Promise<boolean> {
         try {
-            // Limit number of orders on the same time (depend on the balance of USDT you have)
-            // You supposed to hold this equation: 
-            // (USDT_AMOUNT * OPEN_ORDER_ALLOWED * 2 < USDT Balance)!!!
             const amountOfOrders = await AppDataSource.manager.count(MainOrder, {
                 where: { currency: Not(IsNull()) }
             })
