@@ -1,13 +1,11 @@
 import { NetworkError, OrderNotFound } from "ccxt";
 import { AppDataSource } from "./data-source";
 import { MainOrder } from "./entity/MainOrder";
-import { BuyOrSell, OrderStatus, OrderType } from "./enums";
-import { closeAllOrdersBySymbol, closeOrder } from "./operation/exchangeOperations";
+import { OrderStatus } from "./enums";
+import { closeAllOrdersBySymbol } from "./operation/exchangeOperations";
 import { CandleStickService } from "./service/candlestick.service";
 import { OrderService } from "./service/order.service";
 import { crossStrategy } from "./strategy/crossStrategy";
-import { Currency } from "./entity/Currency";
-import { SideOrder } from "./entity/SideOrder";
 
 export const main = async () => {
     try {
