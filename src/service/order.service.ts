@@ -128,9 +128,10 @@ export class OrderService {
 
     async closeOrderManually(mainOrder: MainOrder): Promise<void> {
         try {
+            console.log('Man')
+            console.log('✌️mainOrder --->', mainOrder);
             const { currency, buyOrSell, amount, sideOrders } = mainOrder
             const { symbol } = currency
-            console.log('Man')
             const PNL = await getPositionPNL(symbol)
 
             // Close the position
@@ -172,6 +173,7 @@ export class OrderService {
                 const timeDifference = (currentTime.getTime() - createdAt.getTime()) / (1000 * 60)
 
                 if (timeDifference >= this.openOrderAllowedTime) {
+                    console.log('✌️order --->', order);
                     await this.closeOrderManually(order)
                 }
             }
