@@ -1,7 +1,6 @@
 import { AppDataSource } from "../data-source";
 import { CandleStick } from "../entity/CandleStick";
 import { Currency } from "../entity/Currency";
-import { CrossIndicator } from "../enums";
 import { WaitingCrossesArrayType } from "../types";
 import { IndicatorService } from "../service/indicator.service";
 import { StrategyService } from "../service/strategy.service";
