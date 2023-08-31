@@ -6,7 +6,7 @@ import { WaitingCrossesArrayType } from "../types";
 import { IndicatorService } from "../service/indicator.service";
 import { StrategyService } from "../service/strategy.service";
 
-export const crossStrategy = async () => {
+export const MACDCrossStrategy = async () => {
     try {
         const strategyService = new StrategyService()
         const indicatorService = new IndicatorService()
@@ -24,12 +24,12 @@ export const crossStrategy = async () => {
 
             //! If using the SMA cross indicator must change candles amount in .env to 200! 
             // await strategyService.crossesStrategy(closedPrices,CrossIndicator.SMA,currency)
-            const result = await indicatorService.checkCrossesAndBB(closedPrices, CrossIndicator.MACD, currency)
+            const result = await indicatorService.checkMACDCrossesAndBB(closedPrices, currency)
             if (result) {
                 waitingOrders.push(result)
             }
         }
-        await strategyService.crossesAndBBStrategy(waitingOrders)
+        await strategyService.MACDCrossesAndBBStrategy(waitingOrders)
 
         console.log('End strategy');
     } catch (err) {

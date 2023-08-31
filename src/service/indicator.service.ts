@@ -1,5 +1,5 @@
 import { MACDOutput } from "technicalindicators/declarations/moving_averages/MACD"
-import { BuyOrSell, CrossIndicator, Crosses } from "../enums"
+import { BuyOrSell } from "../enums"
 import { calculateBollingerBands, calculateCrosses, calculateMACD, calculateRSI, calculateStochasticRSI } from "../operation/indicators"
 import { Currency } from "../entity/Currency"
 import { WaitingCrossesArrayType } from "../types"
@@ -74,9 +74,9 @@ export class IndicatorService {
         }
     }
 
-    public checkCrosses(closedPrices: number[], crossIndicator: CrossIndicator): { order: BuyOrSell, lastResult: MACDOutput } | undefined {
+    public checkCrosses(closedPrices: number[]): { order: BuyOrSell, lastResult: MACDOutput } | undefined {
         try {
-            const crosses = calculateCrosses(closedPrices, crossIndicator)
+            const crosses = calculateCrosses(closedPrices)
 
             // crossUp must be on index 0!!! (according to the type)
             const crossUpValues = crosses[0].values
@@ -98,11 +98,11 @@ export class IndicatorService {
         }
     }
 
-    async checkCrossesAndBB(closedPrices: number[], crossIndicator: CrossIndicator, currency: Currency): Promise<void | WaitingCrossesArrayType> {
+    async checkMACDCrossesAndBB(closedPrices: number[], currency: Currency): Promise<void | WaitingCrossesArrayType> {
         try {
             const { symbol } = currency
 
-            const cross = this.checkCrosses(closedPrices, crossIndicator)
+            const cross = this.checkCrosses(closedPrices)
             const BB = calculateBollingerBands(closedPrices)
             const lastBB = BB[BB.length - 1]
             const lastClosedPrice = closedPrices[closedPrices.length - 1]
@@ -130,5 +130,9 @@ export class IndicatorService {
             console.error('Failed to check cross and BB: ' + err)
             throw err
         }
+    }
+
+    async checkSMACrosses(closedPrices: number[], currency: Currency) {
+
     }
 }

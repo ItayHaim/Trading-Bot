@@ -3,7 +3,7 @@ import { StochasticRSIOutput } from 'technicalindicators/declarations/momentum/S
 import { MACDOutput } from "technicalindicators/declarations/moving_averages/MACD"
 import { BollingerBandsOutput } from 'technicalindicators/declarations/volatility/BollingerBands'
 import { CrossesOutput, RSIOutput, SMAOutput, SMAPeriods } from "../types"
-import { CrossIndicator, Crosses } from '../enums'
+import { Crosses } from '../enums'
 
 
 /**
@@ -139,20 +139,20 @@ export const calculateBollingerBands = (closedPrices: number[], period: number =
  * @param crossIndicator - The cross indicator to use (SMA or MACD).
  * @return An array of cross objects.
  */
-export const calculateCrosses = (closedPrices: number[], crossIndicator: CrossIndicator): CrossesOutput => {
+export const calculateCrosses = (closedPrices: number[]): CrossesOutput => {
     try {
         let lineA: number[], lineB: number[], lastResult: MACDOutput | undefined
 
-        if (crossIndicator === CrossIndicator.SMA) {
-            const SMA = calculateSMA(closedPrices)
-            lineA = SMA.find(sma => sma.period === 9).sma.slice(-30)
-            lineB = SMA.find(sma => sma.period === 100).sma.slice(-30)
-        } else if (crossIndicator === CrossIndicator.MACD) {
-            const MACD = calculateMACD(closedPrices)
-            lineA = MACD.map(macd => macd.MACD).slice(-30)
-            lineB = MACD.map(macd => macd.signal).slice(-30)
-            lastResult = MACD[MACD.length - 1]
-        }
+        // if (crossIndicator === CrossIndicator.SMA) {
+        //     const SMA = calculateSMA(closedPrices)
+        //     lineA = SMA.find(sma => sma.period === 9).sma.slice(-30)
+        //     lineB = SMA.find(sma => sma.period === 100).sma.slice(-30)
+        // } else if (crossIndicator === CrossIndicator.MACD) {
+        const MACD = calculateMACD(closedPrices)
+        lineA = MACD.map(macd => macd.MACD).slice(-30)
+        lineB = MACD.map(macd => macd.signal).slice(-30)
+        lastResult = MACD[MACD.length - 1]
+        // }
 
         const calculateCrossUp = CrossUp.calculate({
             lineA: lineA,

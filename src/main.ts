@@ -5,7 +5,7 @@ import { OrderStatus } from "./enums";
 import { closeAllOrdersBySymbol } from "./operation/exchangeOperations";
 import { CandleStickService } from "./service/candlestick.service";
 import { OrderService } from "./service/order.service";
-import { crossStrategy } from "./strategy/crossStrategy";
+import { MACDCrossStrategy } from "./strategy/MACDCrossStrategy";
 
 export const main = async () => {
     try {
@@ -13,7 +13,7 @@ export const main = async () => {
         const orderService = new OrderService()
         let isCheckingOrders = false;
 
-        await crossStrategy()
+        await MACDCrossStrategy()
 
         setInterval(async () => {
             await candleStickService.addOneCandle()
@@ -23,7 +23,7 @@ export const main = async () => {
                 isCheckingOrders = false;
             }
             const canCreateOrder = await orderService.canCreateOrder()
-            canCreateOrder && await crossStrategy()
+            canCreateOrder && await MACDCrossStrategy()
         }, 1000 * 60 * 5) // 5 minutes
 
         setInterval(async () => {

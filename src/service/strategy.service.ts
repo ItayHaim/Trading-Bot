@@ -43,7 +43,7 @@ export class StrategyService {
         }
     }
 
-    async crossesAndBBStrategy(waitingOrders: WaitingCrossesArrayType[]) {
+    async MACDCrossesAndBBStrategy(waitingOrders: WaitingCrossesArrayType[]) {
         try {
             waitingOrders.sort((a, b) => b.MACDDiff - a.MACDDiff)
             console.log('✌️waitingOrders --->', waitingOrders);
@@ -57,4 +57,6 @@ export class StrategyService {
             throw err
         }
     }
+
+    
 }
