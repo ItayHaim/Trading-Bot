@@ -132,25 +132,27 @@ export class IndicatorService {
         }
     }
 
-    async checkMACrosses() {
+    async checkMACrosses(closedPrices: number[], currency: Currency) {
+        try {
+            const { symbol } = currency
+            const cross = calculateMACrosses(closedPrices)
+            console.log('✌️cross --->', cross);
 
-    }
-
-    async checkSMACrosses(closedPrices: number[], currency: Currency) {
-        const { symbol } = currency
-        const cross = calculateMACrosses(closedPrices)
-        console.log('✌️cross --->', cross);
-
-        if (cross) {
-            if (cross === Crosses.CrossUp) {
-                console.log('Should create buy order ' + symbol);
-                return { currency: currency, buyOrSell: BuyOrSell.Buy }
+            if (cross) {
+                if (cross === Crosses.CrossUp) {
+                    console.log('Should create buy order ' + symbol);
+                    return { currency: currency, buyOrSell: BuyOrSell.Buy }
+                } else if (cross === Crosses.CrossDown) {
+                    console.log('Should create sell order ' + symbol);
+                    return { currency: currency, buyOrSell: BuyOrSell.Sell }
+                }
+                else {
+                    console.log('Should NOT create order ' + symbol);
+                }
             }
-        } else if (cross === Crosses.CrossUp) {
-            console.log('Should create sell order ' + symbol);
-            return { currency: currency, buyOrSell: BuyOrSell.Sell }
-        } else {
-            console.log('Should NOT create order ' + symbol);
+        } catch (err) {
+            console.error('Failed to check MA crosses: ' + err)
+            throw err
         }
     }
 }
