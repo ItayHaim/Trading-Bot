@@ -1,8 +1,8 @@
-import { BollingerBands, MACD, RSI, SMA, StochasticRSI, CrossDown, CrossUp } from 'technicalindicators'
+import { BollingerBands, MACD, RSI, SMA, StochasticRSI, CrossDown, CrossUp, EMA } from 'technicalindicators'
 import { StochasticRSIOutput } from 'technicalindicators/declarations/momentum/StochasticRSI'
 import { MACDOutput } from "technicalindicators/declarations/moving_averages/MACD"
 import { BollingerBandsOutput } from 'technicalindicators/declarations/volatility/BollingerBands'
-import { CrossesOutput, RSIOutput, SMAOutput, SMAPeriods } from "../types"
+import { CrossesOutput, RSIOutput, MAOutput, MAPeriods } from "../types"
 import { Crosses } from '../enums'
 
 
@@ -87,18 +87,44 @@ export const calculateMACD = (closedPrices: number[], fastPeriod: number = 12, s
 * Calculates the Simple Moving Average (SMA) for each period
 * in the 'periods' array using the closing prices provided in 'closedPrices'.
 *
-* @param closedPrices - An array of closing prices. If provided array is [110, 105, 102, 100], then 110 is the most recent price.
+* @param closedPrices - An array of closing prices. If provided array is [3, 21, 100, 200], then 110 is the most recent price.
 * @param periods - An array of periods for which the SMA should be calculated. Default periods used are [9, 21, 80, 100, 200].
 * 
 * @returns Returns an array of objects. Each object contains two properties: 'period' and 'sma'.
 *        'period' is the period for which the SMA is calculated.
 *        'sma' is the calculated Simple Moving Average for that period.
 */
-export const calculateSMA = (closedPrices: number[], periods: SMAPeriods[] = [9, 21, 80, 100, 200]): SMAOutput => {
+export const calculateSMA = (closedPrices: number[], periods: MAPeriods[] = [3, 8, 13]): MAOutput => {
     try {
         return periods.map(period => ({
             period,
-            sma: SMA.calculate({
+            ma: SMA.calculate({
+                values: closedPrices,
+                period
+            })
+        }))
+    } catch (err) {
+        console.error('Failed to calculate SMA: ' + err)
+        throw err
+    }
+}
+
+/**
+* Calculates the Simple Moving Average (EMA) for each period
+* in the 'periods' array using the closing prices provided in 'closedPrices'.
+*
+* @param closedPrices - An array of closing prices. If provided array is [3, 21, 100, 200], then 110 is the most recent price.
+* @param periods - An array of periods for which the EMA should be calculated. Default periods used are [9, 21, 80, 100, 200].
+* 
+* @returns Returns an array of objects. Each object contains two properties: 'period' and 'ema'.
+*        'period' is the period for which the EMA is calculated.
+*        'ema' is the calculated Simple Moving Average for that period.
+*/
+export const calculateEMA = (closedPrices: number[], periods: MAPeriods[] = [3, 8, 13]): MAOutput => {
+    try {
+        return periods.map(period => ({
+            period,
+            ma: EMA.calculate({
                 values: closedPrices,
                 period
             })
@@ -139,20 +165,14 @@ export const calculateBollingerBands = (closedPrices: number[], period: number =
  * @param crossIndicator - The cross indicator to use (SMA or MACD).
  * @return An array of cross objects.
  */
-export const calculateCrosses = (closedPrices: number[]): CrossesOutput => {
+export const calculateMACDCrosses = (closedPrices: number[]): CrossesOutput => {
     try {
         let lineA: number[], lineB: number[], lastResult: MACDOutput | undefined
 
-        // if (crossIndicator === CrossIndicator.SMA) {
-        //     const SMA = calculateSMA(closedPrices)
-        //     lineA = SMA.find(sma => sma.period === 9).sma.slice(-30)
-        //     lineB = SMA.find(sma => sma.period === 100).sma.slice(-30)
-        // } else if (crossIndicator === CrossIndicator.MACD) {
         const MACD = calculateMACD(closedPrices)
         lineA = MACD.map(macd => macd.MACD).slice(-30)
         lineB = MACD.map(macd => macd.signal).slice(-30)
         lastResult = MACD[MACD.length - 1]
-        // }
 
         const calculateCrossUp = CrossUp.calculate({
             lineA: lineA,
@@ -172,4 +192,20 @@ export const calculateCrosses = (closedPrices: number[]): CrossesOutput => {
         console.error('Failed to calculate cross: ' + err)
         throw err
     }
+}
+
+export const calculateSMACrosses = (closedPrices: number[]) => {
+    const SMA = calculateSMA(closedPrices)
+    const lineA = SMA.find(sma => sma.period === 3).ma.slice(-30)
+    const lineB = SMA.find(sma => sma.period === 8).ma.slice(-30)
+    const lineC = SMA.find(sma => sma.period === 13).ma.slice(-30)
+
+    const calculateCrossUp = CrossUp.calculate({
+        lineA: lineA,
+        lineB: lineB,
+    })
+    const calculateCrossDown = CrossDown.calculate({
+        lineA: lineA,
+        lineB: lineB,
+    })
 }

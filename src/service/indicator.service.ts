@@ -1,6 +1,6 @@
 import { MACDOutput } from "technicalindicators/declarations/moving_averages/MACD"
 import { BuyOrSell } from "../enums"
-import { calculateBollingerBands, calculateCrosses, calculateMACD, calculateRSI, calculateStochasticRSI } from "../operation/indicators"
+import { calculateBollingerBands, calculateMACD, calculateMACDCrosses, calculateRSI, calculateSMA, calculateStochasticRSI } from "../operation/indicators"
 import { Currency } from "../entity/Currency"
 import { WaitingCrossesArrayType } from "../types"
 
@@ -74,9 +74,9 @@ export class IndicatorService {
         }
     }
 
-    public checkCrosses(closedPrices: number[]): { order: BuyOrSell, lastResult: MACDOutput } | undefined {
+    public checkCrosses(closedPrices: number[]): { order?: BuyOrSell, lastResult?: MACDOutput } | undefined {
         try {
-            const crosses = calculateCrosses(closedPrices)
+            const crosses = calculateMACDCrosses(closedPrices)
 
             // crossUp must be on index 0!!! (according to the type)
             const crossUpValues = crosses[0].values
@@ -133,6 +133,7 @@ export class IndicatorService {
     }
 
     async checkSMACrosses(closedPrices: number[], currency: Currency) {
+        const { symbol } = currency
 
     }
 }
