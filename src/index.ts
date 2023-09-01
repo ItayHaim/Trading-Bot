@@ -31,8 +31,9 @@ AppDataSource.initialize().then(async () => {
             })
 
             // Change currency to isolated and change his leverage
-            await changeLeverage(leverage, currency.symbol)
-            await changeToIsolated(currency.symbol)
+            //! Active when first use
+            // await changeLeverage(leverage, currency.symbol)
+            // await changeToIsolated(currency.symbol)
 
             const OHLCV = await getCoinOHLCV(symbol, timeFrame, undefined, candleAmount)
             for (const candle of OHLCV) {

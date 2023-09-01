@@ -143,10 +143,10 @@ export class IndicatorService {
             const RSIValue = RSI.at(-1)
 
             if (cross && !isDoji) {
-                if ((cross === Crosses.CrossUp) && (RSIValue > 52)) {
+                if ((cross === Crosses.CrossUp) && (RSIValue > 54)) {
                     console.log('Should create buy order ' + symbol);
                     return { currency: currency, buyOrSell: BuyOrSell.Buy, RSIValue: RSIValue }
-                } else if ((cross === Crosses.CrossDown) && (RSIValue < 48)) {
+                } else if ((cross === Crosses.CrossDown) && (RSIValue < 46)) {
                     console.log('Should create sell order ' + symbol);
                     return { currency: currency, buyOrSell: BuyOrSell.Sell, RSIValue: RSIValue }
                 }
