@@ -3,7 +3,6 @@ import { BuyOrSell, Crosses } from "../enums"
 import { calculateBollingerBands, calculateMACD, calculateMACDCrosses, calculateMACrosses, calculateRSI, calculateSMA, calculateStochasticRSI } from "../operation/indicators"
 import { Currency } from "../entity/Currency"
 import { WaitingCrossesArrayType } from "../types"
-import { CandleStickService } from "./candlestick.service"
 import { CandleStick } from "../entity/CandleStick"
 import { checkDoji } from "../operation/candlePatterns"
 
@@ -140,14 +139,16 @@ export class IndicatorService {
             const { symbol } = currency
             const cross = calculateMACrosses(closedPrices)
             const isDoji = checkDoji(lastCandleStick)
+            const RSI = calculateRSI(closedPrices)
+            const RSIValue = RSI.at(-1)
 
             if (cross && !isDoji) {
-                if (cross === Crosses.CrossUp) {
+                if ((cross === Crosses.CrossUp) && (RSIValue > 52)) {
                     console.log('Should create buy order ' + symbol);
-                    return { currency: currency, buyOrSell: BuyOrSell.Buy }
-                } else if (cross === Crosses.CrossDown) {
+                    return { currency: currency, buyOrSell: BuyOrSell.Buy, RSIValue: RSIValue }
+                } else if ((cross === Crosses.CrossDown) && (RSIValue < 48)) {
                     console.log('Should create sell order ' + symbol);
-                    return { currency: currency, buyOrSell: BuyOrSell.Sell }
+                    return { currency: currency, buyOrSell: BuyOrSell.Sell, RSIValue: RSIValue }
                 }
                 else {
                     console.log('Should NOT create order ' + symbol);

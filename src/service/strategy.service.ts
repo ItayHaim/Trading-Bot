@@ -61,7 +61,20 @@ export class StrategyService {
     async MACrossesStrategy(waitingOrders: WaitingCrossesArrayType[]) {
         try {
             console.log('✌️waitingOrders --->', waitingOrders);
-            
+            waitingOrders.sort((a, b) => {
+                if (a.buyOrSell === BuyOrSell.Buy && b.buyOrSell === BuyOrSell.Buy) {
+                    // For 'Buy', higher RSIValue should come first
+                    return (b.RSIValue || 0) - (a.RSIValue || 0); // Assuming 0 as default RSIValue
+                } else if (a.buyOrSell === BuyOrSell.Sell && b.buyOrSell === BuyOrSell.Sell) {
+                    // For 'Sell', lower RSIValue should come first
+                    return (a.RSIValue || 0) - (b.RSIValue || 0); // Assuming 0 as default RSIValue
+                } else {
+                    // If BuyOrSell values are not same, keep original order
+                    return 0;
+                }
+            }) 
+            console.log('✌️waitingOrders --->', waitingOrders);
+
             for (let index in waitingOrders) {
                 const order = waitingOrders[index]
                 await this.orderService.createFullOrder(order.currency, order.buyOrSell)

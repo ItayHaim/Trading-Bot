@@ -46,7 +46,7 @@ export const CurrenciesArray = [
     'LTC/USDT',
 
     // M
-    'MATIC/USDT',
+    // 'MATIC/USDT',//!
 
     // N
     'NEAR/USDT',

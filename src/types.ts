@@ -16,6 +16,6 @@ export type MAPeriods = 3 | 8 | 9 | 13 | 21 | 80 | 100 | 200
 
 
 //--------------------------STRATEGY TYPES--------------------------------
-export type WaitingCrossesArrayType = { currency: Currency, buyOrSell: BuyOrSell, MACDDiff?: number }
+export type WaitingCrossesArrayType = { currency: Currency, buyOrSell: BuyOrSell, MACDDiff?: number, RSIValue?: number }
 
 
