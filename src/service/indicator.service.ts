@@ -1,6 +1,6 @@
 import { MACDOutput } from "technicalindicators/declarations/moving_averages/MACD"
-import { BuyOrSell } from "../enums"
-import { calculateBollingerBands, calculateMACD, calculateMACDCrosses, calculateRSI, calculateSMA, calculateStochasticRSI } from "../operation/indicators"
+import { BuyOrSell, Crosses } from "../enums"
+import { calculateBollingerBands, calculateMACD, calculateMACDCrosses, calculateMACrosses, calculateRSI, calculateSMA, calculateStochasticRSI } from "../operation/indicators"
 import { Currency } from "../entity/Currency"
 import { WaitingCrossesArrayType } from "../types"
 
@@ -74,7 +74,7 @@ export class IndicatorService {
         }
     }
 
-    public checkCrosses(closedPrices: number[]): { order?: BuyOrSell, lastResult?: MACDOutput } | undefined {
+    public checkMACDCrosses(closedPrices: number[]): { order?: BuyOrSell, lastResult?: MACDOutput } | undefined {
         try {
             const crosses = calculateMACDCrosses(closedPrices)
 
@@ -102,7 +102,7 @@ export class IndicatorService {
         try {
             const { symbol } = currency
 
-            const cross = this.checkCrosses(closedPrices)
+            const cross = this.checkMACDCrosses(closedPrices)
             const BB = calculateBollingerBands(closedPrices)
             const lastBB = BB[BB.length - 1]
             const lastClosedPrice = closedPrices[closedPrices.length - 1]
@@ -132,8 +132,25 @@ export class IndicatorService {
         }
     }
 
+    async checkMACrosses() {
+
+    }
+
     async checkSMACrosses(closedPrices: number[], currency: Currency) {
         const { symbol } = currency
+        const cross = calculateMACrosses(closedPrices)
+        console.log('✌️cross --->', cross);
 
+        if (cross) {
+            if (cross === Crosses.CrossUp) {
+                console.log('Should create buy order ' + symbol);
+                return { currency: currency, buyOrSell: BuyOrSell.Buy }
+            }
+        } else if (cross === Crosses.CrossUp) {
+            console.log('Should create sell order ' + symbol);
+            return { currency: currency, buyOrSell: BuyOrSell.Sell }
+        } else {
+            console.log('Should NOT create order ' + symbol);
+        }
     }
 }

@@ -194,18 +194,46 @@ export const calculateMACDCrosses = (closedPrices: number[]): CrossesOutput => {
     }
 }
 
-export const calculateSMACrosses = (closedPrices: number[]) => {
-    const SMA = calculateSMA(closedPrices)
-    const lineA = SMA.find(sma => sma.period === 3).ma.slice(-30)
-    const lineB = SMA.find(sma => sma.period === 8).ma.slice(-30)
-    const lineC = SMA.find(sma => sma.period === 13).ma.slice(-30)
+export const calculateMACrosses = (closedPrices: number[]): Crosses | undefined => {
+    try {
+        const SMA = calculateSMA(closedPrices)
+        const EMA = calculateEMA(closedPrices)
+        console.log('✌️SMA --->', SMA);
+        console.log('✌️EMA --->', EMA);
 
-    const calculateCrossUp = CrossUp.calculate({
-        lineA: lineA,
-        lineB: lineB,
-    })
-    const calculateCrossDown = CrossDown.calculate({
-        lineA: lineA,
-        lineB: lineB,
-    })
+        const SMAlineA = SMA.find(ma => ma.period === 3).ma.slice(-30)
+        const SMAlineB = SMA.find(ma => ma.period === 8).ma.slice(-30)
+        const EMAlineA = EMA.find(ma => ma.period === 3).ma.slice(-30)
+        const EMAlineB = EMA.find(ma => ma.period === 8).ma.slice(-30)
+
+        const calculateSMACrossUp = CrossUp.calculate({
+            lineA: SMAlineA,
+            lineB: SMAlineB
+        })
+        const calculateSMACrossDown = CrossDown.calculate({
+            lineA: SMAlineA,
+            lineB: SMAlineB
+        })
+
+        const calculateEMACrossUp = CrossUp.calculate({
+            lineA: EMAlineA,
+            lineB: EMAlineB
+        })
+        const calculateEMACrossDown = CrossDown.calculate({
+            lineA: EMAlineA,
+            lineB: EMAlineB
+        })
+
+        if (calculateSMACrossUp.at(-1) && calculateEMACrossUp.at(-1)) {
+            return Crosses.CrossUp
+        }
+
+        if (calculateSMACrossDown.at(-1) && calculateEMACrossDown.at(-1)) {
+            return Crosses.CrossDown
+        }
+    }
+    catch (err) {
+        console.error('Failed to calculate cross: ' + err)
+        throw err
+    }
 }

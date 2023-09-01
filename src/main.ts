@@ -6,6 +6,7 @@ import { closeAllOrdersBySymbol } from "./operation/exchangeOperations";
 import { CandleStickService } from "./service/candlestick.service";
 import { OrderService } from "./service/order.service";
 import { MACDCrossStrategy } from "./strategy/MACDCrossStrategy";
+import { MACrossStrategy } from "./strategy/MACrossStrategy";
 
 export const main = async () => {
     try {
@@ -13,25 +14,25 @@ export const main = async () => {
         const orderService = new OrderService()
         let isCheckingOrders = false;
 
-        await MACDCrossStrategy()
+        await MACrossStrategy()
 
         setInterval(async () => {
             await candleStickService.addOneCandle()
-            if (!isCheckingOrders) {
-                isCheckingOrders = true;
-                await orderService.checkOrderTime()
-                isCheckingOrders = false;
-            }
+            // if (!isCheckingOrders) {
+            //     isCheckingOrders = true;
+            //     await orderService.checkOrderTime()
+            //     isCheckingOrders = false;
+            // }
             const canCreateOrder = await orderService.canCreateOrder()
-            canCreateOrder && await MACDCrossStrategy()
+            canCreateOrder && await MACrossStrategy()
         }, 1000 * 60 * 5) // 5 minutes
 
         setInterval(async () => {
-            if (!isCheckingOrders) {
-                isCheckingOrders = true;
+            // if (!isCheckingOrders) {
+            //     isCheckingOrders = true;
                 await orderService.checkOrdersStatus()
-                isCheckingOrders = false;
-            }
+            //     isCheckingOrders = false;
+            // }
         }, 1000 * 5) // 5 seconds
 
         // const currency = await AppDataSource.manager.findOne(Currency, {

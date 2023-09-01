@@ -4,7 +4,7 @@ import { Currency } from "../entity/Currency"
 import { IndicatorService } from "../service/indicator.service"
 import { StrategyService } from "../service/strategy.service"
 
-export const SMACrossStrategy = async () => {
+export const MACrossStrategy = async () => {
     try {
         const strategyService = new StrategyService()
         const indicatorService = new IndicatorService()
