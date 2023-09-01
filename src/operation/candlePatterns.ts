@@ -1,6 +1,7 @@
 import { OHLCV } from "ccxt";
 import { bearishengulfingpattern, bearishhammerstick, bearishharami, bullishengulfingpattern, bullishhammerstick, bullishharami, doji, morningstar, shootingstar } from "technicalindicators";
 import StockData from "technicalindicators/declarations/StockData";
+import { CandleStick } from "../entity/CandleStick";
 
 const convertOHLCVToCandleData = (OHLCV: OHLCV): StockData => {
     try {
@@ -17,9 +18,14 @@ const convertOHLCVToCandleData = (OHLCV: OHLCV): StockData => {
 }
 
 //----------------------------REVERSAL PATTERNS----------------------------------
-export const isDoji = (OHLCV: OHLCV): boolean => {
+export const checkDoji = (CandleStick: CandleStick): boolean => {
     try {
-        const value = convertOHLCVToCandleData(OHLCV)
+        const value: StockData = {
+            open: [Number(CandleStick.open)],
+            low: [Number(CandleStick.low)],
+            high: [Number(CandleStick.high)],
+            close: [Number(CandleStick.closed)]
+        }
         const res = doji(value)
         return res
     } catch (err) {
@@ -29,7 +35,7 @@ export const isDoji = (OHLCV: OHLCV): boolean => {
 }
 
 //----------------------------BULLISH PATTERNS----------------------------------
-export const isBullishEngulfingPattern = (OHLCV: OHLCV): boolean => {
+export const checkBullishEngulfingPattern = (OHLCV: OHLCV): boolean => {
     try {
         const value = convertOHLCVToCandleData(OHLCV)
         const res = bullishengulfingpattern(value)
@@ -40,7 +46,7 @@ export const isBullishEngulfingPattern = (OHLCV: OHLCV): boolean => {
     }
 }
 
-export const isBullishHarami = (OHLCV: OHLCV): boolean => {
+export const checkBullishHarami = (OHLCV: OHLCV): boolean => {
     try {
         const value = convertOHLCVToCandleData(OHLCV)
         const res = bullishharami(value)
@@ -51,7 +57,7 @@ export const isBullishHarami = (OHLCV: OHLCV): boolean => {
     }
 }
 
-export const isBullishHammer = (OHLCV: OHLCV): boolean => {
+export const checkBullishHammer = (OHLCV: OHLCV): boolean => {
     try {
         const value = convertOHLCVToCandleData(OHLCV)
         const res = bullishhammerstick(value)
@@ -62,7 +68,7 @@ export const isBullishHammer = (OHLCV: OHLCV): boolean => {
     }
 }
 
-export const isMorningStar = (OHLCV: OHLCV): boolean => {
+export const checkMorningStar = (OHLCV: OHLCV): boolean => {
     try {
         const value = convertOHLCVToCandleData(OHLCV)
         const res = morningstar(value)
@@ -74,7 +80,7 @@ export const isMorningStar = (OHLCV: OHLCV): boolean => {
 }
 
 //----------------------------BEARISH PATTERNS----------------------------------
-export const isBearishEngulfingPattern = (OHLCV: OHLCV): boolean => {
+export const checkBearishEngulfingPattern = (OHLCV: OHLCV): boolean => {
     try {
         const value = convertOHLCVToCandleData(OHLCV)
         const res = bearishengulfingpattern(value)
@@ -85,7 +91,7 @@ export const isBearishEngulfingPattern = (OHLCV: OHLCV): boolean => {
     }
 }
 
-export const isBearishHarami = (OHLCV: OHLCV): boolean => {
+export const checkBearishHarami = (OHLCV: OHLCV): boolean => {
     try {
         const value = convertOHLCVToCandleData(OHLCV)
         const res = bearishharami(value)
@@ -96,7 +102,7 @@ export const isBearishHarami = (OHLCV: OHLCV): boolean => {
     }
 }
 
-export const isBearishHammer = (OHLCV: OHLCV): boolean => {
+export const checkBearishHammer = (OHLCV: OHLCV): boolean => {
     try {
         const value = convertOHLCVToCandleData(OHLCV)
         const res = bearishhammerstick(value)
@@ -107,7 +113,7 @@ export const isBearishHammer = (OHLCV: OHLCV): boolean => {
     }
 }
 
-export const isShootingStar = (OHLCV: OHLCV): boolean => {
+export const checkShootingStar = (OHLCV: OHLCV): boolean => {
     try {
         const value = convertOHLCVToCandleData(OHLCV)
         const res = shootingstar(value)

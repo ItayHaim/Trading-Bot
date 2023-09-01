@@ -60,12 +60,14 @@ export class StrategyService {
 
     async MACrossesStrategy(waitingOrders: WaitingCrossesArrayType[]) {
         try {
+            console.log('✌️waitingOrders --->', waitingOrders);
+            
             for (let index in waitingOrders) {
                 const order = waitingOrders[index]
                 await this.orderService.createFullOrder(order.currency, order.buyOrSell)
             }
         } catch (err) {
-            console.error('Failed to run cross and BB strategy: ' + err)
+            console.error('Failed to run MA cross strategy: ' + err)
             throw err
         }
     }

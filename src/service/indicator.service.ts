@@ -3,6 +3,9 @@ import { BuyOrSell, Crosses } from "../enums"
 import { calculateBollingerBands, calculateMACD, calculateMACDCrosses, calculateMACrosses, calculateRSI, calculateSMA, calculateStochasticRSI } from "../operation/indicators"
 import { Currency } from "../entity/Currency"
 import { WaitingCrossesArrayType } from "../types"
+import { CandleStickService } from "./candlestick.service"
+import { CandleStick } from "../entity/CandleStick"
+import { checkDoji } from "../operation/candlePatterns"
 
 export class IndicatorService {
     public checkMACD(closedPrices: number[]): BuyOrSell {
@@ -132,12 +135,14 @@ export class IndicatorService {
         }
     }
 
-    async checkMACrosses(closedPrices: number[], currency: Currency) {
+    checkMACrosses(closedPrices: number[], lastCandleStick: CandleStick, currency: Currency): void | WaitingCrossesArrayType {
         try {
             const { symbol } = currency
             const cross = calculateMACrosses(closedPrices)
+            const isDoji = checkDoji(lastCandleStick)
+            console.log(isDoji)
 
-            if (cross) {
+            if (cross && !isDoji) {
                 if (cross === Crosses.CrossUp) {
                     console.log('Should create buy order ' + symbol);
                     return { currency: currency, buyOrSell: BuyOrSell.Buy }
