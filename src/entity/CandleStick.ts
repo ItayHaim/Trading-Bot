@@ -25,9 +25,9 @@ export class CandleStick {
     @Column({ type: 'decimal', precision: 18, scale: 8 })
     volume: number
 
-    @OneToOne(() => Cross, (cross) => cross.id)
-    @JoinColumn({ name: "cross_id" })
-    cross: Cross
+    // @OneToOne(() => Cross, (cross) => cross.id)
+    // @JoinColumn({ name: "cross_id" })
+    // cross: Cross
 
     @ManyToOne(() => Currency, (currency) => currency.id)
     @JoinColumn({ name: "currency_id" })

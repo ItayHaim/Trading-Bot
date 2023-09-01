@@ -12,27 +12,18 @@ export const main = async () => {
     try {
         const candleStickService = new CandleStickService()
         const orderService = new OrderService()
-        let isCheckingOrders = false;
 
         await MACrossStrategy()
 
         setInterval(async () => {
             await candleStickService.addOneCandle()
-            // if (!isCheckingOrders) {
-            //     isCheckingOrders = true;
-            //     await orderService.checkOrderTime()
-            //     isCheckingOrders = false;
-            // }
+
             const canCreateOrder = await orderService.canCreateOrder()
             canCreateOrder && await MACrossStrategy()
         }, 1000 * 60 * 5) // 5 minutes
 
         setInterval(async () => {
-            // if (!isCheckingOrders) {
-            //     isCheckingOrders = true;
-                await orderService.checkOrdersStatus()
-            //     isCheckingOrders = false;
-            // }
+            await orderService.checkOrdersStatus()
         }, 1000 * 5) // 5 seconds
 
         // const currency = await AppDataSource.manager.findOne(Currency, {
