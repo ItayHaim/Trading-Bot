@@ -19,10 +19,8 @@ export const MACrossStrategy = async () => {
                 where: { currency: currency },
                 select: { closed: true }
             })
-            console.log('✌️candles --->', candles);
-
             const closedPrices = candles.map(candle => Number(candle.closed))
-
+            
             const result = await indicatorService.checkMACrosses(closedPrices, currency)
             if (result) {
                 waitingOrders.push(result)

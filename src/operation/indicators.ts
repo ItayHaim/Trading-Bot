@@ -94,7 +94,7 @@ export const calculateMACD = (closedPrices: number[], fastPeriod: number = 12, s
 *        'period' is the period for which the SMA is calculated.
 *        'sma' is the calculated Simple Moving Average for that period.
 */
-export const calculateSMA = (closedPrices: number[], periods: MAPeriods[] = [3, 8, 13]): MAOutput => {
+export const calculateSMA = (closedPrices: number[], periods: MAPeriods[] = [3, 8]): MAOutput => {
     try {
         return periods.map(period => ({
             period,
@@ -198,8 +198,6 @@ export const calculateMACrosses = (closedPrices: number[]): Crosses | undefined 
     try {
         const SMA = calculateSMA(closedPrices)
         const EMA = calculateEMA(closedPrices)
-        console.log('✌️SMA --->', SMA);
-        console.log('✌️EMA --->', EMA);
 
         const SMAlineA = SMA.find(ma => ma.period === 3).ma.slice(-30)
         const SMAlineB = SMA.find(ma => ma.period === 8).ma.slice(-30)
@@ -214,7 +212,6 @@ export const calculateMACrosses = (closedPrices: number[]): Crosses | undefined 
             lineA: SMAlineA,
             lineB: SMAlineB
         })
-
         const calculateEMACrossUp = CrossUp.calculate({
             lineA: EMAlineA,
             lineB: EMAlineB
