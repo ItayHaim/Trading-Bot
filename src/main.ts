@@ -5,7 +5,6 @@ import { OrderStatus } from "./enums";
 import { closeAllOrdersBySymbol } from "./operation/exchangeOperations";
 import { CandleStickService } from "./service/candlestick.service";
 import { OrderService } from "./service/order.service";
-import { MACDCrossStrategy } from "./strategy/MACDCrossStrategy";
 import { MACrossStrategy } from "./strategy/MACrossStrategy";
 
 export const main = async () => {

@@ -101,7 +101,6 @@ export class OrderService {
             const { mainOrder } = sideOrder
             const { currency, sideOrders } = mainOrder
             const { symbol } = currency
-            console.log('Auto')
             const PNL = await getPositionPNL(symbol)
 
             // Find the other SideOrder (TP/SL) to close him

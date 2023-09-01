@@ -205,7 +205,6 @@ export const calculateMACrosses = (closedPrices: number[]): Crosses | undefined 
         const SMAlineB = SMA.find(ma => ma.period === 8).ma.slice(-30)
         const EMAlineA = EMA.find(ma => ma.period === 3).ma.slice(-30)
         const EMAlineB = EMA.find(ma => ma.period === 8).ma.slice(-30)
-
         
 
         const calculateSMACrossUp = CrossUp.calculate({
