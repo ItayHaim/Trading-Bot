@@ -139,9 +139,7 @@ export class IndicatorService {
         try {
             const { symbol } = currency
             const cross = calculateMACrosses(closedPrices)
-            console.log('✌️cross --->', cross);
             const isDoji = checkDoji(lastCandleStick)
-            console.log(isDoji)
 
             if (cross && !isDoji) {
                 if (cross === Crosses.CrossUp) {

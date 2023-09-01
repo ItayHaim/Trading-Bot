@@ -17,8 +17,8 @@ export const CurrenciesArray = [
     // C
     // 'CHR/USDT',//!
     'CTSI/USDT',
-    // 'CHZ/USDT',//!
-    // 'CELR/USDT',//!
+    'CHZ/USDT',//!
+    'CELR/USDT',//!
     'C98/USDT',
 
     // D

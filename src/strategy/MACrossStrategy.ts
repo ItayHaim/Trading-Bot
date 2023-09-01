@@ -26,7 +26,7 @@ export const MACrossStrategy = async () => {
                 waitingOrders.push(result)
             }
         }
-        // await strategyService.MACrossesStrategy(waitingOrders)
+        await strategyService.MACrossesStrategy(waitingOrders)
 
         console.log('End strategy')
     } catch (err) {
