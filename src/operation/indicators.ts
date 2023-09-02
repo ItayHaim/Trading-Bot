@@ -4,9 +4,7 @@ import { MACDOutput } from "technicalindicators/declarations/moving_averages/MAC
 import { BollingerBandsOutput } from 'technicalindicators/declarations/volatility/BollingerBands'
 import { CrossesOutput, RSIOutput, MAOutput, MAPeriods } from "../types"
 import { Crosses } from '../enums'
-import { checkDoji } from './candlePatterns'
-import { CandleStick } from '../entity/CandleStick'
-
+import { Indicators } from '@ixjb94/indicators'
 
 /**
  * Calculates the Relative Strength Index (RSI) based on the given OHLCV data and period.
@@ -205,7 +203,7 @@ export const calculateMACrosses = (closedPrices: number[]): Crosses | undefined 
         const SMAlineB = SMA.find(ma => ma.period === 8).ma.slice(-30)
         const EMAlineA = EMA.find(ma => ma.period === 3).ma.slice(-30)
         const EMAlineB = EMA.find(ma => ma.period === 8).ma.slice(-30)
-        
+
 
         const calculateSMACrossUp = CrossUp.calculate({
             lineA: SMAlineA,
@@ -234,6 +232,18 @@ export const calculateMACrosses = (closedPrices: number[]): Crosses | undefined 
     }
     catch (err) {
         console.error('Failed to calculate cross: ' + err)
+        throw err
+    }
+}
+
+export const calculateLinearRegression = async (closedPrices: number[], period: number = 50) => {
+    try {
+
+        const TA = new Indicators()
+        const res = await TA.linreg(closedPrices, period)
+        return res
+    } catch (err) {
+        console.error('Failed to calculate linear regression: ' + err)
         throw err
     }
 }

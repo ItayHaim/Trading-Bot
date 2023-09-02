@@ -1,6 +1,6 @@
 import { MACDOutput } from "technicalindicators/declarations/moving_averages/MACD"
 import { BuyOrSell, Crosses } from "../enums"
-import { calculateBollingerBands, calculateMACD, calculateMACDCrosses, calculateMACrosses, calculateRSI, calculateSMA, calculateStochasticRSI } from "../operation/indicators"
+import { calculateBollingerBands, calculateLinearRegression, calculateMACD, calculateMACDCrosses, calculateMACrosses, calculateRSI, calculateSMA, calculateStochasticRSI } from "../operation/indicators"
 import { Currency } from "../entity/Currency"
 import { WaitingCrossesArrayType } from "../types"
 import { CandleStick } from "../entity/CandleStick"
@@ -141,6 +141,8 @@ export class IndicatorService {
             const isDoji = checkDoji(lastCandleStick)
             const RSI = calculateRSI(closedPrices)
             const RSIValue = RSI.at(-1)
+            const linerRegression = calculateLinearRegression(closedPrices)
+            console.log('✌️linerRegression --->', linerRegression);
 
             if (cross && !isDoji) {
                 if ((cross === Crosses.CrossUp) && (RSIValue > 54)) {
