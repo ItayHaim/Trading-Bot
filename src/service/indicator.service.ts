@@ -141,6 +141,7 @@ export class IndicatorService {
             const isDoji = checkDoji(lastCandleStick)
             const RSI = calculateRSI(closedPrices)
             const RSIValue = RSI.at(-1)
+            console.log('✌️closedPrices --->', closedPrices);
             const linerRegression = calculateLinearRegression(closedPrices)
             console.log('✌️linerRegression --->', linerRegression);
 
