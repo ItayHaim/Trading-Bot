@@ -4,7 +4,7 @@ import { Currency } from "../entity/Currency"
 import { IndicatorService } from "../service/indicator.service"
 import { StrategyService } from "../service/strategy.service"
 
-export const linearRegressionStrtegy = async() => {
+export const linearRegressionStrategy = async () => {
     try {
         const strategyService = new StrategyService()
         const indicatorService = new IndicatorService()
@@ -19,7 +19,7 @@ export const linearRegressionStrtegy = async() => {
             })
             const closedPrices = candles.map(candle => Number(candle.closed))
 
-
+            const res = await indicatorService.checkLinearRegression(closedPrices, currency)
         }
         // await strategyService.MACrossesStrategy(waitingOrders)
 

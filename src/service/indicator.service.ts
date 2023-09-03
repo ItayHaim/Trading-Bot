@@ -164,7 +164,28 @@ export class IndicatorService {
         try {
             const { symbol } = currency
             const linearRegression = calculateLinearRegression(closedPrices)
-            console.log('✌️linearRegression --->', linearRegression);
+            const RSI = calculateRSI(closedPrices)
+            const MACD = calculateMACD(closedPrices)
+
+            const lastClosedPrice = closedPrices.at(-1)
+            const lastLinearRegression = {
+                upperBand: linearRegression.upperBand.at(-1),
+                lowerBand: linearRegression.lowerBand.at(-1),
+                averageLine: linearRegression.averageLine.at(-1)
+            }
+            const lastRSI = RSI.at(-1)
+            const lastMACDHistogram = MACD.at(-1).histogram
+
+            const oneBeforeLastClosedPrice = closedPrices.at(-2)
+            const oneBeforeLastLinearRegression = {
+                upperBand: linearRegression.upperBand.at(-2),
+                lowerBand: linearRegression.lowerBand.at(-2),
+                averageLine: linearRegression.averageLine.at(-2)
+            }
+            const oneBeforeLastRSI = RSI.at(-2)
+            const oneBeforeLastMACDHistogram = MACD.at(-2).histogram
+
+
         } catch (err) {
             console.error('Failed to check linear regression: ' + err)
             throw err

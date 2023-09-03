@@ -5,19 +5,19 @@ import { OrderStatus } from "./enums";
 import { closeAllOrdersBySymbol } from "./operation/exchangeOperations";
 import { CandleStickService } from "./service/candlestick.service";
 import { OrderService } from "./service/order.service";
-import { MACrossStrategy } from "./strategy/MACrossStrategy";
+import { linearRegressionStrategy } from "./strategy/LinearRegressionStrategy";
 
 export const main = async () => {
     try {
         const candleStickService = new CandleStickService()
         const orderService = new OrderService()
 
-        await MACrossStrategy()
+        await linearRegressionStrategy()
 
         setInterval(async () => {
             await candleStickService.addOneCandle()
             const canCreateOrder = await orderService.canCreateOrder()
-            canCreateOrder && await MACrossStrategy()
+            canCreateOrder && await linearRegressionStrategy()
         }, 1000 * 60 * 5) // 5 minutes
 
         setInterval(async () => {
