@@ -141,9 +141,6 @@ export class IndicatorService {
             const isDoji = checkDoji(lastCandleStick)
             const RSI = calculateRSI(closedPrices)
             const RSIValue = RSI.at(-1)
-            console.log('✌️closedPrices --->', closedPrices);
-            const linerRegression = calculateLinearRegression(closedPrices)
-            console.log('✌️linerRegression --->', linerRegression);
 
             if (cross && !isDoji) {
                 if ((cross === Crosses.CrossUp) && (RSIValue > 54)) {
@@ -159,6 +156,17 @@ export class IndicatorService {
             }
         } catch (err) {
             console.error('Failed to check MA crosses: ' + err)
+            throw err
+        }
+    }
+
+    async checkLinearRegression(closedPrices: number[], currency: Currency) {
+        try {
+            const { symbol } = currency
+            const linearRegression = calculateLinearRegression(closedPrices)
+            console.log('✌️linearRegression --->', linearRegression);
+        } catch (err) {
+            console.error('Failed to check linear regression: ' + err)
             throw err
         }
     }

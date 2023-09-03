@@ -194,6 +194,12 @@ export const calculateMACDCrosses = (closedPrices: number[]): CrossesOutput => {
     }
 }
 
+/**
+ * Calculates the moving average crosses based on the given array of closed prices.
+ *
+ * @param closedPrices - An array of closed prices.
+ * @return The type of cross that occurred, or undefined if no cross occurred.
+ */
 export const calculateMACrosses = (closedPrices: number[]): Crosses | undefined => {
     try {
         const SMA = calculateSMA(closedPrices)
@@ -236,24 +242,19 @@ export const calculateMACrosses = (closedPrices: number[]): Crosses | undefined 
     }
 }
 
-// export const calculateLinearRegression = async (closedPrices: number[], period: number = 50) => {
-//     try {
-//         const TA = new Indicators()
-//         console.log('✌️closedPrices --->', closedPrices);
-//         const res = await TA.linreg(closedPrices, period)
-//         return res
-//     } catch (err) {
-//         console.error('Failed to calculate linear regression: ' + err)
-//         throw err
-//     }
-// }
-
-
+/**
+ * Calculates the linear regression trading indicator values for a given array of closed prices.
+ *
+ * @param closedPrices - The array of closed prices.
+ * @param period - The period for calculating the linear regression values. Default is 50.
+ * @param deviation - The standard deviation factor. Default is 2.
+ * @return An object containing the upper band, lower band, and average line arrays.
+ */
 export const calculateLinearRegression = (
     closedPrices: number[],
     period: number = 50,
     deviation: number = 2
-): { upperBand: number, lowerBand: number, averageLine: number } => {
+): { upperBand: number[], lowerBand: number[], averageLine: number[] } => {
     if (closedPrices.length < period) {
         throw new Error('Insufficient data for the given period.');
     }
@@ -289,5 +290,5 @@ export const calculateLinearRegression = (
         averageLine.push(linearRegressionValues[linearRegressionValues.length - 1]);
     }
 
-    return { upperBand: upperBand.at(-1), lowerBand:lowerBand.at(-1), averageLine:averageLine.at(-1) };
+    return { upperBand, lowerBand, averageLine };
 };
