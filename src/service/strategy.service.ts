@@ -1,6 +1,6 @@
 import { Currency } from "../entity/Currency";
 import { BuyOrSell } from "../enums";
-import { WaitingCrossesArrayType } from "../types";
+import { WaitingLinearRegArrayType, WaitingMACDCrossArrayType, WaitingMACrossArrayType } from "../types";
 import { IndicatorService } from "./indicator.service";
 import { OrderService } from "./order.service";
 
@@ -43,12 +43,12 @@ export class StrategyService {
         }
     }
 
-    async MACDCrossesAndBBStrategy(waitingOrders: WaitingCrossesArrayType[]) {
+    async MACDCrossesAndBBStrategy(waitingOrders: WaitingMACDCrossArrayType[]) {
         try {
             waitingOrders.sort((a, b) => b.MACDDiff - a.MACDDiff)
             console.log('✌️waitingOrders --->', waitingOrders);
 
-            for (let index in waitingOrders) {
+            for (const index in waitingOrders) {
                 const order = waitingOrders[index]
                 await this.orderService.createFullOrder(order.currency, order.buyOrSell)
             }
@@ -58,7 +58,7 @@ export class StrategyService {
         }
     }
 
-    async MACrossesStrategy(waitingOrders: WaitingCrossesArrayType[]) {
+    async MACrossesStrategy(waitingOrders: WaitingMACrossArrayType[]) {
         try {
             console.log('✌️waitingOrders --->', waitingOrders);
             waitingOrders.sort((a, b) => {
@@ -72,10 +72,26 @@ export class StrategyService {
                     // If BuyOrSell values are not same, keep original order
                     return 0;
                 }
-            }) 
+            })
             console.log('✌️waitingOrders --->', waitingOrders);
 
-            for (let index in waitingOrders) {
+            for (const index in waitingOrders) {
+                const order = waitingOrders[index]
+                await this.orderService.createFullOrder(order.currency, order.buyOrSell)
+            }
+        } catch (err) {
+            console.error('Failed to run MA cross strategy: ' + err)
+            throw err
+        }
+    }
+
+    async LinearRegressionStrategy(waitingOrders: WaitingLinearRegArrayType[]) {
+        try {
+            console.log('✌️waitingOrders --->', waitingOrders);
+            waitingOrders.sort((a, b) => b.PricePercentageDiff - a.PricePercentageDiff)
+            console.log('✌️waitingOrders --->', waitingOrders);
+
+            for (const index in waitingOrders) {
                 const order = waitingOrders[index]
                 await this.orderService.createFullOrder(order.currency, order.buyOrSell)
             }

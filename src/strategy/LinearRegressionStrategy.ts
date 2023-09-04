@@ -3,11 +3,13 @@ import { CandleStick } from "../entity/CandleStick"
 import { Currency } from "../entity/Currency"
 import { IndicatorService } from "../service/indicator.service"
 import { StrategyService } from "../service/strategy.service"
+import { WaitingLinearRegArrayType } from "../types"
 
 export const linearRegressionStrategy = async () => {
     try {
         const strategyService = new StrategyService()
         const indicatorService = new IndicatorService()
+        const waitingOrders: WaitingLinearRegArrayType[] = []
 
         const currencies = await AppDataSource.manager.find(Currency)
         for (const index in currencies) {
@@ -17,9 +19,12 @@ export const linearRegressionStrategy = async () => {
                 where: { currency: currency }
             })
 
-            const res = await indicatorService.checkLinearRegression(candles, currency)
+            const result = indicatorService.checkLinearRegression(candles, currency)
+            if(result){
+                waitingOrders.push(result)
+            }
         }
-        // await strategyService.MACrossesStrategy(waitingOrders)
+        await strategyService.LinearRegressionStrategy(waitingOrders)
 
         console.log('End strategy')
     } catch (err) {
