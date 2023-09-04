@@ -94,7 +94,7 @@ export class StrategyService {
                 await this.orderService.createFullOrder(order.currency, order.buyOrSell)
             }
         } catch (err) {
-            console.error('Failed to run MA cross strategy: ' + err)
+            console.error('Failed to run linear regression strategy: ' + err)
             throw err
         }
     }

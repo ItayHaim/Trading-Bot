@@ -107,10 +107,8 @@ export const createOrder = async (symbol: string, buyOrSell: OrderSide, amountIn
     catch (err) {
         if (err instanceof OrderImmediatelyFillable) {
             closeAllOrdersBySymbol(symbol)
-            return
         }
         console.error('Failed to create the order:' + err)
-        throw err
     }
 }
 

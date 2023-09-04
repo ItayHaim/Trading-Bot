@@ -53,6 +53,7 @@ export class OrderService {
                 buyOrSell: orderSide,
                 currency: currency
             })
+
             await AppDataSource.manager.save(SideOrder, {
                 orderId: StopLossId,
                 orderType: OrderType.StopLoss,
