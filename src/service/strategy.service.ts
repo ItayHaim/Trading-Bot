@@ -87,9 +87,7 @@ export class StrategyService {
 
     async LinearRegressionStrategy(waitingOrders: WaitingLinearRegArrayType[]) {
         try {
-            console.log('✌️waitingOrders --->', waitingOrders);
             waitingOrders.sort((a, b) => b.PricePercentageDiff - a.PricePercentageDiff)
-            console.log('✌️waitingOrders --->', waitingOrders);
 
             for (const index in waitingOrders) {
                 const order = waitingOrders[index]
