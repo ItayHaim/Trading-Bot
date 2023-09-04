@@ -170,11 +170,11 @@ export class IndicatorService {
             const linearRegression = calculateLinearRegression(closedPrices)
             // const RSI = calculateRSI(closedPrices)
             // const MACD = calculateMACD(closedPrices)
-
+            
             // const lastClosedPrice = closedPrices.at(-1)
             const lastHighPrice = candles.at(-1).high
             const lastLowPrice = candles.at(-1).low
-
+            
             const lastLinearRegression = {
                 upperBand: linearRegression.upperBand.at(-1),
                 lowerBand: linearRegression.lowerBand.at(-1),
@@ -183,10 +183,11 @@ export class IndicatorService {
             // const lastRSI = RSI.at(-1)
             // const lastMACDHistogram = MACD.at(-1).histogram
 
-            console.log('✌️lastLowPrices --->', lastLowPrice);
-            console.log('✌️lastHighPrices --->', lastHighPrice);
+            // console.log('✌️linearRegression --->', linearRegression);
+            // console.log('✌️lastLowPrices --->', lastLowPrice);
+            // console.log('✌️lastHighPrices --->', lastHighPrice);
             // console.log('✌️lastClosedPrice --->', lastClosedPrice);
-            console.log('✌️lastLinearRegression --->', lastLinearRegression);
+            // console.log('✌️lastLinearRegression --->', lastLinearRegression);
             // console.log('✌️lastRSI --->', lastRSI);
             // console.log('✌️lastMACDHistogram --->', lastMACDHistogram);
 
