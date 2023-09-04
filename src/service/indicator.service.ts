@@ -211,14 +211,10 @@ export class IndicatorService {
             // console.log('✌️oneBeforeLastRSI --->', oneBeforeLastRSI);
             // console.log('✌️oneBeforeLastMACDHistogram --->', oneBeforeLastMACDHistogram);
             if (lastLowPrice <= lastLinearRegression.lowerBand) {
-                console.log('✌️lastLinearRegression.lowerBand --->', lastLinearRegression.lowerBand);
-                console.log('✌️lastLowPrice --->', lastLowPrice);
                 console.log('Should create buy order ' + symbol)
                 return { currency: currency, buyOrSell: BuyOrSell.Buy, PricePercentageDiff: Math.abs(((lastLinearRegression.lowerBand - lastLowPrice) / lastLowPrice) * 100) }
             } else if (lastHighPrice >= lastLinearRegression.upperBand) {
                 console.log('Should create sell order ' + symbol);
-                console.log('✌️lastHighPrice --->', lastHighPrice);
-                console.log('✌️lastLinearRegression.upperBand --->', lastLinearRegression.upperBand);
                 return { currency: currency, buyOrSell: BuyOrSell.Sell, PricePercentageDiff: Math.abs(((lastHighPrice - lastLinearRegression.upperBand) / lastLinearRegression.upperBand) * 100) }
             }
             return
