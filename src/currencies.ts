@@ -8,7 +8,7 @@ export const CurrenciesArray = [
     'APT/USDT',
 
     // B
-    'BTC/USDT',
+    // 'BTC/USDT', //!
     'BAND/USDT',
     'BAT/USDT',
     'BNB/USDT',
