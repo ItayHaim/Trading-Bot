@@ -14,12 +14,10 @@ export const linearRegressionStrategy = async () => {
             const currency = currencies[index]
 
             const candles = await AppDataSource.manager.find(CandleStick, {
-                where: { currency: currency },
-                select: { closed: true }
+                where: { currency: currency }
             })
-            const closedPrices = candles.map(candle => Number(candle.closed))
 
-            const res = await indicatorService.checkLinearRegression(closedPrices, currency)
+            const res = await indicatorService.checkLinearRegression(candles, currency)
         }
         // await strategyService.MACrossesStrategy(waitingOrders)
 

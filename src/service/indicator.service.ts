@@ -2,7 +2,7 @@ import { MACDOutput } from "technicalindicators/declarations/moving_averages/MAC
 import { BuyOrSell, Crosses } from "../enums"
 import { calculateBollingerBands, calculateLinearRegression, calculateMACD, calculateMACDCrosses, calculateMACrosses, calculateRSI, calculateSMA, calculateStochasticRSI } from "../operation/indicators"
 import { Currency } from "../entity/Currency"
-import { WaitingCrossesArrayType } from "../types"
+import { WaitingLinearRegArrayType, WaitingMACDCrossArrayType, WaitingMACrossArrayType } from "../types"
 import { CandleStick } from "../entity/CandleStick"
 import { checkDoji } from "../operation/candlePatterns"
 
@@ -100,7 +100,7 @@ export class IndicatorService {
         }
     }
 
-    async checkMACDCrossesAndBB(closedPrices: number[], currency: Currency): Promise<void | WaitingCrossesArrayType> {
+    async checkMACDCrossesAndBB(closedPrices: number[], currency: Currency): Promise<void | WaitingMACDCrossArrayType> {
         try {
             const { symbol } = currency
 
@@ -134,7 +134,7 @@ export class IndicatorService {
         }
     }
 
-    checkMACrosses(closedPrices: number[], lastCandleStick: CandleStick, currency: Currency): void | WaitingCrossesArrayType {
+    checkMACrosses(closedPrices: number[], lastCandleStick: CandleStick, currency: Currency): void | WaitingMACrossArrayType {
         try {
             const { symbol } = currency
             const cross = calculateMACrosses(closedPrices)
@@ -160,32 +160,64 @@ export class IndicatorService {
         }
     }
 
-    async checkLinearRegression(closedPrices: number[], currency: Currency) {
+    checkLinearRegression(candles: CandleStick[], currency: Currency): void | WaitingLinearRegArrayType {
         try {
             const { symbol } = currency
-            const linearRegression = calculateLinearRegression(closedPrices)
-            const RSI = calculateRSI(closedPrices)
-            const MACD = calculateMACD(closedPrices)
+            const closedPrices = candles.map(candle => Number(candle.closed))
+            // const highPrices = candles.map(candle => Number(candle.high))
+            // const lowPrices = candles.map(candle => Number(candle.low))
 
-            const lastClosedPrice = closedPrices.at(-1)
+            const linearRegression = calculateLinearRegression(closedPrices)
+            // const RSI = calculateRSI(closedPrices)
+            // const MACD = calculateMACD(closedPrices)
+
+            // const lastClosedPrice = closedPrices.at(-1)
+            const lastHighPrice = candles.at(-1).high
+            const lastLowPrice = candles.at(-1).low
+
             const lastLinearRegression = {
                 upperBand: linearRegression.upperBand.at(-1),
                 lowerBand: linearRegression.lowerBand.at(-1),
                 averageLine: linearRegression.averageLine.at(-1)
             }
-            const lastRSI = RSI.at(-1)
-            const lastMACDHistogram = MACD.at(-1).histogram
+            // const lastRSI = RSI.at(-1)
+            // const lastMACDHistogram = MACD.at(-1).histogram
 
-            const oneBeforeLastClosedPrice = closedPrices.at(-2)
-            const oneBeforeLastLinearRegression = {
-                upperBand: linearRegression.upperBand.at(-2),
-                lowerBand: linearRegression.lowerBand.at(-2),
-                averageLine: linearRegression.averageLine.at(-2)
+            console.log('✌️lastLowPrices --->', lastLowPrice);
+            console.log('✌️lastHighPrices --->', lastHighPrice);
+            // console.log('✌️lastClosedPrice --->', lastClosedPrice);
+            console.log('✌️lastLinearRegression --->', lastLinearRegression);
+            // console.log('✌️lastRSI --->', lastRSI);
+            // console.log('✌️lastMACDHistogram --->', lastMACDHistogram);
+
+            // const oneBeforeLastClosedPrice = closedPrices.at(-2)
+            // const oneBeforeLastHighPrice = highPrices.at(-2)
+            // const oneBeforeLastLowPrice = lowPrices.at(-2)
+
+            // const oneBeforeLastLinearRegression = {
+            //     upperBand: linearRegression.upperBand.at(-2),
+            //     lowerBand: linearRegression.lowerBand.at(-2),
+            //     averageLine: linearRegression.averageLine.at(-2)
+            // }
+            // const oneBeforeLastRSI = RSI.at(-2)
+            // const oneBeforeLastMACDHistogram = MACD.at(-2).histogram
+
+
+            // console.log('✌️oneBeforeLastLowPrice --->', oneBeforeLastLowPrice);
+            // console.log('✌️oneBeforeLastHighPrice --->', oneBeforeLastHighPrice);
+            // console.log('✌️oneBeforeLastClosedPrice --->', oneBeforeLastClosedPrice);
+            // console.log('✌️oneBeforeLastLinearRegression --->', oneBeforeLastLinearRegression);
+            // console.log('✌️oneBeforeLastRSI --->', oneBeforeLastRSI);
+            // console.log('✌️oneBeforeLastMACDHistogram --->', oneBeforeLastMACDHistogram);
+            if (lastLowPrice < lastLinearRegression.lowerBand) {
+                console.log('Should create buy order ' + symbol)
+                return { currency: currency, buyOrSell: BuyOrSell.Buy, PricePercentageDiff: Math.abs(((lastLinearRegression.lowerBand - lastLowPrice) / lastLowPrice) * 100) }
+            } else if (lastHighPrice > lastLinearRegression.upperBand) {
+                console.log('Should create sell order ' + symbol);
+                return { currency: currency, buyOrSell: BuyOrSell.Sell, PricePercentageDiff: Math.abs(((lastHighPrice - lastLinearRegression.upperBand) / lastLinearRegression.upperBand) * 100) }
+            } else {
+                console.log('Should NOT create order ' + symbol);
             }
-            const oneBeforeLastRSI = RSI.at(-2)
-            const oneBeforeLastMACDHistogram = MACD.at(-2).histogram
-
-
         } catch (err) {
             console.error('Failed to check linear regression: ' + err)
             throw err
