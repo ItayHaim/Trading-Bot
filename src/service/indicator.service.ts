@@ -164,9 +164,7 @@ export class IndicatorService {
         try {
             const { symbol } = currency
             const closedPrices = candles.map(candle => Number(candle.closed))
-            // const highPrices = candles.map(candle => Number(candle.high))
-            // const lowPrices = candles.map(candle => Number(candle.low))
-
+            
             const linearRegression = calculateLinearRegression(closedPrices)
             // const RSI = calculateRSI(closedPrices)
             // const MACD = calculateMACD(closedPrices)
@@ -183,7 +181,6 @@ export class IndicatorService {
             // const lastRSI = RSI.at(-1)
             // const lastMACDHistogram = MACD.at(-1).histogram
 
-            // console.log('✌️linearRegression --->', linearRegression);
             // console.log('✌️lastLowPrices --->', lastLowPrice);
             // console.log('✌️lastHighPrices --->', lastHighPrice);
             // console.log('✌️lastClosedPrice --->', lastClosedPrice);

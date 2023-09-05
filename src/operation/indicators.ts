@@ -4,7 +4,6 @@ import { MACDOutput } from "technicalindicators/declarations/moving_averages/MAC
 import { BollingerBandsOutput } from 'technicalindicators/declarations/volatility/BollingerBands'
 import { CrossesOutput, RSIOutput, MAOutput, MAPeriods } from "../types"
 import { Crosses } from '../enums'
-import { Indicators } from '@ixjb94/indicators'
 
 /**
  * Calculates the Relative Strength Index (RSI) based on the given OHLCV data and period.
@@ -282,7 +281,7 @@ export const calculateLinearRegression = (
         }
 
         const standardDeviation = deviation * Math.sqrt(
-            pricesSlice.reduce((acc, price, index) => acc + (price - linearRegressionValues[index]) ** 2, 0) / (n - 1)
+            pricesSlice.reduce((acc, price, index) => acc + (price - linearRegressionValues[index]) ** 2, 0) / n
         );
 
         upperBand.push(linearRegressionValues[linearRegressionValues.length - 1] + standardDeviation);
