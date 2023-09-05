@@ -12,7 +12,7 @@ export const main = async () => {
         const candleStickService = new CandleStickService()
         const orderService = new OrderService()
 
-        await linearRegressionStrategy()
+        // await linearRegressionStrategy()
 
         setInterval(async () => {
             await candleStickService.addOneCandle()
