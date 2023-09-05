@@ -111,8 +111,7 @@ export class OrderService {
                 .andWhere("sideOrder.id != :sideOrderId", { sideOrderId: sideOrder.id })
                 .getOne();
 
-            console.log('✌️otherSideOrder --->', otherSideOrder);
-            await closeOrder(otherSideOrder.orderId, symbol)
+            otherSideOrder && await closeOrder(otherSideOrder.orderId, symbol)
 
             //Delete orders from DB
             await this.deleteOrderFromDB(sideOrders, mainOrder, PNL)
