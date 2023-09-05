@@ -24,7 +24,7 @@ export const linearRegressionStrategy = async () => {
                 waitingOrders.push(result)
             }
         }
-        waitingOrders.length > 0 && await strategyService.LinearRegressionStrategy(waitingOrders)
+        // waitingOrders.length > 0 && await strategyService.LinearRegressionStrategy(waitingOrders)
 
         console.log('End strategy')
     } catch (err) {
