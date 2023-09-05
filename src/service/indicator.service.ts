@@ -164,22 +164,15 @@ export class IndicatorService {
         try {
             const { symbol } = currency
             const closedPrices = candles.map(candle => Number(candle.closed))
-
-            const linearRegression = calculateLinearRegression(closedPrices)
-
-            const lastHighPrice = candles.at(-1).high
             const lastLowPrice = candles.at(-1).low
-
+            const lastHighPrice = candles.at(-1).high
+            
+            const linearRegression = calculateLinearRegression(closedPrices)
             const lastLinearRegression = {
                 upperBand: linearRegression.upperBand.at(-1),
                 lowerBand: linearRegression.lowerBand.at(-1),
                 averageLine: linearRegression.averageLine.at(-1)
             }
-
-            // console.log('✌️lastLowPrices --->', lastLowPrice);
-            // console.log('✌️lastHighPrices --->', lastHighPrice);
-            // console.log('✌️lastClosedPrice --->', lastClosedPrice);
-            // console.log('✌️lastLinearRegression --->', lastLinearRegression);
 
             const oneBeforeLastHighPrice = candles.at(-2).high
             const oneBeforeLastLowPrice = candles.at(-2).low
@@ -189,7 +182,6 @@ export class IndicatorService {
             //     lowerBand: linearRegression.lowerBand.at(-2),
             //     averageLine: linearRegression.averageLine.at(-2)
             // }
-
 
             // console.log('✌️oneBeforeLastLowPrice --->', oneBeforeLastLowPrice);
             // console.log('✌️oneBeforeLastHighPrice --->', oneBeforeLastHighPrice);

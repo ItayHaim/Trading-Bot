@@ -251,7 +251,7 @@ export const calculateMACrosses = (closedPrices: number[]): Crosses | undefined 
  */
 export const calculateLinearRegression = (
     closedPrices: number[],
-    period: number = 50,
+    period: number = 100,
     deviation: number = 2
 ): { upperBand: number[], lowerBand: number[], averageLine: number[] } => {
     if (closedPrices.length < period) {
