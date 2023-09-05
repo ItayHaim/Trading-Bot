@@ -166,6 +166,8 @@ export class IndicatorService {
             const closedPrices = candles.map(candle => Number(candle.closed))
             const lastLowPrice = candles.at(-1).low
             const lastHighPrice = candles.at(-1).high
+            const oneBeforeLastHighPrice = candles.at(-2).high
+            const oneBeforeLastLowPrice = candles.at(-2).low
             
             const linearRegression = calculateLinearRegression(closedPrices)
             const lastLinearRegression = {
@@ -173,9 +175,6 @@ export class IndicatorService {
                 lowerBand: linearRegression.lowerBand.at(-1),
                 averageLine: linearRegression.averageLine.at(-1)
             }
-
-            const oneBeforeLastHighPrice = candles.at(-2).high
-            const oneBeforeLastLowPrice = candles.at(-2).low
 
             // const oneBeforeLastLinearRegression = {
             //     upperBand: linearRegression.upperBand.at(-2),
