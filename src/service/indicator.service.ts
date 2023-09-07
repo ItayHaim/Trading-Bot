@@ -199,12 +199,7 @@ export class IndicatorService {
                 const oneBeforeLastMACDHistogram = MACD.at(-2).histogram
 
                 if (lastMACDHistogram > oneBeforeLastMACDHistogram) {
-                    console.log(candles.at(-1))
                     console.log('Should create buy order ' + symbol)
-                    console.log('✌️lastLinearRegression.lowerBand --->', lastLinearRegression.lowerBand)
-                    console.log('✌️oneBeforeLastLowPrice --->', oneBeforeLastLowPrice)
-                    console.log('✌️lastMACDHistogram --->', lastMACDHistogram)
-                    console.log('✌️oneBeforeLastMACDHistogram --->', oneBeforeLastMACDHistogram + '\n')
                     return { currency: currency, buyOrSell: BuyOrSell.Buy, PricePercentageDiff: Math.abs(((lastLinearRegression.lowerBand - lastLowPrice) / lastLowPrice) * 100) }
                 }
             } else if (oneBeforeLastHighPrice >= lastLinearRegression.upperBand) {
@@ -213,12 +208,7 @@ export class IndicatorService {
                 const oneBeforeLastMACDHistogram = MACD.at(-2).histogram
 
                 if (lastMACDHistogram < oneBeforeLastMACDHistogram) {
-                    console.log(candles.at(-1))
                     console.log('Should create sell order ' + symbol)
-                    console.log('✌️lastLinearRegression.upperBand --->', lastLinearRegression.upperBand)
-                    console.log('✌️oneBeforeLastHighPrice --->', oneBeforeLastHighPrice)
-                    console.log('✌️lastMACDHistogram --->', lastMACDHistogram)
-                    console.log('✌️oneBeforeLastMACDHistogram --->', oneBeforeLastMACDHistogram + '\n')
                     return { currency: currency, buyOrSell: BuyOrSell.Sell, PricePercentageDiff: Math.abs(((lastHighPrice - lastLinearRegression.upperBand) / lastLinearRegression.upperBand) * 100) }
                 }
             }
