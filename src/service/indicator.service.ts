@@ -116,16 +116,16 @@ export class IndicatorService {
 
                 if (cross.order === BuyOrSell.Buy && calculateMACDDiff >= 8) {
                     if ((lastClosedPrice <= lastBB.upper) && (lastClosedPrice >= lastBB.middle)) {
-                        console.log('Should create buy order ' + symbol);
+                        console.log('Should create buy order ' + symbol)
                         return { currency: currency, buyOrSell: BuyOrSell.Buy, MACDDiff: calculateMACDDiff }
                     }
                 } else if (cross.order === BuyOrSell.Sell && calculateMACDDiff >= 8) {
                     if ((lastClosedPrice >= lastBB.lower) && (lastClosedPrice <= lastBB.middle)) {
-                        console.log('Should create sell order ' + symbol);
+                        console.log('Should create sell order ' + symbol)
                         return { currency: currency, buyOrSell: BuyOrSell.Sell, MACDDiff: calculateMACDDiff }
                     }
                 } else {
-                    console.log('Should NOT create order ' + symbol);
+                    console.log('Should NOT create order ' + symbol)
                 }
             }
         } catch (err) {
@@ -144,14 +144,14 @@ export class IndicatorService {
 
             if (cross && !isDoji) {
                 if ((cross === Crosses.CrossUp) && (RSIValue > 54)) {
-                    console.log('Should create buy order ' + symbol);
+                    console.log('Should create buy order ' + symbol)
                     return { currency: currency, buyOrSell: BuyOrSell.Buy, RSIValue: RSIValue }
                 } else if ((cross === Crosses.CrossDown) && (RSIValue < 46)) {
-                    console.log('Should create sell order ' + symbol);
+                    console.log('Should create sell order ' + symbol)
                     return { currency: currency, buyOrSell: BuyOrSell.Sell, RSIValue: RSIValue }
                 }
                 else {
-                    console.log('Should NOT create order ' + symbol);
+                    console.log('Should NOT create order ' + symbol)
                 }
             }
         } catch (err) {
@@ -182,15 +182,15 @@ export class IndicatorService {
             //     averageLine: linearRegression.averageLine.at(-2)
             // }
 
-            // console.log('✌️oneBeforeLastLowPrice --->', oneBeforeLastLowPrice);
-            // console.log('✌️oneBeforeLastHighPrice --->', oneBeforeLastHighPrice);
-            // console.log('✌️oneBeforeLastClosedPrice --->', oneBeforeLastClosedPrice);
-            // console.log('✌️oneBeforeLastLinearRegression --->', oneBeforeLastLinearRegression);
+            // console.log('✌️oneBeforeLastLowPrice --->', oneBeforeLastLowPrice)
+            // console.log('✌️oneBeforeLastHighPrice --->', oneBeforeLastHighPrice)
+            // console.log('✌️oneBeforeLastClosedPrice --->', oneBeforeLastClosedPrice)
+            // console.log('✌️oneBeforeLastLinearRegression --->', oneBeforeLastLinearRegression)
             // if (lastLowPrice <= lastLinearRegression.lowerBand) {
             //     console.log('Should create buy order ' + symbol)
             //     return { currency: currency, buyOrSell: BuyOrSell.Buy, PricePercentageDiff: Math.abs(((lastLinearRegression.lowerBand - lastLowPrice) / lastLowPrice) * 100) }
             // } else if (lastHighPrice >= lastLinearRegression.upperBand) {
-            //     console.log('Should create sell order ' + symbol);
+            //     console.log('Should create sell order ' + symbol)
             //     return { currency: currency, buyOrSell: BuyOrSell.Sell, PricePercentageDiff: Math.abs(((lastHighPrice - lastLinearRegression.upperBand) / lastLinearRegression.upperBand) * 100) }
             // }
             if (oneBeforeLastLowPrice <= lastLinearRegression.lowerBand) {
@@ -199,11 +199,12 @@ export class IndicatorService {
                 const oneBeforeLastMACDHistogram = MACD.at(-2).histogram
 
                 if (lastMACDHistogram > oneBeforeLastMACDHistogram) {
+                    console.log(candles.at(-1))
                     console.log('Should create buy order ' + symbol)
-                    console.log('✌️lastLinearRegression.lowerBand --->', lastLinearRegression.lowerBand);
-                    console.log('✌️oneBeforeLastLowPrice --->', oneBeforeLastLowPrice);
-                    console.log('✌️lastMACDHistogram --->', lastMACDHistogram);
-                    console.log('✌️oneBeforeLastMACDHistogram --->', oneBeforeLastMACDHistogram);
+                    console.log('✌️lastLinearRegression.lowerBand --->', lastLinearRegression.lowerBand)
+                    console.log('✌️oneBeforeLastLowPrice --->', oneBeforeLastLowPrice)
+                    console.log('✌️lastMACDHistogram --->', lastMACDHistogram)
+                    console.log('✌️oneBeforeLastMACDHistogram --->', oneBeforeLastMACDHistogram)
                     return { currency: currency, buyOrSell: BuyOrSell.Buy, PricePercentageDiff: Math.abs(((lastLinearRegression.lowerBand - lastLowPrice) / lastLowPrice) * 100) }
                 }
             } else if (oneBeforeLastHighPrice >= lastLinearRegression.upperBand) {
@@ -212,11 +213,12 @@ export class IndicatorService {
                 const oneBeforeLastMACDHistogram = MACD.at(-2).histogram
 
                 if (lastMACDHistogram < oneBeforeLastMACDHistogram) {
-                    console.log('Should create sell order ' + symbol);
-                    console.log('✌️lastLinearRegression.upperBand --->', lastLinearRegression.upperBand);
-                    console.log('✌️oneBeforeLastHighPrice --->', oneBeforeLastHighPrice);
-                    console.log('✌️lastMACDHistogram --->', lastMACDHistogram);
-                    console.log('✌️oneBeforeLastMACDHistogram --->', oneBeforeLastMACDHistogram);
+                    console.log(candles.at(-1))
+                    console.log('Should create sell order ' + symbol)
+                    console.log('✌️lastLinearRegression.upperBand --->', lastLinearRegression.upperBand)
+                    console.log('✌️oneBeforeLastHighPrice --->', oneBeforeLastHighPrice)
+                    console.log('✌️lastMACDHistogram --->', lastMACDHistogram)
+                    console.log('✌️oneBeforeLastMACDHistogram --->', oneBeforeLastMACDHistogram)
                     return { currency: currency, buyOrSell: BuyOrSell.Sell, PricePercentageDiff: Math.abs(((lastHighPrice - lastLinearRegression.upperBand) / lastLinearRegression.upperBand) * 100) }
                 }
             }
