@@ -14,8 +14,6 @@ const candleAmount = Number(process.env.CANDLE_AMOUNT);
 
 AppDataSource.initialize().then(async () => {
     try {
-        console.log(new Date().toISOString());
-
         // Deleting data from currency, candlestick and sid orders tables
         await AppDataSource.getRepository(MainOrder).update({}, {
             currency: null
@@ -48,9 +46,9 @@ AppDataSource.initialize().then(async () => {
         });
 
         const candlesArray = (await Promise.all(promises)).flat();
-
         await AppDataSource.manager.save(CandleStick, candlesArray);
         console.log('Connect and initialize ');
+        
         // Run the trading strategy
         main();
     } catch (err) {
