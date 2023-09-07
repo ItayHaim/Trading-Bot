@@ -9,6 +9,7 @@ export const binanceExchange: binance = new binance({
     // verbose: true // Make every response send with headers  
     options: {
         defaultType: 'future',
-        warnOnFetchOpenOrdersWithoutSymbol: false
+        warnOnFetchOpenOrdersWithoutSymbol: false,
+        adjustForTimeDifference: true
     }
 });
