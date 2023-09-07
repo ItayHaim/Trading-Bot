@@ -168,7 +168,7 @@ export class IndicatorService {
             const lastHighPrice = candles.at(-1).high
             const oneBeforeLastHighPrice = candles.at(-2).high
             const oneBeforeLastLowPrice = candles.at(-2).low
-            
+
             const linearRegression = calculateLinearRegression(closedPrices)
             const lastLinearRegression = {
                 upperBand: linearRegression.upperBand.at(-1),
@@ -200,6 +200,10 @@ export class IndicatorService {
 
                 if (lastMACDHistogram > oneBeforeLastMACDHistogram) {
                     console.log('Should create buy order ' + symbol)
+                    console.log('✌️lastLinearRegression.lowerBand --->', lastLinearRegression.lowerBand);
+                    console.log('✌️oneBeforeLastLowPrice --->', oneBeforeLastLowPrice);
+                    console.log('✌️lastMACDHistogram --->', lastMACDHistogram);
+                    console.log('✌️oneBeforeLastMACDHistogram --->', oneBeforeLastMACDHistogram);
                     return { currency: currency, buyOrSell: BuyOrSell.Buy, PricePercentageDiff: Math.abs(((lastLinearRegression.lowerBand - lastLowPrice) / lastLowPrice) * 100) }
                 }
             } else if (oneBeforeLastHighPrice >= lastLinearRegression.upperBand) {
@@ -209,6 +213,10 @@ export class IndicatorService {
 
                 if (lastMACDHistogram < oneBeforeLastMACDHistogram) {
                     console.log('Should create sell order ' + symbol);
+                    console.log('✌️lastLinearRegression.upperBand --->', lastLinearRegression.upperBand);
+                    console.log('✌️oneBeforeLastHighPrice --->', oneBeforeLastHighPrice);
+                    console.log('✌️lastMACDHistogram --->', lastMACDHistogram);
+                    console.log('✌️oneBeforeLastMACDHistogram --->', oneBeforeLastMACDHistogram);
                     return { currency: currency, buyOrSell: BuyOrSell.Sell, PricePercentageDiff: Math.abs(((lastHighPrice - lastLinearRegression.upperBand) / lastLinearRegression.upperBand) * 100) }
                 }
             }
