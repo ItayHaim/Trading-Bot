@@ -1,4 +1,3 @@
-import { CurrenciesArray } from "../currencies"
 import { AppDataSource } from "../data-source"
 import { CandleStick } from "../entity/CandleStick"
 import { Currency } from "../entity/Currency"
@@ -9,16 +8,11 @@ export class CandleStickService {
 
     async addOneCandle(): Promise<void> {
         try {
-            for (const index in CurrenciesArray) {
-                const symbol = CurrenciesArray[index]
+            const currencies = await AppDataSource.manager.find(Currency)
 
-                const currency = await AppDataSource.manager.findOneOrFail(Currency, {
-                    where: { symbol: symbol }
-                })
-
-                const oneOHLCV = (await getCoinOHLCV(symbol, this.timeFrame, undefined, 1))[0]
-
-                await AppDataSource.manager.save(CandleStick, {
+            const promises = currencies.map(async (currency) => {
+                const oneOHLCV = (await getCoinOHLCV(currency.symbol, this.timeFrame, undefined, 1))[0]
+                return {
                     currency: currency,
                     date: new Date(oneOHLCV[0]),
                     open: oneOHLCV[1],
@@ -26,8 +20,12 @@ export class CandleStickService {
                     low: oneOHLCV[3],
                     closed: oneOHLCV[4],
                     volume: oneOHLCV[5]
-                })
-            }
+                }
+            });
+
+            const candlesArray = await Promise.all(promises);
+
+            await AppDataSource.manager.save(CandleStick, candlesArray)
             console.log('Added on candle!');
         } catch (err) {
             console.error('Failed to add one candle: ' + err)
