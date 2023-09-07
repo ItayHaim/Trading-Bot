@@ -194,20 +194,24 @@ export class IndicatorService {
             //     return { currency: currency, buyOrSell: BuyOrSell.Sell, PricePercentageDiff: Math.abs(((lastHighPrice - lastLinearRegression.upperBand) / lastLinearRegression.upperBand) * 100) }
             // }
             if (oneBeforeLastLowPrice <= lastLinearRegression.lowerBand) {
+                const RSI = calculateRSI(closedPrices)
                 const MACD = calculateMACD(closedPrices)
                 const lastMACDHistogram = MACD.at(-1).histogram
                 const oneBeforeLastMACDHistogram = MACD.at(-2).histogram
-
+                
                 if (lastMACDHistogram > oneBeforeLastMACDHistogram) {
+                    console.log(RSI.at(-1));
                     console.log('Should create buy order ' + symbol)
                     return { currency: currency, buyOrSell: BuyOrSell.Buy, PricePercentageDiff: Math.abs(((lastLinearRegression.lowerBand - lastLowPrice) / lastLowPrice) * 100) }
                 }
             } else if (oneBeforeLastHighPrice >= lastLinearRegression.upperBand) {
+                const RSI = calculateRSI(closedPrices)
                 const MACD = calculateMACD(closedPrices)
                 const lastMACDHistogram = MACD.at(-1).histogram
                 const oneBeforeLastMACDHistogram = MACD.at(-2).histogram
-
+                
                 if (lastMACDHistogram < oneBeforeLastMACDHistogram) {
+                    console.log(RSI.at(-1));
                     console.log('Should create sell order ' + symbol)
                     return { currency: currency, buyOrSell: BuyOrSell.Sell, PricePercentageDiff: Math.abs(((lastHighPrice - lastLinearRegression.upperBand) / lastLinearRegression.upperBand) * 100) }
                 }
