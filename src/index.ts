@@ -5,7 +5,7 @@ import { Currency } from "./entity/Currency";
 import { MainOrder } from "./entity/MainOrder";
 import { SideOrder } from "./entity/SideOrder";
 import { main } from "./main";
-import { changeLeverage, changeToIsolated, getCoinOHLCV } from "./operation/exchangeOperations";
+import { getCoinOHLCV } from "./operation/exchangeOperations";
 
 
 AppDataSource.initialize().then(async () => {
@@ -13,9 +13,10 @@ AppDataSource.initialize().then(async () => {
         const timeFrame = process.env.TIME_FRAME
         const leverage = Number(process.env.LEVERAGE)
         const candleAmount = Number(process.env.CANDLE_AMOUNT)
+        const candlesArray = []
 
         // Deleting data from currency, candlestick and sid orders tables
-        AppDataSource.getRepository(MainOrder).update({}, {
+        await AppDataSource.getRepository(MainOrder).update({}, {
             currency: null
         })
         await AppDataSource.getRepository(CandleStick).delete({})
@@ -37,7 +38,7 @@ AppDataSource.initialize().then(async () => {
 
             const OHLCV = await getCoinOHLCV(symbol, timeFrame, undefined, candleAmount)
             for (const candle of OHLCV) {
-                await AppDataSource.manager.save(CandleStick, {
+                candlesArray.push({
                     currency: currency,
                     date: new Date(candle[0]),
                     open: candle[1],
@@ -45,11 +46,13 @@ AppDataSource.initialize().then(async () => {
                     low: candle[3],
                     closed: candle[4],
                     volume: candle[5]
-                });
+                })
             }
         }
-        // Run the trading strategy
+
+        await AppDataSource.manager.save(CandleStick, candlesArray)
         console.log('Connect and initialize ')
+        // Run the trading strategy
         main()
     } catch (err) {
         console.error('Failed to connect or initialize: ' + err);
