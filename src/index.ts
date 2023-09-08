@@ -47,7 +47,7 @@ AppDataSource.initialize().then(async () => {
 
         const candlesArray = (await Promise.all(promises)).flat();
         await AppDataSource.manager.save(CandleStick, candlesArray);
-        
+
         console.log('Connect and initialize ');
         // Run the trading strategy
         main();

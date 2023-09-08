@@ -251,9 +251,9 @@ export const calculateMACrosses = (closedPrices: number[]): Crosses | undefined 
  */
 export const calculateLinearRegression = (
     closedPrices: number[],
-    period: number = 100,
+    period: number = 200,
     deviation: number = 2
-): { upperBand: number[], lowerBand: number[], averageLine: number[], incline: number[] } => {
+): { upperBand: number[], lowerBand: number[], averageLine: number[], /*incline: number[]*/ } => {
     if (closedPrices.length < period) {
         throw new Error('Insufficient data for the given period.');
     }
@@ -261,7 +261,7 @@ export const calculateLinearRegression = (
     const upperBand: number[] = [];
     const lowerBand: number[] = [];
     const averageLine: number[] = [];
-    const incline: number[] = [];
+    /*const incline: number[] = [];*/
 
     for (let i = period - 1; i < closedPrices.length; i++) {
         const pricesSlice = closedPrices.slice(i - period + 1, i + 1);
@@ -290,11 +290,11 @@ export const calculateLinearRegression = (
         averageLine.push(linearRegressionValues[linearRegressionValues.length - 1]);
 
         // Calculate incline (angle) in degrees
-        const inclineValue = (Math.atan(slope) * 180) / Math.PI;
-        incline.push(inclineValue);
+        // const inclineValue = (Math.atan(slope) * 180) / Math.PI;
+        // incline.push(inclineValue);
     }
 
-    return { upperBand, lowerBand, averageLine, incline };
+    return { upperBand, lowerBand, averageLine, /*incline*/ };
 };
 
 // export const calculateLinearRegression = (
