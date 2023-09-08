@@ -5,7 +5,7 @@ export const binanceExchange: binance = new binance({
     apiKey: process.env.API_KEY,
     secret: process.env.SECRET_KEY,
     enableRateLimit: true,
-    timeout: 20000, // Change the RequestError to be popped after 20s
+    timeout: 30000, // Change the RequestError to be popped after 20s
     // verbose: true // Make every response send with headers  
     options: {
         defaultType: 'future',

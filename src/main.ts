@@ -22,7 +22,7 @@ export const main = async () => {
 
         setInterval(async () => {
             await orderService.checkOrdersStatus()
-        }, 1000 * 5) // 5 seconds
+        }, 1000 * 10) // 10 seconds
         
     } catch (err) {
         console.error(err);

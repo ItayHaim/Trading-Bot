@@ -1,4 +1,4 @@
-import { OHLCV, OrderImmediatelyFillable, Ticker } from "ccxt"
+import { OHLCV, OrderImmediatelyFillable, RequestTimeout, Ticker } from "ccxt"
 import { Order, OrderSide, OrderType } from "ccxt/js/src/base/types"
 import { binanceExchange } from "./exchange"
 import { CreateOrderReturnType } from "../types"
@@ -52,6 +52,9 @@ export const getCoinOHLCV = async (symbol: string, timeFrame: string, sinceDate?
         return res
     } catch (err) {
         console.error('Failed to get coin OHLCV: ' + err)
+        if (err instanceof RequestTimeout) {
+            getCoinOHLCV(symbol, timeFrame, undefined, limit)
+        }
         throw err
     }
 }
@@ -219,6 +222,9 @@ export const isOrderFilled = async (orderId: string, symbol: string): Promise<st
         return res
     } catch (err) {
         console.error('Failed to check if order is filled: ' + err)
+        if (err instanceof RequestTimeout) {
+            isOrderFilled(orderId, symbol)
+        }
         throw err
     }
 }
