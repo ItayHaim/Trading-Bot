@@ -253,7 +253,7 @@ export const calculateLinearRegression = (
     closedPrices: number[],
     period: number = 100,
     deviation: number = 2
-): { upperBand: number[], lowerBand: number[], averageLine: number[] } => {
+): { upperBand: number[], lowerBand: number[], averageLine: number[], incline: number[] } => {
     if (closedPrices.length < period) {
         throw new Error('Insufficient data for the given period.');
     }
@@ -261,6 +261,7 @@ export const calculateLinearRegression = (
     const upperBand: number[] = [];
     const lowerBand: number[] = [];
     const averageLine: number[] = [];
+    const incline: number[] = [];
 
     for (let i = period - 1; i < closedPrices.length; i++) {
         const pricesSlice = closedPrices.slice(i - period + 1, i + 1);
@@ -287,7 +288,54 @@ export const calculateLinearRegression = (
         upperBand.push(linearRegressionValues[linearRegressionValues.length - 1] + standardDeviation);
         lowerBand.push(linearRegressionValues[linearRegressionValues.length - 1] - standardDeviation);
         averageLine.push(linearRegressionValues[linearRegressionValues.length - 1]);
+
+        // Calculate incline (angle) in degrees
+        const inclineValue = (Math.atan(slope) * 180) / Math.PI;
+        incline.push(inclineValue);
     }
 
-    return { upperBand, lowerBand, averageLine };
+    return { upperBand, lowerBand, averageLine, incline };
 };
+
+// export const calculateLinearRegression = (
+//     closedPrices: number[],
+//     period: number = 100,
+//     deviation: number = 2
+// ): { upperBand: number[], lowerBand: number[], averageLine: number[] } => {
+//     if (closedPrices.length < period) {
+//         throw new Error('Insufficient data for the given period.');
+//     }
+
+//     const upperBand: number[] = [];
+//     const lowerBand: number[] = [];
+//     const averageLine: number[] = [];
+
+//     for (let i = period - 1; i < closedPrices.length; i++) {
+//         const pricesSlice = closedPrices.slice(i - period + 1, i + 1);
+//         const sumX = pricesSlice.reduce((acc, _, index) => acc + index, 0);
+//         const sumY = pricesSlice.reduce((acc, price) => acc + price, 0);
+//         const sumXY = pricesSlice.reduce((acc, price, index) => acc + index * price, 0);
+//         const sumXSquare = pricesSlice.reduce((acc, _, index) => acc + index ** 2, 0);
+
+//         const n = pricesSlice.length;
+//         const slope = (n * sumXY - sumX * sumY) / (n * sumXSquare - sumX ** 2);
+//         const intercept = (sumY - slope * sumX) / n;
+
+//         const linearRegressionValues: number[] = [];
+
+//         for (let j = i - period + 1; j <= i; j++) {
+//             const projectedValue = slope * (j - (i - period + 1)) + intercept;
+//             linearRegressionValues.push(projectedValue);
+//         }
+
+//         const standardDeviation = deviation * Math.sqrt(
+//             pricesSlice.reduce((acc, price, index) => acc + (price - linearRegressionValues[index]) ** 2, 0) / n
+//         );
+
+//         upperBand.push(linearRegressionValues[linearRegressionValues.length - 1] + standardDeviation);
+//         lowerBand.push(linearRegressionValues[linearRegressionValues.length - 1] - standardDeviation);
+//         averageLine.push(linearRegressionValues[linearRegressionValues.length - 1]);
+//     }
+
+//     return { upperBand, lowerBand, averageLine };
+// };
