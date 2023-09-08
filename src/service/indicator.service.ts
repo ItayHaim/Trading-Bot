@@ -177,7 +177,6 @@ export class IndicatorService {
                 averageLine: linearRegression.averageLine.at(-1)
             }
 
-
             if ((oneBeforeLastLowPrice <= lastLinearRegression.lowerBand) && (oneBeforeLastClosedPrice < lastLinearRegression.lowerBand * 1.003)) {
                 const RSI = calculateRSI(closedPrices)
                 const MACD = calculateMACD(closedPrices)
