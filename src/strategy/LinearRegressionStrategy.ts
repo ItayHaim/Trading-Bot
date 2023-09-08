@@ -20,9 +20,8 @@ export const linearRegressionStrategy = async () => {
             })
 
             const result = indicatorService.checkLinearRegression(candles, currency)
-            if (result) {
-                waitingOrders.push(result)
-            }
+
+            result && waitingOrders.push(result)
         }
         waitingOrders.length > 0 && await strategyService.LinearRegressionStrategy(waitingOrders)
 
