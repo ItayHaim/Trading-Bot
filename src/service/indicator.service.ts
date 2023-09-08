@@ -183,9 +183,9 @@ export class IndicatorService {
                 const lastMACDHistogram = MACD.at(-1).histogram
                 const oneBeforeLastMACDHistogram = MACD.at(-2).histogram
                 const lastRSI = RSI.at(-1)
+                console.log('✌️lastRSI --->', lastRSI);
 
-                if ((lastMACDHistogram > oneBeforeLastMACDHistogram) && (lastRSI < 32)) {
-                    console.log(lastRSI);
+                if ((lastMACDHistogram > oneBeforeLastMACDHistogram) && (lastRSI < 35)) {
                     console.log('Should create buy order ' + symbol)
                     return { currency: currency, buyOrSell: BuyOrSell.Buy, PricePercentageDiff: Math.abs(((lastLinearRegression.lowerBand - lastLowPrice) / lastLowPrice) * 100) }
                 }
@@ -195,9 +195,9 @@ export class IndicatorService {
                 const lastMACDHistogram = MACD.at(-1).histogram
                 const oneBeforeLastMACDHistogram = MACD.at(-2).histogram
                 const lastRSI = RSI.at(-1)
+                console.log('✌️lastRSI --->', lastRSI);
 
-                if ((lastMACDHistogram < oneBeforeLastMACDHistogram) && (lastRSI > 68)) {
-                    console.log(lastRSI);
+                if ((lastMACDHistogram < oneBeforeLastMACDHistogram) && (lastRSI > 65)) {
                     console.log('Should create sell order ' + symbol)
                     return { currency: currency, buyOrSell: BuyOrSell.Sell, PricePercentageDiff: Math.abs(((lastHighPrice - lastLinearRegression.upperBand) / lastLinearRegression.upperBand) * 100) }
                 }
