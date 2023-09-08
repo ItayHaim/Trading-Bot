@@ -77,6 +77,7 @@ export const CurrenciesArray = [
 
     // T
     'TRX/USDT',
+    'TRB/USDT',
 
     // V
     'VET/USDT',

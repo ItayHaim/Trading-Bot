@@ -183,6 +183,7 @@ export class IndicatorService {
                 const lastMACDHistogram = MACD.at(-1).histogram
                 const oneBeforeLastMACDHistogram = MACD.at(-2).histogram
                 const lastRSI = RSI.at(-1)
+                console.log(symbol);
                 console.log('✌️lastRSI --->', lastRSI);
 
                 if ((lastMACDHistogram > oneBeforeLastMACDHistogram) && (lastRSI < 35)) {
@@ -195,6 +196,7 @@ export class IndicatorService {
                 const lastMACDHistogram = MACD.at(-1).histogram
                 const oneBeforeLastMACDHistogram = MACD.at(-2).histogram
                 const lastRSI = RSI.at(-1)
+                console.log(symbol);
                 console.log('✌️lastRSI --->', lastRSI);
 
                 if ((lastMACDHistogram < oneBeforeLastMACDHistogram) && (lastRSI > 65)) {
