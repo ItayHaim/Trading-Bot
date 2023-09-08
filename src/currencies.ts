@@ -13,13 +13,15 @@ export const CurrenciesArray = [
     'BAT/USDT',
     'BNB/USDT',
     'BAL/USDT',
+    'BLZ/USDT',
 
     // C
-    // 'CHR/USDT',//!
+    'CHR/USDT',//!
     'CTSI/USDT',
     'CHZ/USDT',//!
     'CELR/USDT',//!
     'C98/USDT',
+    'CYBER/USDT',
 
     // D
     'DOT/USDT',
@@ -31,7 +33,7 @@ export const CurrenciesArray = [
     'ENJ/USDT',
 
     // F
-    // 'FLM/USDT',//!
+    'FLM/USDT',//!
     'FTM/USDT',
 
     // G
@@ -40,23 +42,30 @@ export const CurrenciesArray = [
     // I
     'ICP/USDT',
 
+    // K
+    'KAVA/USDT',
+
     // L
     'LINK/USDT',
     'LRC/USDT',
     'LTC/USDT',
 
     // M
-    // 'MATIC/USDT',//!
+    'MATIC/USDT',//!
 
     // N
     'NEAR/USDT',
+    'NMR/USDT',
 
     // O
     'OP/USDT',
 
+    // P
+    'PERP/USDT',
+
     // R
     'RVN/USDT',
-    // 'RSR/USDT', //!
+    'RSR/USDT', //!
 
     // S
     'SOL/USDT',
@@ -71,6 +80,9 @@ export const CurrenciesArray = [
 
     // V
     'VET/USDT',
+
+    // U
+    'UNFI/USDT',
 
     // X
     'XRP/USDT',

@@ -5,7 +5,7 @@ import { Currency } from "./entity/Currency";
 import { MainOrder } from "./entity/MainOrder";
 import { SideOrder } from "./entity/SideOrder";
 import { main } from "./main";
-import { getCoinOHLCV } from "./operation/exchangeOperations";
+import { changeLeverage, changeToIsolated, getCoinOHLCV } from "./operation/exchangeOperations";
 
 // Access environment variables once
 const timeFrame = process.env.TIME_FRAME;
@@ -30,8 +30,8 @@ AppDataSource.initialize().then(async () => {
 
             // Change currency to isolated and change his leverage
             //! Active when first use
-            // await changeLeverage(leverage, currency.symbol)
-            // await changeToIsolated(currency.symbol)
+            await changeLeverage(leverage, currency.symbol)
+            await changeToIsolated(currency.symbol)
 
             const OHLCV = await getCoinOHLCV(symbol, timeFrame, undefined, candleAmount);
             return OHLCV.map(candle => ({
