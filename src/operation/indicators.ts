@@ -252,7 +252,7 @@ export const calculateMACrosses = (closedPrices: number[]): Crosses | undefined 
 export const calculateLinearRegression = (
     closedPrices: number[],
     period: number = 100,
-    deviation: number = 2
+    deviation: number = 2.5
 ): { upperBand: number[], lowerBand: number[], averageLine: number[], incline: number[] } => {
     if (closedPrices.length < period) {
         throw new Error('Insufficient data for the given period.');
