@@ -21,7 +21,7 @@ export const CurrenciesArray = [
     'CHZ/USDT',//!
     'CELR/USDT',//!
     'C98/USDT',
-    'CYBER/USDT',
+    // 'CYBER/USDT',
 
     // D
     'DOT/USDT',
@@ -61,7 +61,7 @@ export const CurrenciesArray = [
     'OP/USDT',
 
     // P
-    'PERP/USDT',
+    // 'PERP/USDT',
 
     // R
     'RVN/USDT',
@@ -87,7 +87,7 @@ export const CurrenciesArray = [
 
     // X
     'XRP/USDT',
-    'XLM/USDT',
+    // 'XLM/USDT',
 
     // W
     'WLD/USDT',

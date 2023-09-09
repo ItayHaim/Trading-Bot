@@ -177,7 +177,7 @@ export class IndicatorService {
                 averageLine: linearRegression.averageLine.at(-1)
             }
 
-            if ((oneBeforeLastLowPrice <= lastLinearRegression.lowerBand) && (oneBeforeLastClosedPrice < lastLinearRegression.lowerBand * 1.003)) {
+            if ((oneBeforeLastClosedPrice <= lastLinearRegression.lowerBand) && (oneBeforeLastClosedPrice < lastLinearRegression.lowerBand * 1.003)) {
                 const RSI = calculateRSI(closedPrices)
                 const MACD = calculateMACD(closedPrices)
                 const lastMACDHistogram = MACD.at(-1).histogram
@@ -190,7 +190,7 @@ export class IndicatorService {
                     console.log('Should create buy order ' + symbol)
                     return { currency: currency, buyOrSell: BuyOrSell.Buy, PricePercentageDiff: Math.abs(((lastLinearRegression.lowerBand - lastLowPrice) / lastLowPrice) * 100) }
                 }
-            } else if ((oneBeforeLastHighPrice >= lastLinearRegression.upperBand) && (oneBeforeLastClosedPrice > lastLinearRegression.upperBand * 0.997)) {
+            } else if ((oneBeforeLastClosedPrice >= lastLinearRegression.upperBand) && (oneBeforeLastClosedPrice > lastLinearRegression.upperBand * 0.997)) {
                 const RSI = calculateRSI(closedPrices)
                 const MACD = calculateMACD(closedPrices)
                 const lastMACDHistogram = MACD.at(-1).histogram
