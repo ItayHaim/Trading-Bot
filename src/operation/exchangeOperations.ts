@@ -52,7 +52,9 @@ export const getCoinOHLCV = async (symbol: string, timeFrame: string, sinceDate?
         return res
     } catch (err) {
         console.error('Failed to get coin OHLCV: ' + err)
+        console.log(err instanceof RequestTimeout)
         if (err instanceof RequestTimeout) {
+            console.log('inside');
             getCoinOHLCV(symbol, timeFrame, undefined, limit)
         }
         throw err
