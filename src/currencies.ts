@@ -29,7 +29,7 @@ export const CurrenciesArray = [
     // E
     'EDU/USDT',
     'EGLD/USDT',
-    'ETH/USDT',
+    // 'ETH/USDT',//!
     'ENJ/USDT',
 
     // F
