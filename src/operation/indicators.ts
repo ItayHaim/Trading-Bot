@@ -249,53 +249,51 @@ export const calculateMACrosses = (closedPrices: number[]): Crosses | undefined 
  * @param deviation - The standard deviation factor. Default is 2.
  * @return An object containing the upper band, lower band, and average line arrays.
  */
-export const calculateLinearRegression = (
-    closedPrices: number[],
-    period: number = 200,
-    deviation: number = 2
-): { upperBand: number[], lowerBand: number[], averageLine: number[], /*incline: number[]*/ } => {
-    if (closedPrices.length < period) {
-        throw new Error('Insufficient data for the given period.');
-    }
-
-    const upperBand: number[] = [];
-    const lowerBand: number[] = [];
-    const averageLine: number[] = [];
-    /*const incline: number[] = [];*/
-
-    for (let i = period - 1; i < closedPrices.length; i++) {
-        const pricesSlice = closedPrices.slice(i - period + 1, i + 1);
-        const sumX = pricesSlice.reduce((acc, _, index) => acc + index, 0);
-        const sumY = pricesSlice.reduce((acc, price) => acc + price, 0);
-        const sumXY = pricesSlice.reduce((acc, price, index) => acc + index * price, 0);
-        const sumXSquare = pricesSlice.reduce((acc, _, index) => acc + index ** 2, 0);
-
-        const n = pricesSlice.length;
-        const slope = (n * sumXY - sumX * sumY) / (n * sumXSquare - sumX ** 2);
-        const intercept = (sumY - slope * sumX) / n;
-
-        const linearRegressionValues: number[] = [];
-
-        for (let j = i - period + 1; j <= i; j++) {
-            const projectedValue = slope * (j - (i - period + 1)) + intercept;
-            linearRegressionValues.push(projectedValue);
+export const
+    calculateLinearRegression = (
+        closedPrices: number[],
+        period: number = 200,
+        deviation: number = 2
+    ): { upperBand: number[], lowerBand: number[], averageLine: number[], incline: number[] } => {
+        if (closedPrices.length < period) {
+            throw new Error('Insufficient data for the given period.');
         }
 
-        const standardDeviation = deviation * Math.sqrt(
-            pricesSlice.reduce((acc, price, index) => acc + (price - linearRegressionValues[index]) ** 2, 0) / n
-        );
+        const upperBand: number[] = [];
+        const lowerBand: number[] = [];
+        const averageLine: number[] = [];
+        const incline: number[] = [];
 
-        upperBand.push(linearRegressionValues[linearRegressionValues.length - 1] + standardDeviation);
-        lowerBand.push(linearRegressionValues[linearRegressionValues.length - 1] - standardDeviation);
-        averageLine.push(linearRegressionValues[linearRegressionValues.length - 1]);
+        for (let i = period - 1; i < closedPrices.length; i++) {
+            const pricesSlice = closedPrices.slice(i - period + 1, i + 1);
+            const sumX = pricesSlice.reduce((acc, _, index) => acc + index, 0);
+            const sumY = pricesSlice.reduce((acc, price) => acc + price, 0);
+            const sumXY = pricesSlice.reduce((acc, price, index) => acc + index * price, 0);
+            const sumXSquare = pricesSlice.reduce((acc, _, index) => acc + index ** 2, 0);
 
-        // Calculate incline (angle) in degrees
-        // const inclineValue = (Math.atan(slope) * 180) / Math.PI;
-        // incline.push(inclineValue);
-    }
+            const n = pricesSlice.length;
+            const slope = (n * sumXY - sumX * sumY) / (n * sumXSquare - sumX ** 2);
+            const intercept = (sumY - slope * sumX) / n;
 
-    return { upperBand, lowerBand, averageLine, /*incline*/ };
-};
+            const linearRegressionValues: number[] = [];
+
+            for (let j = i - period + 1; j <= i; j++) {
+                const projectedValue = slope * (j - (i - period + 1)) + intercept;
+                linearRegressionValues.push(projectedValue);
+            }
+
+            const standardDeviation = deviation * Math.sqrt(
+                pricesSlice.reduce((acc, price, index) => acc + (price - linearRegressionValues[index]) ** 2, 0) / n
+            );
+
+            upperBand.push(linearRegressionValues[linearRegressionValues.length - 1] + standardDeviation);
+            lowerBand.push(linearRegressionValues[linearRegressionValues.length - 1] - standardDeviation);
+            averageLine.push(linearRegressionValues[linearRegressionValues.length - 1]);
+            incline.push(slope)
+        }
+
+        return { upperBand, lowerBand, averageLine, incline };
+    };
 
 // export const calculateLinearRegression = (
 //     closedPrices: number[],

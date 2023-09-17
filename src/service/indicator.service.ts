@@ -166,15 +166,14 @@ export class IndicatorService {
             const closedPrices = candles.map(candle => Number(candle.closed))
             const lastLowPrice = candles.at(-1).low
             const lastHighPrice = candles.at(-1).high
-            const oneBeforeLastHighPrice = candles.at(-2).high
-            const oneBeforeLastLowPrice = candles.at(-2).low
             const oneBeforeLastClosedPrice = candles.at(-2).closed
 
             const linearRegression = calculateLinearRegression(closedPrices)
             const lastLinearRegression = {
                 upperBand: linearRegression.upperBand.at(-1),
                 lowerBand: linearRegression.lowerBand.at(-1),
-                averageLine: linearRegression.averageLine.at(-1)
+                averageLine: linearRegression.averageLine.at(-1),
+                incline: linearRegression.averageLine.at(-1)
             }
 
             if ((oneBeforeLastClosedPrice <= lastLinearRegression.lowerBand) && (oneBeforeLastClosedPrice < lastLinearRegression.lowerBand * 1.003)) {
@@ -185,8 +184,9 @@ export class IndicatorService {
                 const lastRSI = RSI.at(-1)
                 console.log(symbol);
                 console.log('✌️lastRSI --->', lastRSI);
+                console.log('✌️lastLinearRegression.incline --->', lastLinearRegression.incline);
 
-                if ((lastMACDHistogram > oneBeforeLastMACDHistogram) && (lastRSI < 35)) {
+                if ((lastMACDHistogram > oneBeforeLastMACDHistogram) && (lastRSI < 30) && (lastLinearRegression.incline > 0)) {
                     console.log('Should create buy order ' + symbol)
                     return { currency: currency, buyOrSell: BuyOrSell.Buy, PricePercentageDiff: Math.abs(((lastLinearRegression.lowerBand - lastLowPrice) / lastLowPrice) * 100) }
                 }
@@ -198,8 +198,9 @@ export class IndicatorService {
                 const lastRSI = RSI.at(-1)
                 console.log(symbol);
                 console.log('✌️lastRSI --->', lastRSI);
+                console.log('✌️lastLinearRegression.incline --->', lastLinearRegression.incline);
 
-                if ((lastMACDHistogram < oneBeforeLastMACDHistogram) && (lastRSI > 65)) {
+                if ((lastMACDHistogram < oneBeforeLastMACDHistogram) && (lastRSI > 70) && (lastLinearRegression.incline < 0)) {
                     console.log('Should create sell order ' + symbol)
                     return { currency: currency, buyOrSell: BuyOrSell.Sell, PricePercentageDiff: Math.abs(((lastHighPrice - lastLinearRegression.upperBand) / lastLinearRegression.upperBand) * 100) }
                 }
