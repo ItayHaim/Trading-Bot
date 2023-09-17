@@ -173,7 +173,7 @@ export class IndicatorService {
                 upperBand: linearRegression.upperBand.at(-1),
                 lowerBand: linearRegression.lowerBand.at(-1),
                 averageLine: linearRegression.averageLine.at(-1),
-                incline: linearRegression.averageLine.at(-1)
+                incline: linearRegression.incline.at(-1)
             }
 
             if ((oneBeforeLastClosedPrice <= lastLinearRegression.lowerBand) && (oneBeforeLastClosedPrice < lastLinearRegression.lowerBand * 1.003)) {

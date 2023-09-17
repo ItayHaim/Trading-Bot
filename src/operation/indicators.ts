@@ -291,7 +291,7 @@ export const
             averageLine.push(linearRegressionValues[linearRegressionValues.length - 1]);
             incline.push(slope)
         }
-
+        
         return { upperBand, lowerBand, averageLine, incline };
     };
 
