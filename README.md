@@ -43,11 +43,8 @@ Make sure you have [Node.js](http://nodejs.org/) and npm installed.
 
 ## Configuring Your Bot
 
-- Rename the `.env.sample` file (if exist) to `.env`.
-- Open the `.env` file and customize the following fields: 
-
-` API_KEY=your-binance-api-key API_SECRET=your-binance-api-secret`
-
+- Rename the `.env.template` file to `.env`.
+- Open the `.env` file and customize the fields. 
 - Make sure you have enough balance in your USDT wallet:
 
 ` USDT_AMOUNT * OPEN_ORDER_ALLOWED * 2 < Your USDT Balance`
